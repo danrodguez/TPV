@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/margin"
+    android:layout_marginTop="@dimen/margin"
+    android:layout_marginRight="@dimen/margin"
+    android:layout_marginBottom="@dimen/margin"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Bienvenido"
+            android:textColor="#000000"
+            android:textSize="23sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="#0061F1"
+            android:textSize="23sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop"
+            android:text="@string/app"
+            android:textColor="#050101"
+            android:textSize="23sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textStyle="normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/IniciarSesion"
+            android:textColor="#050101"
+            android:textSize="23sp" />
+
+        <EditText
+            android:padding="10dp"
+            android:id="@+id/emailedit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:autofillHints=""
+            android:background="@drawable/bordeazul"
+            android:ems="10"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/hintemail"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textAlignment="gravity"
+            android:textAllCaps="false"
+            android:textSize="23sp"
+            android:textStyle="italic"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:padding="10dp"
+            android:id="@+id/contrasenaEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margintop"
+            android:autofillHints=""
+            android:background="@drawable/bordeazul"
+            android:ems="10"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/hintcontrasena"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textSize="23sp"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/Acceder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop"
+            android:background="@drawable/botongrisclaro"
+            android:ems="10"
+            android:text="@string/acceder"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="23sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/recuperarcontrasenaboton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margintop"
+            android:background="@color/transparente"
+            android:text="@string/Recuperarcontrasena"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/gratis"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_size" />
+
+        <Button
+            android:id="@+id/CrearCuentag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/transparente"
+            android:minHeight="0dp"
+            android:text="@string/crearcuenta"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</LinearLayout>
+
+

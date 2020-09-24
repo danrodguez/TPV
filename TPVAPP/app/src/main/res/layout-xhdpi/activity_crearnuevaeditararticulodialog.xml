@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/bordenegro"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:text="@string/nuevacategoria"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold" />
+
+    <EditText
+        android:hint="Ej: Bebidas"
+        android:padding="5dp"
+        android:id="@+id/crearcategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginTop="@dimen/margintop"
+        android:layout_marginRight="@dimen/margin"
+        android:background="@drawable/bordeazul"
+        android:textSize="@dimen/text_size" />
+
+    <LinearLayout
+        android:weightSum="4"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_weight="2"
+            android:layout_marginEnd="5dp"
+            android:textColor="#0061F1"
+            android:id="@+id/cancelarboton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bordeazul"
+            android:text="@string/cancelar"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="20sp" />
+
+        <Button
+            android:layout_weight="2"
+            android:textColor="#fff"
+            android:id="@+id/crearboton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/botonnaranja"
+            android:text="@string/crear"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>
+

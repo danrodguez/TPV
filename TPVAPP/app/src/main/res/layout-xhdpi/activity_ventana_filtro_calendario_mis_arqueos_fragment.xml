@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bordenegro"
+    android:layout_margin="@dimen/margin">
+
+    <CalendarView
+        android:weekSeparatorLineColor="@android:style/TextAppearance.Small"
+        android:selectedWeekBackgroundColor="@android:style/TextAppearance.Small"
+        android:theme="@style/CustomCalendarMonth"
+        android:weekDayTextAppearance="@style/CustomCalendarWeek"
+        android:layout_margin="5dp"
+        android:id="@+id/calendario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:padding="10dp"
+        android:weightSum="4"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:paddingHorizontal="10dp"
+            android:id="@+id/cancelarboton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/bordeazul"
+            android:text="@string/cancelar"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="#0061F1"
+            android:textSize="20sp" />
+
+        <Button
+            android:paddingHorizontal="10dp"
+            android:layout_weight="2"
+            android:textColor="#ffff"
+            android:id="@+id/aceptarboton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/botonnaranja"
+            android:text="@string/aceptar"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>

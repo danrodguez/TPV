@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearla"
+    android:background="@drawable/bordenegro"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:text="@string/inserte_numero"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold" />
+
+    <EditText
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:id="@+id/numeroedittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bordeazul"
+        android:textSize="@dimen/text_size"
+        android:autofillHints=""
+        android:inputType="number"
+        tools:ignore="LabelFor" />
+
+    <LinearLayout
+        android:weightSum="4"
+        android:layout_margin="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:padding="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:textColor="#0061F1"
+            android:id="@+id/cancelarboton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bordeazul"
+            android:text="@string/cancelar"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_sizegrande" />
+
+        <Button
+            android:padding="5dp"
+            android:layout_weight="2"
+            android:textColor="#ffff"
+            android:id="@+id/filtronumero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/botonnaranja"
+            android:text="@string/filtrar"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_sizegrande" />
+    </LinearLayout>
+
+</LinearLayout>

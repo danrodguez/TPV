@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bordenegro">
+
+    <TextView
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/entradatexto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Existe un descuadre de efectivo" />
+
+    <LinearLayout
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:padding="5dp"
+            android:id="@+id/encajatexto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EN CAJA" />
+
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginEnd="20dp"
+            android:gravity="end"
+            android:text="0.0€"
+            android:textColor="@color/black"
+            android:id="@+id/dineroencaja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:padding="5dp"
+            android:id="@+id/calculadotexto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CALCULADO" />
+
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginEnd="20dp"
+            android:gravity="end"
+            android:text="0.0€"
+            android:textColor="@color/black"
+            android:id="@+id/dinerocalculado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grisclaro" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/descuadretexto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="DESCUADRE"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginEnd="20dp"
+            android:gravity="end"
+            android:text="0.0€"
+            android:textColor="#E60A0A"
+            android:id="@+id/dinerodescuadre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/margin"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/encajatexto4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Desea continuar?"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:gravity="center|bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelar"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bordeazul"
+            android:padding="@dimen/margintop"
+            android:text="@string/cancelar"
+            android:textAllCaps="false"
+            android:textColor="#0061F1"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/aceptarboton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:background="@drawable/botonnaranja"
+            android:padding="@dimen/margintop"
+            android:text="@string/aceptar"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</LinearLayout>

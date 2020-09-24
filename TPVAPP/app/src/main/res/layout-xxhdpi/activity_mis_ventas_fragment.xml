@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.diusframi.tpv.Fragments.MisVentas.MisVentasFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.AppBarOverlay"
+            app:theme="@style/ToolbarColoredBackArrow">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/mis_ventas"
+                android:textColor="#FFF"
+                android:textSize="25sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:weightSum="4"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/linearl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_marginBottom="@dimen/margin"
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+
+
+                    <Button
+                        android:id="@+id/filtronumero"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bordeazul"
+                        android:text="@string/numer"
+                        android:textSize="@dimen/text_size" />
+
+                    <ImageButton
+                        android:id="@+id/filtrocalendario"
+                        android:src="@drawable/calendariocopia"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin"
+                        android:layout_weight="1"
+                        android:background="@drawable/bordeazul"
+                        android:textSize="@dimen/text_size"
+                        android:contentDescription="@string/calendario" />
+
+                    <ImageButton
+                        android:visibility="gone"
+                        android:id="@+id/filtroqr"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin"
+                        android:layout_weight="1"
+                        android:background="@drawable/bordeazul"
+                        android:src="@drawable/qrcopia"
+                        android:textSize="2sp"
+                        tools:ignore="SmallSp"
+                        android:contentDescription="@string/filtroqr" />
+
+
+                </LinearLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="2"
+                    android:id="@+id/RecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:weightSum="4"
+                    android:padding="5dp"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margintop"
+                    android:gravity="bottom|center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:padding="10dp"
+                        android:layout_weight="1"
+                        android:id="@+id/salirboton"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tamanoboton"
+                        android:layout_gravity="bottom|center"
+                        android:background="@drawable/bordeazul"
+                        android:text="@string/salir"
+                        android:textAllCaps="false"
+                        android:textColor="#0061F1"
+                        android:textSize="@dimen/text_size"
+                        tools:ignore="ButtonStyle,NestedWeights" />
+
+                    <Button
+                        android:layout_weight="3"
+                        android:id="@+id/quitarfiltros"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tamanoboton"
+                        android:layout_gravity="bottom|center"
+                        android:layout_marginStart="@dimen/margin"
+                        android:background="@drawable/botongrisclaro"
+                        android:drawableStart="@drawable/quitarfiltros"
+                        android:padding="10dp"
+                        android:text="@string/quitarfiltros"
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size"
+                        tools:ignore="ButtonStyle" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- The navigation drawer -->
+    <com.google.android.material.navigation.NavigationView
+        app:headerLayout="@layout/nav_header"
+        android:id="@+id/navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        app:itemTextColor="@color/negro"
+        app:menu="@menu/menu_main"
+        app:theme="@style/AppTheme" />
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:weightSum="4"
+    android:layout_margin="5dp"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="INTRODUCE IMPORTE A COBRAR"
+                android:textColor="@color/negro"
+                android:textSize="25dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Importe pendiente"
+                    android:textColor="@color/gris"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:gravity="center"
+                    android:text="0,00€"
+                    android:id="@+id/importe"
+                    android:textColor="@color/gris"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:layout_marginTop="80dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:text="TICKET"
+                    android:textColor="@color/negro"
+                    android:textSize="@dimen/text_size" />
+
+                <EditText
+                    android:gravity="center"
+                    android:id="@+id/importeedit"
+                    android:layout_width="193dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bordeazul"
+                    android:inputType="number"
+                    android:textSize="45sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_weight="4"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|bottom"
+        android:weightSum="4">
+
+        <Button
+            android:id="@+id/volver"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginRight="@dimen/margintop"
+            android:layout_weight="2"
+            android:background="@drawable/bordeazul"
+            android:text="Volver"
+            android:textAllCaps="false"
+            android:textColor="#0061F1"
+            android:textSize="@dimen/text_size"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/cobrar"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_weight="2"
+            android:background="@drawable/botongrisclaro"
+            android:padding="10dp"
+            android:text="Cobrar"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="@dimen/text_size" />
+    </LinearLayout>
+
+</LinearLayout>
+

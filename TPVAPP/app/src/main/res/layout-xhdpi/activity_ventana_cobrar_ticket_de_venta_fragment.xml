@@ -1,0 +1,119 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bordenegro"
+    android:layout_margin="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:weightSum="4"
+        android:id="@+id/tarjeta"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bordeazul"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:clickable="false"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:id="@+id/imagentarjeta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tarjetapeq"
+            android:contentDescription="@string/imagentarjeta" />
+
+        <Button
+            android:clickable="false"
+            android:layout_weight="3"
+            android:textSize="@dimen/text_size"
+            android:textAllCaps="false"
+            android:id="@+id/botontarjeta"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:text="@string/tarjeta"
+            android:textColor="#0061F1"
+            android:textStyle="italic" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="4"
+        android:id="@+id/efectivo"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bordeazul"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:clickable="false"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:id="@+id/imagenefectivo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/efectivo"
+            android:contentDescription="@string/imagenefectivo" />
+
+        <Button
+            android:clickable="false"
+            android:layout_weight="3"
+            android:textSize="@dimen/text_size"
+            android:textAllCaps="false"
+            android:id="@+id/botonefectivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:text="@string/efectivo"
+            android:textColor="#0061F1"
+            android:textStyle="italic" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/cheque"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginTop="@dimen/margintop"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginBottom="@dimen/margintop"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bordeazulfondogris"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:clickable="false"
+            android:id="@+id/imagencheque"
+            android:layout_width="124dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ticket" />
+
+        <Button
+            android:clickable="false"
+            android:textSize="@dimen/text_size"
+            android:textAllCaps="false"
+            android:id="@+id/botoncheque"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:text="@string/cheque_restaurante"
+            android:textColor="#204EA2"
+            android:textStyle="italic" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

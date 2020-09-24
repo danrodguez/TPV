@@ -1,0 +1,8 @@
+include ':etickets-Sdk-debug'
+include ':etickets-Sdk-debug'
+include ':etickets-Sdk-debug'
+include ':etickets-Sdk-debug'
+include ':etickets-Sdk-debug'
+include ':etickets-Sdk-debug'
+include ':app'
+rootProject.name='TPV'

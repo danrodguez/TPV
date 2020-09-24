@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/margin"
+    android:layout_marginTop="@dimen/margin"
+    android:layout_marginRight="@dimen/margin"
+    android:layout_marginBottom="@dimen/margin"
+    android:orientation="vertical"
+    tools:context=".CrearCuenta">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/configuracioninicial"
+        android:textColor="#0061F1"
+        android:textSize="25sp" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margintop"
+        android:text="@string/confirma"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/nombrecomercial"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/nombrecomercialedit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:autofillHints=""
+        android:background="@drawable/bordeazul"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/nombrecomercialhint"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:ignore="LabelFor" />
+
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/Nombrefiscal"
+        android:textColor="#000000"
+        android:textSize="15sp"
+
+        />
+
+    <EditText
+        android:id="@+id/nombrefiscalconfiguracioninicialedit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:autofillHints=""
+        android:background="@drawable/bordeazul"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/nombrefiscalhint"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:ignore="LabelFor" />
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/direccionfiscal"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/domicilioedit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:autofillHints=""
+        android:background="@drawable/bordeazul"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/domiciliohint"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:ignore="LabelFor" />
+
+    <EditText
+        android:id="@+id/localidadedit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margintop"
+        android:autofillHints=""
+        android:background="@drawable/bordeazul"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/localidadhint"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:ignore="LabelFor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margintop">
+
+        <EditText
+
+            android:id="@+id/codigopostaledit"
+            android:layout_width="123dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margintop"
+            android:autofillHints=""
+            android:background="@drawable/bordeazul"
+            android:ems="10"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:hint="@string/codigopostalhint"
+            android:inputType="number"
+            android:paddingStart="2dp"
+            android:textAlignment="gravity"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/provinciaedit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="20dp"
+            android:autofillHints=""
+            android:background="@drawable/bordeazul"
+            android:ems="10"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/provinciahint"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textAlignment="gravity"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            tools:ignore="LabelFor" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/telefonoedit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:autofillHints=""
+        android:background="@drawable/bordeazul"
+        android:baselineAligned="false"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/telefonohint"
+        android:inputType="number"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        tools:ignore="LabelFor" />
+
+    <Button
+        android:id="@+id/CrearCuenta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margintop"
+        android:background="@color/naranja"
+        android:baselineAligned="true"
+        android:text="@string/crearcuenta"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+</LinearLayout>

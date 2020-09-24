@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.diusframi.tpv.Fragments.TotalizarCierreCaja.TotalizarCierreCajaFianzaFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.AppBarOverlay"
+            app:theme="@style/ToolbarColoredBackArrow">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Totalizar/Cierre caja"
+                android:textColor="#FFF"
+                android:textSize="25sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margintop"
+                    android:text="@string/fianza"
+                    android:textColor="@color/negro"
+                    android:textSize="@dimen/text_size" />
+
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginStart="45dp"
+                    android:weightSum="6"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_margin="5dp"
+                        android:layout_weight="5"
+                        android:id="@+id/procimporteedit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bordeazul"
+                        android:ems="10"
+                        android:importantForAutofill="no"
+                        android:inputType="numberDecimal"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/text_sizegrande" />
+
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/euro"
+                        android:textSize="@dimen/text_size" />
+                </LinearLayout>
+            </LinearLayout>
+            </ScrollView>
+            <LinearLayout
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:layout_margin="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom"
+                android:gravity="bottom|center">
+
+                <Button
+                    android:id="@+id/cancelarbotontotalizar"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bordeazul"
+                    android:padding="@dimen/margintop"
+                    android:text="@string/cancelar"
+                    android:textAllCaps="false"
+                    android:textColor="#0061F1"
+                    android:textSize="@dimen/text_size" />
+
+                <Button
+                    android:id="@+id/generararqueoboton"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margintop"
+                    android:background="@drawable/botongrisclaro"
+                    android:padding="@dimen/margintop"
+                    android:text="Generar arqueo"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- The navigation drawer -->
+    <com.google.android.material.navigation.NavigationView
+        app:headerLayout="@layout/nav_header"
+        android:id="@+id/navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        app:itemTextColor="@color/negro"
+        app:menu="@menu/menu_main"
+        app:theme="@style/AppTheme" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
+
