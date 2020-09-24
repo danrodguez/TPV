@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_weight="3"
         android:layout_width="match_parent"
-        android:layout_height="500dp">
+        android:layout_height="400dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -241,7 +241,6 @@
 
                 <TextView
                     android:textStyle="bold"
-                    android:layout_marginEnd="5dp"
                     android:textColor="@color/negro"
                     android:gravity="center"
                     android:layout_weight="1"

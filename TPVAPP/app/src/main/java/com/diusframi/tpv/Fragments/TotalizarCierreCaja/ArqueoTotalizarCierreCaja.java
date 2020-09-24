@@ -25,9 +25,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
-    ImageButton imprimirboton;
+
     Button volverboton;
-    ImageButton correoboton;
+
 
 
     TextView numeroarqueo;
@@ -140,9 +140,8 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         impuesto10cuota = findViewById(R.id.cuota10text);
         impuesto21baseimponible = findViewById(R.id.baseimponible21text);
         impuesto21cuota = findViewById(R.id.cuota21text);
-        imprimirboton = findViewById(R.id.imprimir);
         volverboton = findViewById(R.id.volver);
-        correoboton = findViewById(R.id.correo);
+
 
 
         if (descuadrenumero < 0) {
@@ -205,23 +204,6 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
             }
         });
 
-        imprimirboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast toast1 =
-                        Toast.makeText(getApplicationContext(),
-                                "Todavía por implementar", Toast.LENGTH_SHORT);
 
-                toast1.show();
-            }
-        });
-
-        correoboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
-            }
-        });
     }
 }

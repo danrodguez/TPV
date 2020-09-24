@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/Cafes"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:clickable="false"
@@ -31,7 +31,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/Cafes"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:clickable="false"
@@ -42,7 +42,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/Cafes"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
 
 </LinearLayout>

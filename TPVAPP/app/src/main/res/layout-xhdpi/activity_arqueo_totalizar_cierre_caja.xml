@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="4"
-        tools:ignore="UselessParent">
+        android:weightSum="4">
 
         <ScrollView
             android:layout_weight="1"
@@ -49,7 +48,6 @@
                         android:text="@string/_2020_00000"
                         android:textSize="15sp" />
                 </LinearLayout>
-
                 <LinearLayout
                     android:weightSum="6"
                     android:layout_width="match_parent"
@@ -468,7 +466,7 @@
 
                         <TextView
                             android:textColor="@color/black"
-                            android:id="@+id/recuentoefectivotext"
+                            android:id="@+id/totalrecuentotext"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="20dp"
@@ -592,7 +590,7 @@
                         android:textColor="#0061F1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="10dp"
                         android:text="@string/resumen_por_m_todo_de_pago"
                         android:textSize="15sp"
                         tools:ignore="TooManyViews" />
@@ -643,7 +641,6 @@
                     android:layout_marginTop="@dimen/margintop">
 
                     <TextView
-                        android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -704,7 +701,7 @@
 
 
                     <LinearLayout
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="5dp"
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -739,6 +736,7 @@
 
 
                     <LinearLayout
+                        android:layout_marginStart="5dp"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -837,29 +835,7 @@
                 android:textStyle="normal"
                 tools:ignore="NestedWeights" />
 
-            <ImageButton
-                android:id="@+id/imprimir"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/tamanoboton"
-                android:layout_marginEnd="@dimen/margintop"
-                android:layout_weight="2"
-                android:adjustViewBounds="true"
-                android:background="@drawable/bordeazulfondogris"
-                android:scaleType="fitCenter"
-                android:src="@drawable/impresora"
-                android:contentDescription="@string/impresora" />
 
-            <ImageButton
-                android:id="@+id/correo"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/tamanoboton"
-                android:layout_weight="2"
-                android:adjustViewBounds="true"
-                android:background="@drawable/bordeazulfondogris"
-                android:padding="15dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/correo"
-                android:contentDescription="@string/correo" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

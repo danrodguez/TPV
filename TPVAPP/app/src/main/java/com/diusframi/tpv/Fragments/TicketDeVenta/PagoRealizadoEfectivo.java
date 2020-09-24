@@ -19,6 +19,7 @@ import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Constructores.ProductoTicket;
 import com.diusframi.tpv.Constructores.ProductosTicketAdapter;
 import com.diusframi.tpv.Fragments.Venta.Venta;
+import com.diusframi.tpv.MostrarPdf;
 import com.diusframi.tpv.R;
 import com.example.etickets_sdk.DatosCajaR;
 import com.example.etickets_sdk.Eticket;
@@ -39,7 +40,7 @@ public class PagoRealizadoEfectivo extends AppCompatActivity  {
     Double efectivot;
     CheckBox checkbox;
     Cursor cursorid;
-
+    MostrarPdf tarea = new MostrarPdf();
     int orden;
     String fechatexto="";
     String horatexto="";
@@ -230,25 +231,26 @@ orden = id;
                 toast1.show();
 
                 final DecimalFormat decim = new DecimalFormat("0.00");
-                datos.setTotal(Double.parseDouble(decim.format(totalnumero)));
-                datos.setEfectivo(Double.parseDouble(decim.format(efectivot)));
-                datos.setFactura(String.valueOf(decim.format(finalIdticket)));
+                datos.setTotal(totalnumero);
+                datos.setEfectivo(efectivot);
+                datos.setFactura(String.valueOf(finalIdticket));
                 datos.setCif(ciftexto);
-                datos.setBase10(Double.parseDouble(decim.format(impuestos10baseimponiblenumero)));
-                datos.setBase21(Double.parseDouble(decim.format(impuestos21baseimponiblenumero)));
-                datos.setCuota10(Double.parseDouble(decim.format(impuestos10cuotanumero)));
-                datos.setCuota21(Double.parseDouble(decim.format(impuestos21cuotanumero)));
-                datos.setCambio(Double.parseDouble(decim.format(finalCambionumero1)));
+                datos.setBase10((impuestos10baseimponiblenumero));
+                datos.setBase21(impuestos21baseimponiblenumero);
+                datos.setCuota10(impuestos10cuotanumero);
+                datos.setCuota21(impuestos21cuotanumero);
+                datos.setCambio(finalCambionumero1);
                 datos.setDireccionFiscal(direccionfiscaltexto);
                 datos.setFecha(fechatexto);
                 datos.setNombreComercio(nombrecomerciotexto);
                 datos.setNombreFiscal(nombrefiscaltexto);
                 datos.setHora(horatexto);
-                datos.setPrecio(Double.parseDouble(decim.format(totalnumero)));
+                datos.setPrecio(totalnumero);
                 datos.setNumero(String.valueOf(totalnumero));
                 datos.setListArticulos(listanombres);
 
             crearPDF.generarQr();
+                tarea.execute();
                 ArrayList<Double> listadoble1 = new ArrayList<>();
                 ArrayList<Double> listadoble2 = new ArrayList<>();
              if(crearPDF.createPdf(datos.getNombreComercio(),datos.getNombreFiscal(),datos.getNumero(),datos.getDireccionFiscal(),datos.getCif(),datos.getFactura(),datos.getEfectivo(),datos.getCambio(),datos.getTotal(),datos.getBase10(),datos.getCuota10(),datos.getBase21(),datos.getCuota21(),datos.getListArticulos(),datos.getListArticulos(),listadoble1,listadoble2)){
