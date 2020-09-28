@@ -67,13 +67,8 @@ public class MostrarPdf extends AsyncTask<String, String, Boolean> {
     }
 
     public void onPostExecute(Boolean result) {
-         Application application = null;
-         Context context = application.getApplicationContext();
-        if (result) {
-            Toast.makeText(context, "Subido Correctamente", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Error Servidor", Toast.LENGTH_SHORT).show();
-        }
+
+
     }
 
 }

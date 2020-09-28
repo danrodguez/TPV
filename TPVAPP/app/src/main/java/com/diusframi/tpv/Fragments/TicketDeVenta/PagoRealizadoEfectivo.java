@@ -229,7 +229,8 @@ orden = id;
                                 "Todavía por implementar", Toast.LENGTH_SHORT);
 
                 toast1.show();
-
+                ArrayList<String> list = new ArrayList();
+                ArrayList<Double>otra=new ArrayList<>();
                 final DecimalFormat decim = new DecimalFormat("0.00");
                 datos.setTotal(totalnumero);
                 datos.setEfectivo(efectivot);
@@ -248,11 +249,14 @@ orden = id;
                 datos.setPrecio(totalnumero);
                 datos.setNumero(String.valueOf(totalnumero));
                 datos.setListArticulos(listanombres);
-
+                datos.setListunidades(list);
+                datos.setListImportes(otra);
+                datos.setListPrecios(otra);
             crearPDF.generarQr();
                 tarea.execute();
                 ArrayList<Double> listadoble1 = new ArrayList<>();
                 ArrayList<Double> listadoble2 = new ArrayList<>();
+
              if(crearPDF.createPdf(datos.getNombreComercio(),datos.getNombreFiscal(),datos.getNumero(),datos.getDireccionFiscal(),datos.getCif(),datos.getFactura(),datos.getEfectivo(),datos.getCambio(),datos.getTotal(),datos.getBase10(),datos.getCuota10(),datos.getBase21(),datos.getCuota21(),datos.getListArticulos(),datos.getListArticulos(),listadoble1,listadoble2)){
                  Toast.makeText(getApplicationContext(),"Factura creada con exito",Toast.LENGTH_LONG).show();
                 }else{
