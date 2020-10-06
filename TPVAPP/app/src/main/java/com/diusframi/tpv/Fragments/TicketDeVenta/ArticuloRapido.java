@@ -18,7 +18,7 @@ import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.InputDinero;
 import com.diusframi.tpv.R;
-import java.text.DecimalFormat;
+
 import java.util.StringTokenizer;
 
 public class ArticuloRapido extends AppCompatActivity {
@@ -205,7 +205,7 @@ public class ArticuloRapido extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                BaseDatos resg = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getApplicationContext(), null);
                 double preciotexto = Double.parseDouble(precioedit.getText().toString());
                 StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
                 String ivacortado = tokens.nextToken();
@@ -277,9 +277,11 @@ public class ArticuloRapido extends AppCompatActivity {
                     guardar.setBackgroundResource(R.drawable.botonnaranja);
 
 
-                dialog.dismiss();
 
-            }}
+
+            }
+                dialog.dismiss();
+            }
         });
 
 

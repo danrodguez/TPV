@@ -11,7 +11,6 @@
         android:textColor="@color/black"
         android:layout_margin="10dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/entradatexto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Existe un descuadre de efectivo" />
@@ -28,7 +27,6 @@
             android:textSize="15sp"
             android:textColor="@color/black"
             android:padding="5dp"
-            android:id="@+id/encajatexto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="EN CAJA" />
@@ -56,7 +54,6 @@
             android:textSize="15sp"
             android:textColor="@color/black"
             android:padding="5dp"
-            android:id="@+id/calculadotexto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CALCULADO" />
@@ -94,7 +91,6 @@
 
         <TextView
             android:textSize="15sp"
-            android:id="@+id/descuadretexto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -120,7 +116,6 @@
 
         <TextView
             android:textSize="15sp"
-            android:id="@+id/encajatexto4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/desea_continuar"

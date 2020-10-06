@@ -30,7 +30,7 @@ public class ConfiguracionInicial extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion_inicial);
-        final BaseDatos sqLiteHelper = new BaseDatos(this, "BDUsuarios", null, 1);
+        final BaseDatos sqLiteHelper = new BaseDatos(this, null);
 
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
@@ -318,32 +318,28 @@ public class ConfiguracionInicial extends AppCompatActivity {
 
         //Funcion que comprueba que crearcuenta tiene texto y vuelve el boton de enviar de gris a naranja
         final byte[] vacio = new byte[0];
-        crearcuenta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        crearcuenta.setOnClickListener(v -> {
 
-                sqLiteHelper.insertDataUsuarios(
-                        email,
-                        contrasena,
-                        cif,
-                        nombrecomercial.getText().toString(),
-                        nombrefiscal.getText().toString(),
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        domiciliofiscal.getText().toString(),
-                        localidadfiscal.getText().toString(),
-                        codigopostalfiscal.getText().toString(),
-                        provinciafiscal.getText().toString(),
-                        telefonofiscal.getText().toString(),
-                        vacio,
-                        1
-                );
-                Intent intent = new Intent(getApplicationContext(), Venta.class);
-                startActivity(intent);
-            }
+            sqLiteHelper.insertDataUsuarios(
+                    email,
+                    contrasena,
+                    cif,
+                    nombrecomercial.getText().toString(),
+                    nombrefiscal.getText().toString(),
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    domiciliofiscal.getText().toString(),
+                    localidadfiscal.getText().toString(),
+                    codigopostalfiscal.getText().toString(),
+                    provinciafiscal.getText().toString(),
+                    telefonofiscal.getText().toString(),
+                    vacio
+            );
+            Intent intent1 = new Intent(getApplicationContext(), Venta.class);
+            startActivity(intent1);
         });
     }
 }

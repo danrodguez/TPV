@@ -68,7 +68,7 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MultiV
     }
 
     class MultiViewHolder extends RecyclerView.ViewHolder {
-        BaseDatos resg = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(itemView.getContext(), null);
         Integer favoritos;
         TextView Nombre, Precio;
         ImageView Favorito;
@@ -108,14 +108,15 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MultiV
             @SuppressLint("UseCompatLoadingForDrawables") Drawable img = context.getResources().getDrawable(R.drawable.estrellablanca);
             img.setBounds(0, 0, 20, 20);
 
-            BaseDatos resg2 = new BaseDatos(context, "BaseDatos", null, 1);
+            BaseDatos resg2 = new BaseDatos(context, null);
             SQLiteDatabase bd2 = resg2.getReadableDatabase();
             Cursor cursor = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '"+Articuloslista.getCategoria()+"'", null);
 
             while(cursor.moveToNext()){
                 categoria = cursor.getString(0);
             }
-
+            bd2.close();
+            cursor.close();
             final String finalCategoria = categoria;
             Nombre.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -128,7 +129,7 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MultiV
                 @Override
                 public void onClick(View v) {
 
-                    BaseDatos resg2 = new BaseDatos(context, "BaseDatos", null, 1);
+                    BaseDatos resg2 = new BaseDatos(context, null);
                     SQLiteDatabase database = resg2.getWritableDatabase();
                     String sql = " DELETE FROM Articulos WHERE Nombre = ?;";
 

@@ -21,7 +21,6 @@
             app:theme="@style/ToolbarColoredBackArrow">
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -42,9 +41,6 @@
                 android:layout_height="match_parent"
                 tools:ignore="UselessParent">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:layout_margin="5dp"
@@ -629,7 +625,7 @@
                     </LinearLayout>
 
 
-                </RelativeLayout>
+
             </ScrollView>
         </LinearLayout>
     </LinearLayout>

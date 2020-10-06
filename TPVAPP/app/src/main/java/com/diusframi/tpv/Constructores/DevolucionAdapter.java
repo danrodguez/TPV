@@ -61,12 +61,14 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
     }
 
     class MultiViewHolder extends RecyclerView.ViewHolder {
-        BaseDatos resg = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
         CheckBox check;
         TextView Articulostext;
         TextView NumeroText;
         TextView ImporteText;
-
+        int iddevolucion = 0;
+        int idorden = 0;
+        int categoria = 0;
+        String categoriareal = "";
         MultiViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -80,201 +82,148 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
 
         @SuppressLint("SetTextI18n")
         void bind(final Devolucionconstruct devolucionlista) {
-            BaseDatos resg3 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-            SQLiteDatabase bd3 = resg3.getReadableDatabase();
-
-
-            Devolucion.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                                                               @Override
-                                                               public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                                                                if(Devolucion.checkbox.isChecked()){
-                                                                      mListener.checkall();
 
 
 
-                                                               }}
-                                                           });
+            if(devolucionlista.isChequeado()){
+                check.setChecked(true);
+            }else{
+                check.setChecked(false);
+            }
+
+            mListener.cambiarbotonanaranja();
 
 
-if(devolucionlista.isChequeado()){
-    check.setChecked(true);
-    //select del nombre del producto devuelto en vendidos,
-    if (check.isChecked()) {
-        mListener.sumar(devolucionlista.getPrecio());
-        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-        @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-        @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-        @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
+            check.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-        cursorselect.moveToFirst();
-        int categoria = cursorselect.getInt(0);
+                        if (check.isChecked()) {
 
-        @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-        cursorselect2.moveToFirst();
-        String categoriareal = cursorselect2.getString(0);
+                            BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                            SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                            Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '" + devolucionlista.getOrden() + "'", null);
+                            Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "'  AND idorden LIKE '" + devolucionlista.getOrden() + "'", null);
+                            Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
+                            Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
+
+                            if (cursorselect.moveToFirst()) {
+                                categoria = cursorselect.getInt(0);
+                            }
+
+                            cursorselect.close();
 
 
-        int iva = 0;
-        int numero = 0;
+                            Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
+                            if (cursorselect2.moveToFirst()) {
+                                categoriareal = cursorselect2.getString(0);
+                            }
 
-        if(cursorselect3.moveToFirst()){
-            iva = cursorselect3.getInt(0);
-        }
-        if(cursor3.moveToFirst()){
-            numero = cursor3.getInt(0);
+                            cursorselect2.close();
+                            int iva = 0;
+                            int numero = 0;
 
-        }
-        if(!cursor2.moveToFirst()){
-            resg2.crearnuevadevoluciontemporal(devolucionlista.getOrden(),categoriareal,devolucionlista.getArticulo(),1,devolucionlista.getPrecio()*numero,iva);
-        }else{
-            resg2.actualizardevoluciontemporal(numero+1,devolucionlista.getArticulo(),devolucionlista.getOrden());
-        }
+                            if (cursorselect3.moveToFirst()) {
+                                iva = cursorselect3.getInt(0);
+                            }
+                            cursorselect3.close();
+                            if (cursor3.moveToFirst()) {
+                                numero = cursor3.getInt(0);
 
+                            }
+                            cursor3.close();
 
+                            @SuppressLint("Recycle") Cursor cursor5 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id ASC", null);
+                            while (cursor5.moveToNext()) {
+                                iddevolucion = cursor5.getInt(0);
+                            }
+                            cursor5.close();
+                            if (iddevolucion == 0) {
+                                iddevolucion = 1;
+                            } else {
+                                iddevolucion = iddevolucion + 1;
+                            }
 
-        mListener.cambiarbotonanaranja();
-    } else{
+                            @SuppressLint("Recycle") Cursor cursor6 = bd2.rawQuery("SELECT idorden FROM Devueltostemporal ORDER BY idorden DESC ", null);
+                            while (cursor6.moveToNext()) {
+                                idorden = cursor6.getInt(0);
+                                idorden = idorden + 1;
+                            }
+                            cursor6.close();
 
-        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-        @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-        @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-        @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-
-        cursorselect.moveToFirst();
-        int categoria = cursorselect.getInt(0);
-
-        @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-        cursorselect2.moveToFirst();
-        String categoriareal = cursorselect2.getString(0);
-
-
-        int iva = 0;
-        int numero = 0;
-
-        if(cursorselect3.moveToFirst()){
-            iva = cursorselect3.getInt(0);
-        }
-        if(cursor3.moveToFirst()){
-            numero = cursor3.getInt(0);
-
-        }
-        if(!cursor2.moveToFirst()){
-            resg2.crearnuevadevoluciontemporal(devolucionlista.getOrden(),categoriareal,devolucionlista.getArticulo(),1,devolucionlista.getPrecio()*numero,iva);
-        }else{
-            resg2.actualizardevoluciontemporal(numero-1,devolucionlista.getArticulo(),devolucionlista.getOrden());
-        }
+                            if (iddevolucion == 0) {
+                                iddevolucion = 1;
+                            } else {
+                                iddevolucion = iddevolucion + 1;
+                            }
 
 
+                            if (!cursor2.moveToFirst()) {
+                                resg2.crearnuevadevoluciontemporal(devolucionlista.getOrden(), categoriareal, devolucionlista.getArticulo(), 1, devolucionlista.getPrecio() * 1, iva, devolucionlista.getOrdenticket());
+                            } else {
+                                resg2.actualizardevoluciontemporal(numero + 1, devolucionlista.getArticulo(), devolucionlista.getOrden());
+                            }
 
 
+                            cursor2.close();
 
-        mListener.restar(devolucionlista.getPrecio());
+                            mListener.cambiarbotonanaranja();
+
+                            mListener.sumar(devolucionlista.getPrecio());
 
 
-    }
+                        } else if (!check.isChecked()) {
+                            BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                            SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                            @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '" + devolucionlista.getOrden() + "'", null);
+                            @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '" + devolucionlista.getOrden() + "' ", null);
+                            @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
+                            @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
 
-}
+                            if (cursorselect.moveToFirst()) {
+                                categoria = cursorselect.getInt(0);
+                            }
+
+
+                            @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
+                            if (cursorselect2.moveToFirst()) {
+                                categoriareal = cursorselect2.getString(0);
+                            }
+
+                            int iva = 0;
+                            int numero = 0;
+
+                            if (cursorselect3.moveToFirst()) {
+                                iva = cursorselect3.getInt(0);
+                            }
+                            if (cursor3.moveToFirst()) {
+                                numero = cursor3.getInt(0);
+
+                            }
+
+                            @SuppressLint("Recycle") Cursor cursor5 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id ASC", null);
+                            while (cursor5.moveToNext()) {
+                                iddevolucion = cursor5.getInt(0);
+                            }
+
+                            if (iddevolucion == 0) {
+                                iddevolucion = 1;
+                            } else {
+                                iddevolucion = iddevolucion + 1;
+                            }
+
+
+                            resg2.actualizardevoluciontemporal(numero, devolucionlista.getArticulo(), devolucionlista.getOrden());
+
+                            mListener.restar(devolucionlista.getPrecio());
+
+
+                        }
+                    });
+
+
             Articulostext.setText(devolucionlista.getArticulo());
-            DecimalFormat decim = new DecimalFormat("0.00");
             NumeroText.setText("x"+devolucionlista.getUnidad().toString());
             Double importe = devolucionlista.getPrecio();
             ImporteText.setText(importe * devolucionlista.getUnidad() + "€");
-            //select del nombre del producto devuelto en vendidos,
-
-
-            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    //select del nombre del producto devuelto en vendidos,
-                    if (check.isChecked()) {
-                        mListener.sumar(devolucionlista.getPrecio());
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-                        @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-                        @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-                        @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-
-                        cursorselect.moveToFirst();
-                        int categoria = cursorselect.getInt(0);
-
-                        @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-                        cursorselect2.moveToFirst();
-                        String categoriareal = cursorselect2.getString(0);
-
-
-                        int iva = 0;
-                        int numero = 0;
-
-                        if(cursorselect3.moveToFirst()){
-                            iva = cursorselect3.getInt(0);
-                        }
-                        if(cursor3.moveToFirst()){
-                            numero = cursor3.getInt(0);
-
-                        }
-                        if(!cursor2.moveToFirst()){
-                            resg2.crearnuevadevoluciontemporal(devolucionlista.getOrden(),categoriareal,devolucionlista.getArticulo(),1,devolucionlista.getPrecio(),iva);
-                        }else{
-                            resg2.actualizardevoluciontemporal(numero+1,devolucionlista.getArticulo(),devolucionlista.getOrden());
-                        }
-
-
-
-
-                    mListener.cambiarbotonanaranja();
-                    } else{
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-                        @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idorden LIKE '" +devolucionlista.getOrden()+ "' AND  Nombre LIKE '"+devolucionlista.getArticulo()+"'", null);
-                        @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-                        @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-
-                        cursorselect.moveToFirst();
-                        int categoria = cursorselect.getInt(0);
-
-                        @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-                        cursorselect2.moveToFirst();
-                        String categoriareal = cursorselect2.getString(0);
-
-
-                        int iva = 0;
-                        int numero = 0;
-
-                        if(cursorselect3.moveToFirst()){
-                            iva = cursorselect3.getInt(0);
-                        }
-                        if(cursor3.moveToFirst()){
-                            numero = cursor3.getInt(0);
-
-                        }
-                        if(!cursor2.moveToFirst()){
-                            resg2.crearnuevadevoluciontemporal(devolucionlista.getOrden(),categoriareal,devolucionlista.getArticulo(),1,devolucionlista.getPrecio(),iva);
-                        }else{
-                            resg2.actualizardevoluciontemporal(numero-1,devolucionlista.getArticulo(),devolucionlista.getOrden());
-                        }
-
-
-
-
-                        mListener.restar(devolucionlista.getPrecio());
-
-
-                    }
-
-
-                }
-            });
-
-
         }
     }
 

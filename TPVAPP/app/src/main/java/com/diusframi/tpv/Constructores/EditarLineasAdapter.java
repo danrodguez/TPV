@@ -7,22 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Fragments.Venta.Botonventa;
 import com.diusframi.tpv.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class EditarLineasAdapter extends RecyclerView.Adapter<EditarLineasAdapter.MultiViewHolder> {
 
@@ -39,18 +33,12 @@ public class EditarLineasAdapter extends RecyclerView.Adapter<EditarLineasAdapte
     }
 
 
-    public void setEditarLista(ArrayList<EditarLinea> editarLista) {
-        this.EditarLista = new ArrayList<>();
-        this.EditarLista = editarLista;
-
-    }
-
     @NonNull
     @Override
     public EditarLineasAdapter.MultiViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.editarlineasconfiguracion, viewGroup, false);
 
-        return new EditarLineasAdapter.MultiViewHolder(view);
+        return new MultiViewHolder(view);
     }
 
     @Override
@@ -65,7 +53,7 @@ public class EditarLineasAdapter extends RecyclerView.Adapter<EditarLineasAdapte
     }
 
 
-    class MultiViewHolder extends RecyclerView.ViewHolder {
+    static class MultiViewHolder extends RecyclerView.ViewHolder {
         Integer numeroarticulos = 0;
         TextView Nombre, Numero;
         ImageButton Menos,Mas;
@@ -85,106 +73,98 @@ public class EditarLineasAdapter extends RecyclerView.Adapter<EditarLineasAdapte
             Numero.setText("x"+EditarLista.getNumero().toString());
             numeroarticulos = EditarLista.getNumero();
 
-            Menos.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            Menos.setOnClickListener(v -> {
 
-                    if (numeroarticulos > 0) {
-                        numeroarticulos--;
-                        Menos.setVisibility(View.VISIBLE);
-                        Numero.setText("x" + numeroarticulos);
-                        Numero.setVisibility(View.VISIBLE);
+                if (numeroarticulos > 0) {
+                    numeroarticulos--;
+                    Menos.setVisibility(View.VISIBLE);
+                    Numero.setText("x" + numeroarticulos);
+                    Numero.setVisibility(View.VISIBLE);
 
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                        cursor2.moveToFirst();
-                        int numeroarticulos = Integer.parseInt(cursor2.getString(0));
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                    cursor2.moveToFirst();
+                    int numeroarticulos = Integer.parseInt(cursor2.getString(0));
 
-                        resg2.actualizarnumeroarticulos(
-                                Nombre.getText().toString(),
-                                numeroarticulos - 1
-                        );
+                    resg2.actualizarnumeroarticulos(
+                            Nombre.getText().toString(),
+                            numeroarticulos - 1
+                    );
 
-                    }else if (numeroarticulos == 0) {
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        resg2.quitararticulo();
-                        Menos.setVisibility(View.GONE);
-
-                    }
-
-
-            }
-                    });
-
-            Mas.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String categoriareal = "";
-                    String numerotokenizado = "";
-
-if(numeroarticulos == 0){
-    numeroarticulos = 1;
-    String preciotokenizado = "";
-    String IVA = "";
-    BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-    SQLiteDatabase bd2 = resg2.getReadableDatabase();
-
-    @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-
-    if (!cursor.moveToFirst()) {
-        BaseDatos resg3 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-        SQLiteDatabase bd3 = resg2.getReadableDatabase();
-        @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-        cursorselect.moveToFirst();
-        int categoria = cursorselect.getInt(0);
-        @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-
-        @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT Precio,IVA FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-        cursorselect2.moveToFirst();
-        while (cursorselect3.moveToNext()) {
-            preciotokenizado = String.valueOf(cursorselect3.getDouble(0));
-            IVA = String.valueOf(cursorselect3.getInt(1));
-        }
-        categoriareal = cursorselect2.getString(0);
-        numerotokenizado = EditarLista.getNumero().toString();
-
-
-
-    }
-    resg2.quitararticulo();
-    resg2.articulonuevolistacompra(
-            categoriareal,
-            EditarLista.getNombre(),
-            Integer.parseInt(numerotokenizado),
-            Double.parseDouble(preciotokenizado),
-            Integer.parseInt(IVA)
-
-    );
-}else{
-    numeroarticulos++;
-}
-
-                        Menos.setVisibility(View.VISIBLE);
-                        Numero.setText("x" + numeroarticulos);
-                        Numero.setVisibility(View.VISIBLE);
-
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                        cursor2.moveToFirst();
-
-
-                        resg2.actualizarnumeroarticulos(
-                                Nombre.getText().toString(),
-                                numeroarticulos
-
-
-                        );
-
-
+                }else if (numeroarticulos == 0) {
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    resg2.quitararticulo();
+                    Menos.setVisibility(View.GONE);
 
                 }
+
+
+        });
+
+            Mas.setOnClickListener(v -> {
+                String categoriareal = "";
+                String numerotokenizado = "";
+
+if(numeroarticulos == 0){
+numeroarticulos = 1;
+String preciotokenizado = "";
+String IVA = "";
+BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+SQLiteDatabase bd2 = resg2.getReadableDatabase();
+
+@SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+
+if (!cursor.moveToFirst()) {
+    @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+    cursorselect.moveToFirst();
+    int categoria = cursorselect.getInt(0);
+    @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
+
+    @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT Precio,IVA FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+    cursorselect2.moveToFirst();
+    while (cursorselect3.moveToNext()) {
+        preciotokenizado = String.valueOf(cursorselect3.getDouble(0));
+        IVA = String.valueOf(cursorselect3.getInt(1));
+    }
+    categoriareal = cursorselect2.getString(0);
+    numerotokenizado = EditarLista.getNumero().toString();
+
+
+
+}
+resg2.quitararticulo();
+resg2.articulonuevolistacompra(
+        categoriareal,
+        EditarLista.getNombre(),
+        Integer.parseInt(numerotokenizado),
+        Double.parseDouble(preciotokenizado),
+        Integer.parseInt(IVA)
+
+);
+}else{
+numeroarticulos++;
+}
+
+                    Menos.setVisibility(View.VISIBLE);
+                    Numero.setText("x" + numeroarticulos);
+                    Numero.setVisibility(View.VISIBLE);
+
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                    cursor2.moveToFirst();
+
+
+                    resg2.actualizarnumeroarticulos(
+                            Nombre.getText().toString(),
+                            numeroarticulos
+
+
+                    );
+
+
+
             });
 
 

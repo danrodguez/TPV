@@ -1,6 +1,7 @@
 package com.diusframi.tpv.Fragments.MisArticulos;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,6 +49,7 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
     private ArrayList<Articulo> listarticulos = new ArrayList<>();
     LinearLayout linearLayout;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.activity_misarticulos_fragment, container, false);
@@ -77,15 +79,15 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
         drawerLayout.setDrawerElevation(0);
 
 
-        BaseDatos resg = new BaseDatos(view.getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(view.getContext(), null);
         SQLiteDatabase bd = resg.getReadableDatabase();
         Cursor cursortipos = bd.rawQuery("SELECT DISTINCT Categoria FROM Categoriastabla", null);
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Display display = requireActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 
 
-        Drawable img = getContext().getResources().getDrawable(R.drawable.estrellablanca);
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable img = requireContext().getResources().getDrawable(R.drawable.estrellablanca);
         img.setBounds(0, 0, size.x / 23, size.x / 23);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size.x / 3, size.x / 8);
         layoutParams.setMargins(0, size.x / 50, size.x / 25, size.x / 25);
@@ -100,7 +102,7 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
         btFavorito.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         btFavorito.setLayoutParams(layoutParams);
         btFavorito.setPaddingRelative(size.x / 55, 0, 0, 0);
-        btFavorito.setTextColor(ContextCompat.getColor(getActivity(), R.color.primary_text));
+        btFavorito.setTextColor(ContextCompat.getColor(requireActivity(), R.color.primary_text));
         btFavorito.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size));
         btFavorito.setAllCaps(false);
         btFavorito.setButtonDrawable(android.R.color.transparent);
@@ -115,7 +117,7 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
             btCategory.setAllCaps(false);
             btCategory.setBackgroundResource(R.drawable.a);
             btCategory.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            btCategory.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text));
+            btCategory.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_text));
             LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(size.x / 3, size.x / 8);
             layoutParams2.setMargins(0, size.x / 50, size.x / 25, size.x / 25);
             btCategory.setLayoutParams(layoutParams2);
@@ -124,46 +126,43 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
             Botoneslinear.addView(btCategory);
 
 //Al darle click a boton de categoria te muestra todos los articulos de esa categoria
-            btCategory.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<Articulo> lista = new ArrayList<>();
-                    BaseDatos resg2 = new BaseDatos(view.getContext(), "BaseDatos", null, 1);
-                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                    Cursor cursor = bd2.rawQuery("SELECT Nombre,Favorito,Precio,IVA,Base FROM Articulos INNER JOIN Categoriastabla on Categoriastabla.id = Articulos.Categorias WHERE Categoriastabla.Categoria  LIKE '" + btCategory.getText().toString() + "' ORDER BY Nombre ASC", null);
-                    double precio;
-                    String nombre;
-                    int favorito;
-                    int iva;
-                    double precioiva;
+            btCategory.setOnClickListener(v -> {
+                ArrayList<Articulo> lista = new ArrayList<>();
+                BaseDatos resg2 = new BaseDatos(view.getContext(), null);
+                SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                Cursor cursor = bd2.rawQuery("SELECT Nombre,Favorito,Precio,IVA,Base FROM Articulos INNER JOIN Categoriastabla on Categoriastabla.id = Articulos.Categorias WHERE Categoriastabla.Categoria  LIKE '" + btCategory.getText().toString() + "' ORDER BY Nombre ASC", null);
+                double precio;
+                String nombre;
+                int favorito;
+                int iva;
+                double precioiva;
 
-                    while (cursor.moveToNext()) {
-                        nombre = cursor.getString(0);
-                        favorito = cursor.getInt(1);
-                        precio = cursor.getDouble(2);
-                        iva = cursor.getInt(3);
-                        precioiva = cursor.getDouble(4);
+                while (cursor.moveToNext()) {
+                    nombre = cursor.getString(0);
+                    favorito = cursor.getInt(1);
+                    precio = cursor.getDouble(2);
+                    iva = cursor.getInt(3);
+                    precioiva = cursor.getDouble(4);
 
-                        lista.add(new Articulo(btCategory.getText().toString(), nombre, favorito, precio, iva, precioiva));
-                        adapter.setArticulosLista(lista);
+                    lista.add(new Articulo(btCategory.getText().toString(), nombre, favorito, precio, iva, precioiva));
+                    adapter.setArticulosLista(lista);
 
-                    }
-                    ArticuloAdaptercategoria adapter = new ArticuloAdaptercategoria(MisarticulosFragment.this, MisarticulosFragment.this, view.getContext(), lista);
-                    recyclerView.setAdapter(adapter);
+                }
+                ArticuloAdaptercategoria adapter = new ArticuloAdaptercategoria(MisarticulosFragment.this, MisarticulosFragment.this, view.getContext(), lista);
+                recyclerView.setAdapter(adapter);
 
-                    if (btCategory.isChecked()) {
-                        recyclerView.setVisibility(View.VISIBLE);
-
-
-                    }
+                if (btCategory.isChecked()) {
+                    recyclerView.setVisibility(View.VISIBLE);
 
 
                 }
+
+cursor.close();
             });
 
             btFavorito.setChecked(true);
             ArrayList<Articulo> lista = new ArrayList<>();
-            BaseDatos resg3 = new BaseDatos(view.getContext(), "BaseDatos", null, 1);
+            BaseDatos resg3 = new BaseDatos(view.getContext(), null);
             SQLiteDatabase bd3 = resg3.getReadableDatabase();
             Cursor cursor2 = bd3.rawQuery("SELECT Categorias,Nombre,Favorito,Precio,IVA,Base FROM Articulos WHERE Favorito LIKE '1' ORDER BY Nombre ASC", null);
             String categoria;
@@ -193,73 +192,64 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
 
 
             }
+cursor2.close();
 
+            btFavorito.setOnClickListener(v -> {
+                ArrayList<Articulo> lista1 = new ArrayList<>();
+                BaseDatos resg2 = new BaseDatos(getContext(), null);
+                SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                Cursor cursor = bd2.rawQuery("SELECT Categorias,Nombre,Favorito,Precio,IVA,Base FROM Articulos WHERE Favorito LIKE '1' ORDER BY Nombre ASC", null);
+                String tipo;
+                double precio1;
+                String nombre1;
+                int favorito1;
+                int iva1;
+                double precioiva1;
 
-            btFavorito.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<Articulo> lista = new ArrayList<>();
-                    BaseDatos resg2 = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                    Cursor cursor = bd2.rawQuery("SELECT Categorias,Nombre,Favorito,Precio,IVA,Base FROM Articulos WHERE Favorito LIKE '1' ORDER BY Nombre ASC", null);
-                    String tipo;
-                    double precio;
-                    String nombre;
-                    int favorito;
-                    int iva;
-                    double precioiva;
+                while (cursor.moveToNext()) {
+                    tipo = cursor.getString(0);
+                    nombre1 = cursor.getString(1);
+                    favorito1 = cursor.getInt(2);
+                    precio1 = cursor.getDouble(3);
+                    iva1 = cursor.getInt(4);
+                    precioiva1 = cursor.getDouble(5);
 
-                    while (cursor.moveToNext()) {
-                        tipo = cursor.getString(0);
-                        nombre = cursor.getString(1);
-                        favorito = cursor.getInt(2);
-                        precio = cursor.getDouble(3);
-                        iva = cursor.getInt(4);
-                        precioiva = cursor.getDouble(5);
+                    lista1.add(new Articulo(tipo, nombre1, favorito1, precio1, iva1, precioiva1));
+                    adapter.setArticulosLista(lista1);
+                }
+cursor.close();
+                ArticuloAdapter adapter = new ArticuloAdapter(MisarticulosFragment.this, MisarticulosFragment.this, getContext(), lista1);
+                recyclerView.setAdapter(adapter);
 
-                        lista.add(new Articulo(tipo, nombre, favorito, precio, iva, precioiva));
-                        adapter.setArticulosLista(lista);
-                    }
+                if (btFavorito.isChecked()) {
 
-                    ArticuloAdapter adapter = new ArticuloAdapter(MisarticulosFragment.this, MisarticulosFragment.this, getContext(), lista);
-                    recyclerView.setAdapter(adapter);
-
-                    if (btFavorito.isChecked()) {
-
-                        recyclerView.setVisibility(View.VISIBLE);
-
-
-                    }
+                    recyclerView.setVisibility(View.VISIBLE);
 
 
                 }
+
+
             });
         }
+cursortipos.close();
 
-
-        salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(view.getContext(), Venta.class);
-                startActivity(i);
-            }
+        salir.setOnClickListener(v -> {
+            Intent i = new Intent(view.getContext(), Venta.class);
+            startActivity(i);
         });
 
 
-        nuevoarticulo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment = new EditarArticuloFragment();
-                linearLayout.setVisibility(View.GONE);
+        nuevoarticulo.setOnClickListener(v -> {
+            fragment = new EditarArticuloFragment();
+            linearLayout.setVisibility(View.GONE);
 
-                if (fragment != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("nombreproducto", "");
-                    fragment.setArguments(bundle);
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_fragment, fragment);
-                    ft.commit();
-                }
+            if (fragment != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("nombreproducto", "");
+                fragment.setArguments(bundle);
+                FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_fragment, fragment);
+                ft.commit();
             }
         });
 
@@ -283,7 +273,7 @@ public class MisarticulosFragment extends Fragment implements Editararticulo {
             bundle.putString("precioproducto", precioproducto);
             Fragment fragment = new EditarArticuloFragment();
             fragment.setArguments(bundle);
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_fragment, fragment);
             ft.commit();
             linearLayout.setVisibility(View.GONE);

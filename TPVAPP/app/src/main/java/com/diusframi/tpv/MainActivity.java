@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,10 +42,13 @@ public class MainActivity extends AppCompatActivity {
         Contrasena = findViewById(R.id.contrasenaEdit);
         acceder = findViewById(R.id.Acceder);
         recuperarcontrasena = findViewById(R.id.recuperarcontrasenaboton);
-        BaseDatos resg = new BaseDatos(this, "BaseDatos", null, 1);
-        BaseDatos resg2 = new BaseDatos(this, "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(this, null);
+        BaseDatos resg2 = new BaseDatos(this, null);
         final SQLiteDatabase bd = resg.getReadableDatabase();
         final SQLiteDatabase bdw = resg2.getWritableDatabase();
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+
 
         listaRegistros2 = bd.rawQuery("SELECT * FROM Login WHERE log = '0'", null);
         if (!listaRegistros2.moveToFirst()) {
@@ -123,48 +125,40 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        acceder.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        acceder.setOnClickListener(v -> {
 
-                usuarios = Email.getText().toString();
-                contrasenas = Contrasena.getText().toString();
-                listaRegistros = bd.rawQuery("SELECT * FROM Usuarios WHERE email = '" + usuarios + "' AND contrasena = '" + contrasenas + "'", null);
+            usuarios = Email.getText().toString();
+            contrasenas = Contrasena.getText().toString();
+            listaRegistros = bd.rawQuery("SELECT * FROM Usuarios WHERE email = '" + usuarios + "' AND contrasena = '" + contrasenas + "'", null);
 
 //Busca si el usuario esta en la base de datos y chequea si es un mail (el usuario admin dara un bug visual pero funciona)
-                checkData();
-                if (listaRegistros.moveToFirst() & listaRegistros2.moveToFirst()) {
-                    String sentenciaSQL = "UPDATE Login SET log =1;";
-                    bdw.execSQL(sentenciaSQL);
-                    String sentenciaSQL2 = "UPDATE Usuarios SET activo = 1 WHERE email = '" + usuarios + "';";
-                    bdw.execSQL(sentenciaSQL2);
-                    Intent i = new Intent(getApplicationContext(), Venta.class);
-                    startActivity(i);
-
-                }
-
-            }
-        });
-
-
-        recuperarcontrasena.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent i = new Intent(getApplicationContext(), RecuperarContrasena.class);
+            checkData();
+            if (listaRegistros.moveToFirst() & listaRegistros2.moveToFirst()) {
+                String sentenciaSQL = "UPDATE Login SET log =1;";
+                bdw.execSQL(sentenciaSQL);
+                String sentenciaSQL2 = "UPDATE Usuarios SET activo = 1 WHERE email = '" + usuarios + "';";
+                bdw.execSQL(sentenciaSQL2);
+                Intent i = new Intent(getApplicationContext(), Venta.class);
                 startActivity(i);
 
             }
+bd.close();
+            listaRegistros.close();
+            listaRegistros2.close();
+        });
 
+
+        recuperarcontrasena.setOnClickListener(v -> {
+
+            Intent i = new Intent(getApplicationContext(), RecuperarContrasena.class);
+            startActivity(i);
 
         });
 
 
-        crearcuenta.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), CrearCuenta.class);
-                startActivity(i);
-            }
+        crearcuenta.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), CrearCuenta.class);
+            startActivity(i);
         });
 
 

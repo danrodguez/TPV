@@ -5,9 +5,7 @@
     <string name="articulo">Artículo</string>
     <string name="crearnueva"><u>Crear nueva</u></string>
     <string name="categoria">Categoría</string>
-    <string name="editararticulo">Editar artículo</string>
     <string name="app_name">cashierPOS</string>
-    <string name="action_settings">Settings</string>
     <string name="acceder">Acceder</string>
     <string name="IniciarSesion">Iniciar sesión</string>
     <string name="Email">Email</string>
@@ -15,11 +13,8 @@
     <string name="hintemail">Email</string>
     <string name="Nuevoarticulo">Nuevo artículo</string>
     <string name="hintcontrasena">************</string>
-    <string name="hintsn">SN comercio</string>
     <string name="hintcif">A12345678</string>
-    <string name="hintemail2">nombre@mail.com</string>
     <string name="guardar">Guardar</string>
-    <string name="requisitos">Ver requisitos imagen</string>
     <string name="Insertelogo">Inserte el logo de su marca/comercio que desee mostrar en el Ticket.</string>
     <string name="app">Tu app de gestión de venta y cobro para el TPV que sincroniza tus operaciones con el Sistema Ticket BAI.</string>
     <string name="Bienvenido">Bienvenido a</string>
@@ -42,12 +37,7 @@
     <string name="crearcontrasena">Crear Contraseña</string>
     <string name="crearcuenta">Crear cuenta gratuita</string>
     <string name="gratis">¿Aún no estás registrado? Es gratis</string>
-    <string name="anade">Añade artículos al ticket</string>
-    <string name="Favoritos">Favoritos</string>
     <string name="Cafes">Cafés</string>
-    <string name="Menus">Menús</string>
-    <string name="Bebidas">Bebidas</string>
-    <string name="Postres">Postres</string>
     <string name="Borrartodo">Borrar todo</string>
     <string name="verticket">Ver ticket</string>
     <string name="configuracioninicial">Configuración inicial</string>
@@ -71,25 +61,20 @@
     <string name="menu_TotalizarCierraCaja">Totalizar/Cierre caja</string>
     <string name="menu_cerrarsesion">Cerrar sesión</string>
     <string name="telefonohint">Teléfono de contacto</string>
-    <string name="Cierre">Cierre de caja</string>
     <string name="Proceda">Proceda al recuento de efectivo que dispone en caja, e introduzca su importe:</string>
     <string name="euro">€</string>
     <string name="continuar">Continuar</string>
-    <string name="ingresarretirar">Ingresar/Retirar efectivo de caja</string>
     <string name="ingresar">Ingresar</string>
     <string name="retirar">Retirar</string>
     <string name="importe">Importe(€)</string>
     <string name="motivos">Motivos</string>
     <string name="aceptar">Aceptar</string>
-    <string name="ventasytickets">Ventas y Tickets</string>
     <string name="salir">Salir</string>
     <string name="numero">Número</string>
     <string name="fecha">Fecha</string>
     <string name="total">TOTAL</string>
-    <string name="arqueos">Arqueos</string>
     <string name="quitarfiltros">Quitar filtros</string>
     <string name="numer">Nº</string>
-    <string name="cerrar">x</string>
     <string name="impresora">impresora</string>
     <string name="correo">correo</string>
     <string name="devolver">devolver</string>
@@ -123,15 +108,12 @@
     <string name="calculado_efectivo">CALCULADO EFECTIVO</string>
     <string name="art_culo_r_pido">Artículo Rápido</string>
     <string name="nombre_art_culo">Nombre artículo</string>
-    <string name="nombre_categor_a">Nombre categoría</string>
-    <string name="categor_a">Categoría</string>
     <string name="iva_10">IVA 10%</string>
     <string name="a_adir_a_ticket">Añadir a ticket</string>
     <string name="pvp">PVP (€)</string>
     <string name="mis_art_culos">Mis artículos</string>
     <string name="nuevacategoria">Nueva categoría</string>
     <string name="crear">Crear</string>
-    <string name="confirmacorreo">Confirma correo</string>
     <string name="fianza">Indique el importe de efectivo que vaya a dejar en caja (fianza)</string>
     <string name="devoluci_n">Devolución:</string>
     <string name="d20000000001">D20000000001</string>
@@ -165,7 +147,6 @@
     <string name="_10">10%</string>
     <string name="_50_00">50.00€</string>
     <string name="gracias_por_su_visita">GRACIAS POR SU VISITA</string>
-    <string name="volver">Volver</string>
     <string name="nombre_del_comercio">NOMBRE DEL COMERCIO</string>
     <string name="nombre_fiscal">Nombre fiscal</string>
     <string name="cif_nif">CIF/NIF</string>
@@ -183,7 +164,6 @@
     <string name="retirada_de_efectivo_realizada">Retirada de efectivo realizada</string>
     <string name="en_caja">EN CAJA</string>
     <string name="motivo">Motivo:</string>
-    <string name="configurar">configurar</string>
     <string name="configuracion">configuracion</string>
     <string name="cobrar">Cobrar</string>
     <string name="ticket_de_venta">TICKET DE VENTA</string>
@@ -218,6 +198,12 @@
     <string name="escriba_el_correo_donde_enviar_el_ticket">Escriba el correo donde enviar el Ticket</string>
     <string name="Correo">Correo</string>
     <string name="x1">x1</string>
+    <string name="menu_miscategorias">Mis categorías</string>
+    <string name="mis_categorias">Mis categorias</string>
+    <string name="d">D</string>
+    <string name="_0_000">0.00€</string>
+    <string name="todo">TODO</string>
+    <string name="volver">Volver</string>
 
 
 </resources>

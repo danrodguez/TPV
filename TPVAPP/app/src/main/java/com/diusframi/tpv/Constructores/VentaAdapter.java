@@ -91,114 +91,67 @@ public class VentaAdapter extends RecyclerView.Adapter<VentaAdapter.MultiViewHol
 
             precionumero = Articuloslista.getPrecio();
 
-            linear.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.cambiarcolorbotonanaranjaborrar();
-                    numeroarticulos = numeroarticulos + 1;
-                    if (Articuloslista.getPrecio().toString().equals("0.0")) {
-                        mListener.intentpreciovariable(Nombre.getText().toString());
+            linear.setOnClickListener(v -> {
+                mListener.cambiarcolorbotonanaranjaborrar();
+                numeroarticulos = numeroarticulos + 1;
 
-                    } else {
-                        if (numeroarticulos > 0) {
-                            mListener.cambiarcolorbotonanaranjaborrar();
-                            Menos.setVisibility(View.VISIBLE);
-                            Numero.setText("X " + numeroarticulos);
-                            Numero.setVisibility(View.VISIBLE);
-                            BaseDatos resg = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                            SQLiteDatabase bd = resg.getReadableDatabase();
+                if (Articuloslista.getPrecio().toString().equals("0.0")) {
+                    mListener.intentpreciovariable(Nombre.getText().toString());
 
-
-                            @SuppressLint("Recycle") Cursor cursor = bd.rawQuery("SELECT * FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-
-                            if (!cursor.moveToFirst()) {
-                                BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                                SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                                @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                                cursorselect.moveToFirst();
-                                int categoria = cursorselect.getInt(0);
-                                @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-                                cursorselect2.moveToFirst();
-                                String categoriareal = cursorselect2.getString(0);
-                                String numerotokenizado = Numero.getText().toString();
-                                StringTokenizer st = new StringTokenizer(numerotokenizado, " ");
-                                st.nextToken();
-                                String numeroreal2 = st.nextToken();
-                                String preciotokenizado = Articuloslista.getPrecio().toString();
-                                StringTokenizer stp = new StringTokenizer(preciotokenizado, " ");
-                                String precioreal = stp.nextToken();
-                                Double precior = Double.valueOf(precioreal);
-                                resg.quitararticulo();
-                              int numeroint =  Integer.parseInt(numeroreal2);
-                                resg.articulonuevolistacompra(
-                                        categoriareal,
-                                        Nombre.getText().toString(),
-                                        Integer.parseInt(numeroreal2),
-                                        precior*numeroint,
-                                        Integer.parseInt(Iva.getText().toString())
-
-                                );
-                            } else {
-
-                                @SuppressLint("Recycle") Cursor cursor2 = bd.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                                cursor2.moveToFirst();
-                                int numeroarticulos = cursor2.getInt(0);
-
-                                resg.actualizarnumeroarticulos(
-                                        Nombre.getText().toString(),
-                                        numeroarticulos + 1
-
-
-                                );
-                            }
-                        } else {
-                            BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                            SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                            @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
-
-                            if (cursor3.moveToFirst()) {
-                                mListener.cambiarcolorbotonanaranjaborrar();
-                            } else {
-                                mListener.cambiarcolorbotongrisborrar();
-                            }
-
-                            Menos.setVisibility(View.GONE);
-                            Numero.setVisibility(View.GONE);
-                        }
-
-                    }
-                }
-            });
-
-
-            Menos.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
+                } else {
                     if (numeroarticulos > 0) {
                         mListener.cambiarcolorbotonanaranjaborrar();
-                        numeroarticulos--;
                         Menos.setVisibility(View.VISIBLE);
                         Numero.setText("X " + numeroarticulos);
                         Numero.setVisibility(View.VISIBLE);
-
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                        cursor2.moveToFirst();
-                        int numeroarticulos = Integer.parseInt(cursor2.getString(0));
-
-                        resg2.actualizarnumeroarticulos(
-                                Nombre.getText().toString(),
-                                numeroarticulos - 1
+                        BaseDatos resg = new BaseDatos(itemView.getContext(), null);
+                        SQLiteDatabase bd = resg.getReadableDatabase();
 
 
-                        );
+                        @SuppressLint("Recycle") Cursor cursor = bd.rawQuery("SELECT * FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
 
-                    }
+                        if (!cursor.moveToFirst()) {
+                            BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                            SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                            @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                            cursorselect.moveToFirst();
+                            int categoria = cursorselect.getInt(0);
+                            @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
+                            cursorselect2.moveToFirst();
+                            String categoriareal = cursorselect2.getString(0);
+                            String numerotokenizado = Numero.getText().toString();
+                            StringTokenizer st = new StringTokenizer(numerotokenizado, " ");
+                            st.nextToken();
+                            String numeroreal2 = st.nextToken();
+                            String preciotokenizado = Articuloslista.getPrecio().toString();
+                            StringTokenizer stp = new StringTokenizer(preciotokenizado, " ");
+                            String precioreal = stp.nextToken();
+                            double precior = Double.parseDouble(precioreal);
+                            resg.quitararticulo();
+                          int numeroint =  Integer.parseInt(numeroreal2);
+                            resg.articulonuevolistacompra(
+                                    categoriareal,
+                                    Nombre.getText().toString(),
+                                    Integer.parseInt(numeroreal2),
+                                    precior*numeroint,
+                                    Integer.parseInt(Iva.getText().toString())
 
-                    if (numeroarticulos == 0) {
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
+                            );
+                        } else {
+
+                            @SuppressLint("Recycle") Cursor cursor2 = bd.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                            cursor2.moveToFirst();
+                            int numeroarticulos = cursor2.getInt(0);
+
+                            resg.actualizarnumeroarticulos(
+                                    Nombre.getText().toString(),
+                                    numeroarticulos + 1
+
+
+                            );
+                        }
+                    } else {
+                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
                         SQLiteDatabase bd2 = resg2.getReadableDatabase();
                         @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
 
@@ -207,11 +160,53 @@ public class VentaAdapter extends RecyclerView.Adapter<VentaAdapter.MultiViewHol
                         } else {
                             mListener.cambiarcolorbotongrisborrar();
                         }
+
                         Menos.setVisibility(View.GONE);
                         Numero.setVisibility(View.GONE);
                     }
 
                 }
+            });
+
+
+            Menos.setOnClickListener(v -> {
+
+                if (numeroarticulos > 0) {
+                    mListener.cambiarcolorbotonanaranjaborrar();
+                    numeroarticulos--;
+                    Menos.setVisibility(View.VISIBLE);
+                    Numero.setText("X " + numeroarticulos);
+                    Numero.setVisibility(View.VISIBLE);
+
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                    cursor2.moveToFirst();
+                    int numeroarticulos = Integer.parseInt(cursor2.getString(0));
+
+                    resg2.actualizarnumeroarticulos(
+                            Nombre.getText().toString(),
+                            numeroarticulos - 1
+
+
+                    );
+
+                }
+
+                if (numeroarticulos == 0) {
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
+
+                    if (cursor3.moveToFirst()) {
+                        mListener.cambiarcolorbotonanaranjaborrar();
+                    } else {
+                        mListener.cambiarcolorbotongrisborrar();
+                    }
+                    Menos.setVisibility(View.GONE);
+                    Numero.setVisibility(View.GONE);
+                }
+
             });
 
 

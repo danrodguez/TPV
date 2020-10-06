@@ -52,7 +52,7 @@ public class TicketDeVentaFragment extends Fragment {
         LinearLayout = view.findViewById(R.id.linearLayout);
         ArrayList<ArticuloVenta> lista = new ArrayList<>();
         totalnumero = 0;
-        BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(getContext(), null);
 
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -87,6 +87,9 @@ public class TicketDeVentaFragment extends Fragment {
         if (cursorordentexto.moveToNext()) {
             numeroid = cursorordentexto.getInt(0);
         }
+
+        cursorordentexto.close();
+
 
         final Cursor cursororden = bd.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
 
@@ -127,41 +130,20 @@ public class TicketDeVentaFragment extends Fragment {
 
 
 
-        configuracion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialogconfiguracion();
-            }
-
-        });
+        configuracion.setOnClickListener(view1 -> openDialogconfiguracion());
 
 
-        imprimirboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Todavia por implementar",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        imprimirboton.setOnClickListener(v -> Toast.makeText(getActivity(), "Todavia por implementar",
+                Toast.LENGTH_LONG).show());
 
 
-        cobrarboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                openDialogcobrar();
-
-            }
-        });
+        cobrarboton.setOnClickListener(view12 -> openDialogcobrar());
 
 
-        editarboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        editarboton.setOnClickListener(v -> {
 
-                Intent i = new Intent(getContext(), Venta.class);
-                startActivity(i);
-            }
+            Intent i = new Intent(getContext(), Venta.class);
+            startActivity(i);
         });
 
         return view;
@@ -196,74 +178,72 @@ public class TicketDeVentaFragment extends Fragment {
 
         display.getSize(size);
 
-        tarjeta.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                          ArrayList<ArticuloVenta> lista2 = new ArrayList<>();
+        tarjeta.setOnClickListener(v -> {
+                      ArrayList<ArticuloVenta> lista2 = new ArrayList<>();
 totalnumero = 0;
 orden = 0;
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+            BaseDatos resg = new BaseDatos(getContext(), null);
 
 
-                SQLiteDatabase bd = resg.getReadableDatabase();
-                final Cursor cursor = bd.rawQuery("SELECT Categorias, Nombre, Numero, Precio, Iva FROM ArticulosVenta WHERE Numero > '0'", null);
-                String categorias;
-                String nombre;
-                int numero;
-                double precio;
-                int iva;
-                     int numeroid = 0;
+            SQLiteDatabase bd = resg.getReadableDatabase();
+            final Cursor cursor = bd.rawQuery("SELECT Categorias, Nombre, Numero, Precio, Iva FROM ArticulosVenta WHERE Numero > '0'", null);
+            String categorias;
+            String nombre;
+            int numero;
+            double precio;
+            int iva;
+                 int numeroid = 0;
 
-                final Cursor cursorordentexto = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion ", null);
+            final Cursor cursorordentexto = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion ", null);
 
-                if (cursorordentexto.moveToNext()) {
-                    numeroid = cursorordentexto.getInt(0);
-                }
-
-                final Cursor cursororden = bd.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
-
-                if (cursororden.moveToNext()) {
-                    orden = cursororden.getInt(0);
-                }
-
-
-
-
-                if(orden == 0){
-                    orden = 1;
-                }else{
-                    orden = orden + 1;
-
-                }
-
-                if(numeroid!=0){
-                    orden = numeroid;
-                }
-                while (cursor.moveToNext()) {
-                    categorias = cursor.getString(0);
-                    nombre = cursor.getString(1);
-                    numero = cursor.getInt(2);
-                    precio = cursor.getDouble(3);
-                    iva = cursor.getInt(4);
-                    totalnumero = totalnumero + (precio*numero);
-                    lista2.add(new ArticuloVenta(categorias, nombre, numero, precio, iva));
-
-                    resg.crearnuevaorden(orden, categorias, nombre, numero, precio, iva);
-
-
-                }
-                cursor.close();
-                bd.close();
-                cursororden.close();
-
-
-
-
-
-                Intent i = new Intent(getContext(), VentaCobroTarjeta.class);
-                i.putExtra("totalnumero", totalnumero);
-                startActivity(i);
-                dialog.dismiss();
+            if (cursorordentexto.moveToNext()) {
+                numeroid = cursorordentexto.getInt(0);
             }
+cursorordentexto.close();
+            final Cursor cursororden = bd.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
+
+            if (cursororden.moveToNext()) {
+                orden = cursororden.getInt(0);
+            }
+
+
+
+
+            if(orden == 0){
+                orden = 1;
+            }else{
+                orden = orden + 1;
+
+            }
+
+            if(numeroid!=0){
+                orden = numeroid;
+            }
+            while (cursor.moveToNext()) {
+                categorias = cursor.getString(0);
+                nombre = cursor.getString(1);
+                numero = cursor.getInt(2);
+                precio = cursor.getDouble(3);
+                iva = cursor.getInt(4);
+                totalnumero = totalnumero + (precio*numero);
+                lista2.add(new ArticuloVenta(categorias, nombre, numero, precio, iva));
+
+                resg.crearnuevaorden(orden, categorias, nombre, numero, precio, iva);
+
+
+            }
+            cursor.close();
+            bd.close();
+            cursororden.close();
+
+
+
+
+
+            Intent i = new Intent(getContext(), VentaCobroTarjeta.class);
+            i.putExtra("totalnumero", totalnumero);
+            startActivity(i);
+            dialog.dismiss();
         });
 
         efectivo.setOnClickListener(new View.OnClickListener() {
@@ -272,7 +252,7 @@ orden = 0;
                 ArrayList<ArticuloVenta> lista = new ArrayList<>();
                 totalnumero = 0;
                 orden = 0;
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getContext(), null);
 
 
                 SQLiteDatabase bd = resg.getReadableDatabase();
@@ -282,7 +262,6 @@ orden = 0;
                 int numero;
                 double precio;
                 int iva;
-                GridView gridview = view.findViewById(R.id.gridView);
                 int numeroid = 0;
 
                 final Cursor cursorordentexto = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion ", null);
@@ -290,7 +269,7 @@ orden = 0;
                 if (cursorordentexto.moveToNext()) {
                     numeroid = cursorordentexto.getInt(0);
                 }
-
+cursorordentexto.close();
                 final Cursor cursororden = bd.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
 
                 if (cursororden.moveToNext()) {
@@ -338,13 +317,11 @@ orden = 0;
             }
         });
 
-        ticketrestaurante.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), VentaIntroduceImporteTicketRestaurante.class);
-                i.putExtra("totalnumero", totalnumero);
-                startActivity(i);
-                dialog.dismiss();
-            }
+        ticketrestaurante.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), VentaIntroduceImporteTicketRestaurante.class);
+            i.putExtra("totalnumero", totalnumero);
+            startActivity(i);
+            dialog.dismiss();
         });
 
 
@@ -380,34 +357,28 @@ orden = 0;
 
         display.getSize(size);
         dialog.setCanceledOnTouchOutside(true);
-        editarlineaslinear.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-               Intent i = new Intent(getContext(), EditarLineas.class);
-                startActivity(i);
+        editarlineaslinear.setOnClickListener(v -> {
+           Intent i = new Intent(getContext(), EditarLineas.class);
+            startActivity(i);
 
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         });
 
-        articulolinear.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), ArticuloRapido.class);
-                startActivity(i);
+        articulolinear.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), ArticuloRapido.class);
+            startActivity(i);
 
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         });
 
-        borrarlinear.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                resg.BorrarTicket();
-                Intent i = new Intent(getContext(), Venta.class);
-                startActivity(i);
+        borrarlinear.setOnClickListener(v -> {
+            BaseDatos resg = new BaseDatos(getContext(), null);
+            resg.BorrarTicket();
+            Intent i = new Intent(getContext(), Venta.class);
+            startActivity(i);
 
 
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         });
 
 

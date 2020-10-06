@@ -1,8 +1,6 @@
 package com.diusframi.tpv.Fragments.MiCuenta;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,21 +9,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MicrophoneInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,23 +27,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Fragments.TotalizarCierreCaja.TotalizarCierreCajaFianzaFragment;
 import com.diusframi.tpv.Fragments.Venta.Venta;
-import com.diusframi.tpv.MainActivity;
 import com.diusframi.tpv.R;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -93,9 +79,9 @@ public class MiCuentaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_mi_cuenta_fragment, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Mi cuenta");
-        final BaseDatos sqLiteHelper = new BaseDatos(this.getActivity(), "BDUsuarios", null, 1);
-        com.diusframi.tpv.BaseDatos baseDatos = new BaseDatos(this.getActivity(), "BDUsuarios", null, 1);
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle("Mi cuenta");
+        final BaseDatos sqLiteHelper = new BaseDatos(this.getActivity(), null);
+        com.diusframi.tpv.BaseDatos baseDatos = new BaseDatos(this.getActivity(), null);
         final SQLiteDatabase bd = baseDatos.getReadableDatabase();
 
         //Declaraciones
@@ -146,7 +132,7 @@ int iddevolucion = 0;
             guardarboton.setBackgroundResource(R.drawable.botongrisclaro);
         }
 
-        BaseDatos resg2 = new BaseDatos(view.getContext(), "BaseDatos", null, 1);
+        BaseDatos resg2 = new BaseDatos(view.getContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
         final Cursor cursor3 = bd2.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
 
@@ -154,7 +140,7 @@ int iddevolucion = 0;
              idticket = cursor3.getInt(0);
               idticketnumero = idticket + 1;
         }
-
+cursor3.close();
         final Cursor cursor4 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id DESC", null);
 
         if(cursor4.moveToFirst()){
@@ -163,7 +149,7 @@ int iddevolucion = 0;
         }
 
 
-
+cursor4.close();
         Cursor cursor5  = bd.rawQuery("SELECT  NumeroTicket FROM TextoTicketDevolucion", null);
 
         int NumeroTicket = 0;
@@ -175,7 +161,7 @@ int iddevolucion = 0;
         if(NumeroTicket != 0){
             idticketnumero = NumeroTicket;
         }
-
+cursor5.close();
         Cursor cursor6  = bd.rawQuery("SELECT  NumeroDevolucion FROM TextoTicketDevolucion", null);
 
         int NumeroDevolucion = 0;
@@ -188,7 +174,7 @@ int iddevolucion = 0;
             iddevolucionnumero = NumeroDevolucion;
         }
 
-
+cursor6.close();
 
 
         if(idticketnumero == 0){
@@ -200,8 +186,6 @@ if (iddevolucionnumero == 0){
 }
         proximonumeroticket.setText(String.valueOf(idticketnumero));
         proximonumerodevolucion.setText(String.valueOf(iddevolucionnumero));
-        serietickettexto = serieticket.getText().toString();
-        seriedevoluciontexto = seriedevolucion.getText().toString();
 
         //Funcion que comprueba que nombrecomercial tiene texto y vuelve el boton de enviar de gris a naranja
         nombrecomercial.addTextChangedListener(new TextWatcher() {
@@ -850,130 +834,121 @@ if (iddevolucionnumero == 0){
 
 
 
-        imagenB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    requestPermissions(
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_GALLERY
-                    );
+        imagenB.setOnClickListener(view1 -> requestPermissions(
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                REQUEST_CODE_GALLERY
+        ));
 
-                }
-
+        cancelarboton.setOnClickListener(view12 -> {
+            Intent i = new Intent(view12.getContext(), Venta.class);
+            startActivity(i);
         });
 
-        cancelarboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), Venta.class);
-                startActivity(i);
-            }
-        });
-
-        borrarimagenview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Imagen = null;
-               imagenB.setBackgroundResource(R.drawable.curz);
-            }
+        borrarimagenview.setOnClickListener(v -> {
+            Imagen = null;
+           imagenB.setBackgroundResource(R.drawable.curz);
         });
 
 
-        final int finalIdticket = idticket;
         final int finalIddevolucion = iddevolucion;
         final int finalIdticket1 = idticket;
 
 
-        guardarboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = "";
-                listaRegistros2 = bd.rawQuery("SELECT contrasena FROM Usuarios WHERE activo = 1", null);
-                listaRegistros3 = bd.rawQuery("SELECT email FROM Usuarios WHERE activo = 1", null);
+        guardarboton.setOnClickListener(v -> {
+            serietickettexto = serieticket.getText().toString();
+            seriedevoluciontexto = seriedevolucion.getText().toString();
 
-                if (listaRegistros3.moveToFirst()) {
-                    email = listaRegistros3.getString(0);
-                }
+            String email = "";
+            listaRegistros2 = bd.rawQuery("SELECT contrasena FROM Usuarios WHERE activo = 1", null);
+            listaRegistros3 = bd.rawQuery("SELECT email FROM Usuarios WHERE activo = 1", null);
 
-                if (listaRegistros2.moveToFirst()) {
+            if (listaRegistros3.moveToFirst()) {
+                email = listaRegistros3.getString(0);
+            }
 
-                    if(Imagen !=null) {
-                        sqLiteHelper.UpdateDataUsuarios(
-                                email,
-                                listaRegistros2.getString(0),
-                                cif.getText().toString(),
-                                nombrecomercial.getText().toString(),
-                                nombrefiscal.getText().toString(),
-                                domiciliocomercial.getText().toString(),
-                                localidadcomercial.getText().toString(),
-                                codigopostalcomercial.getText().toString(),
-                                provinciacomercial.getText().toString(),
-                                telefonocomercial.getText().toString(),
-                                domiciliofiscal.getText().toString(),
-                                localidadfiscal.getText().toString(),
-                                codigopostalfiscal.getText().toString(),
-                                provinciafiscal.getText().toString(),
-                                telefonofiscal.getText().toString(),
-                                imageViewToByte(Imagen),
-                                1
+            if (listaRegistros2.moveToFirst()) {
+
+                if(Imagen !=null) {
+                    sqLiteHelper.UpdateDataUsuarios(
+                            email,
+                            listaRegistros2.getString(0),
+                            cif.getText().toString(),
+                            nombrecomercial.getText().toString(),
+                            nombrefiscal.getText().toString(),
+                            domiciliocomercial.getText().toString(),
+                            localidadcomercial.getText().toString(),
+                            codigopostalcomercial.getText().toString(),
+                            provinciacomercial.getText().toString(),
+                            telefonocomercial.getText().toString(),
+                            domiciliofiscal.getText().toString(),
+                            localidadfiscal.getText().toString(),
+                            codigopostalfiscal.getText().toString(),
+                            provinciafiscal.getText().toString(),
+                            telefonofiscal.getText().toString(),
+                            imageViewToByte(Imagen),
+                            1
 
 
-                        );
-                        idticketexto = proximonumeroticket.getText().toString();
-                        iddevoluciontexto = proximonumerodevolucion.getText().toString();
+                    );
+                    idticketexto = proximonumeroticket.getText().toString();
+                    iddevoluciontexto = proximonumerodevolucion.getText().toString();
 
-                        if(!serietickettexto.equals("") ){
-                            sqLiteHelper.inserttextoticket(serietickettexto);
+                    if(!serietickettexto.equals("") ){
+                        sqLiteHelper.inserttextoticket(serietickettexto);
 
-                        }
+                    }
 
 if(!idticketexto.equals("")) {
-    if (Integer.parseInt(idticketexto) >= finalIdticket1) {
-        sqLiteHelper.insertnumeroticket(Integer.parseInt(idticketexto));
+if (Integer.parseInt(idticketexto) >= finalIdticket1) {
+    sqLiteHelper.insertnumeroticket(Integer.parseInt(idticketexto));
 
-    }
+}
 }
 
-                        if(!seriedevoluciontexto.equals("")){
-                            sqLiteHelper.inserttextodevolucion(seriedevoluciontexto);
+                    if(!seriedevoluciontexto.equals("")){
+                        sqLiteHelper.inserttextodevolucion(seriedevoluciontexto);
 
-                        }
-if(!iddevoluciontexto.equals("")) {
-    if (Integer.parseInt(iddevoluciontexto) >= finalIddevolucion) {
-        sqLiteHelper.insertnumerodevolucion(Integer.parseInt(iddevoluciontexto));
-
-    }
-}
-
-                    }else{
-                        sqLiteHelper.UpdateDataUsuariossinimagen(
-                                email,
-                                listaRegistros2.getString(0),
-                                cif.getText().toString(),
-                                nombrecomercial.getText().toString(),
-                                nombrefiscal.getText().toString(),
-                                domiciliocomercial.getText().toString(),
-                                localidadcomercial.getText().toString(),
-                                codigopostalcomercial.getText().toString(),
-                                provinciacomercial.getText().toString(),
-                                telefonocomercial.getText().toString(),
-                                domiciliofiscal.getText().toString(),
-                                localidadfiscal.getText().toString(),
-                                codigopostalfiscal.getText().toString(),
-                                provinciafiscal.getText().toString(),
-                                telefonofiscal.getText().toString(),
-                                1
-
-                        );
                     }
-                    Intent i = new Intent(getContext(), Venta.class);
-                    startActivity(i);
-                } else {
-                    Toast toast = Toast.makeText(getContext(), "Email no valido", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
 
+if(!iddevoluciontexto.equals("")) {
+if (Integer.parseInt(iddevoluciontexto) >= finalIddevolucion) {
+    sqLiteHelper.insertnumerodevolucion(Integer.parseInt(iddevoluciontexto));
+
+}
+}
+
+                }else{
+                    sqLiteHelper.UpdateDataUsuariossinimagen(
+                            email,
+                            listaRegistros2.getString(0),
+                            cif.getText().toString(),
+                            nombrecomercial.getText().toString(),
+                            nombrefiscal.getText().toString(),
+                            domiciliocomercial.getText().toString(),
+                            localidadcomercial.getText().toString(),
+                            codigopostalcomercial.getText().toString(),
+                            provinciacomercial.getText().toString(),
+                            telefonocomercial.getText().toString(),
+                            domiciliofiscal.getText().toString(),
+                            localidadfiscal.getText().toString(),
+                            codigopostalfiscal.getText().toString(),
+                            provinciafiscal.getText().toString(),
+                            telefonofiscal.getText().toString(),
+                            1
+
+                    );
+                }
+                Intent i = new Intent(getContext(), Venta.class);
+                startActivity(i);
+                bd.close();
+                bd2.close();
+                listaRegistros2.close();
+                listaRegistros3.close();
+            } else {
+                Toast toast = Toast.makeText(getContext(), "Email no valido", Toast.LENGTH_SHORT);
+                toast.show();
             }
+
         });
 
         return view;

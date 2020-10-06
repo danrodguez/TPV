@@ -29,17 +29,24 @@ public class Articulopreciovariable extends AppCompatActivity {
     String categoria;
     Integer numero;
     private Button BotonIVA;
-
+    EditText articulo;
+String nombre = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_articulopreciovariable);
-
-        final String nombre = getIntent().getStringExtra("nombre");
+        nombre = getIntent().getStringExtra("nombre");
         cancelar = findViewById(R.id.cancelarboton);
         guardar = findViewById(R.id.guardarboton);
-        precio = findViewById(R.id.precioedit);
+        precio = findViewById(R.id.pvpedit);
         BotonIVA = findViewById(R.id.ivaboton);
+        articulo = findViewById(R.id.nombrearticuloedit);
+
+        assert nombre != null;
+        if(!nombre.equals("")){
+    articulo.setText(nombre);
+}
+
 
         guardar.setEnabled(false);
         guardar.setBackgroundResource(R.drawable.botongrisclaro);
@@ -56,7 +63,7 @@ public class Articulopreciovariable extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                BaseDatos resg = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getApplicationContext(), null);
                 SQLiteDatabase bd = resg.getReadableDatabase();
                 @SuppressLint("Recycle") Cursor cursor = bd.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + nombre + "'", null);
                 if (cursor.moveToNext()) {
@@ -71,11 +78,12 @@ public class Articulopreciovariable extends AppCompatActivity {
                 }
                 double preciotexto = Double.parseDouble(precio.getText().toString());
 
-                StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), " ");
+                StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
                 String ivacortado = tokens.nextToken();
-
                 int iva = Integer.parseInt(ivacortado);
                 resg.articulonuevolistacompra(categoria, nombre, numero, preciotexto, iva);
+
+                resg.Creararticulovariable(categoria,nombre,0,preciotexto,iva);
                 Intent i = new Intent(getApplicationContext(), Venta.class);
                 startActivity(i);
             }
@@ -100,8 +108,7 @@ public class Articulopreciovariable extends AppCompatActivity {
 
         final Button iva21boton = view.findViewById(R.id.iva21);
         final Button iva10boton = view.findViewById(R.id.iva10);
-        ImageButton salir = view.findViewById(R.id.salirboton);
-        Button cancelar = view.findViewById(R.id.cancelar);
+        Button cancelar = view.findViewById(R.id.cancelarboton);
         // Specify alert dialog is not cancelable/not ignorable
         builder.setCancelable(false);
 
@@ -133,12 +140,7 @@ public class Articulopreciovariable extends AppCompatActivity {
             }
         });
 
-        salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+
 
         iva10boton.setOnClickListener(new View.OnClickListener() {
             @Override

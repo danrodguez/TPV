@@ -11,9 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Fragments.MisArqueos.Arqueoint;
-import com.diusframi.tpv.Fragments.MisVentas.Ticket;
 import com.diusframi.tpv.R;
 
 import java.text.DecimalFormat;
@@ -90,12 +88,7 @@ public class ArqueoAdapter extends RecyclerView.Adapter<ArqueoAdapter.MultiViewH
                 i = 0;
             }
 
-            MiArqueo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.arqueo(ArqueosLista.getOrden().toString());
-                }
-            });
+            MiArqueo.setOnClickListener(v -> mListener.arqueo(ArqueosLista.getOrden().toString()));
 
 
             String fechastring = String.valueOf(ArqueosLista.getFecha());

@@ -6,19 +6,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,10 +31,33 @@ import com.diusframi.tpv.Constructores.ProductosTicketAdapter;
 import com.diusframi.tpv.Fragments.Correo;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
+import com.example.etickets_sdk.DatosCajaR;
+import com.example.etickets_sdk.Eticket;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MisVentasTicketDevolucion extends Fragment {
     TextView nombrecomercio;
@@ -72,7 +97,15 @@ public class MisVentasTicketDevolucion extends Fragment {
     Double impuestos21baseimponiblenumero = 0.0;
     Double impuestos21cuotanumero = 0.0;
     Double totalnumero = 0.0;
+    String respStr = "";
+    String numerotelefono = "";
+    ArrayList<String> listanombres = new ArrayList<>();
+    ArrayList<Integer> listanumero = new ArrayList<>();
+    ArrayList<Double> listaimporte = new ArrayList<>();
+    ArrayList<Double> listaprecio = new ArrayList<>();
     byte[] imagen = null;
+    DatosCajaR datos = new DatosCajaR();
+    Eticket crearPDF =new Eticket();
     ArrayList<ProductoTicket> listaproductos = new ArrayList<>();
 
     @Override
@@ -109,7 +142,7 @@ public class MisVentasTicketDevolucion extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter1);
 
-        BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(getContext(), null);
         SQLiteDatabase bd = resg.getReadableDatabase();
 
         @SuppressLint("Recycle") Cursor cursor = bd.rawQuery("SELECT Fecha,HoraTexto,Total,TipoPago FROM Devoluciones WHERE id LIKE '" + orden + "'", null);
@@ -148,16 +181,17 @@ public class MisVentasTicketDevolucion extends Fragment {
         hora.setText(horatexto);
         factura.setText(facturatexto);
 
-        BaseDatos resg2 = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg2 = new BaseDatos(getContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
 
-        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT nombrefiscal,nombrecomercial,cif,domiciliofiscal,localidadfiscal,codigopostalfiscal,provinciafiscal,logo FROM Usuarios WHERE activo LIKE 1", null);
+        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT nombrefiscal,nombrecomercial,cif,domiciliofiscal,localidadfiscal,codigopostalfiscal,provinciafiscal,logo,telefonocomercial FROM Usuarios WHERE activo LIKE 1", null);
         while (cursor2.moveToNext()) {
             nombrefiscaltexto = cursor2.getString(0);
             nombrecomerciotexto = cursor2.getString(1);
             ciftexto = cursor2.getString(2);
             direccionfiscaltexto = cursor2.getString(3) + "," + cursor2.getString(4) + "," + cursor2.getString(5) + "," + cursor2.getString(6);
             imagen = cursor2.getBlob(7);
+            numerotelefono = cursor2.getString(8);
         }
 
         nombrefiscal.setText(nombrefiscaltexto);
@@ -177,7 +211,7 @@ public class MisVentasTicketDevolucion extends Fragment {
         int numero21 = 0;
 
 
-        Cursor  cursor10baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva = '10' AND idorden LIKE '"+ordenticket+"' ", null);
+        Cursor  cursor10baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva = '10' AND idorden LIKE '"+orden+"' ", null);
 
         while (cursor10baseimponible.moveToNext()) {
             precio10 = cursor10baseimponible.getDouble(0);
@@ -187,7 +221,7 @@ public class MisVentasTicketDevolucion extends Fragment {
 
         impuestos10cuotanumero = (total10numero*10)/100;
 
-        Cursor  cursor21baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva = '21' AND idorden LIKE '"+ordenticket+"' ", null);
+        Cursor  cursor21baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva = '21' AND idorden LIKE '"+orden+"' ", null);
 
         while (cursor21baseimponible.moveToNext()) {
             precio21 = cursor21baseimponible.getDouble(0);
@@ -208,7 +242,7 @@ public class MisVentasTicketDevolucion extends Fragment {
         total.setText(String.valueOf(decim.format(totalnumero)));
         pago.setText(String.valueOf(decim.format(totalnumero)));
 
-        Cursor  cursorlista = bd.rawQuery("SELECT Numero,Nombre,Precio FROM Devueltostemporal WHERE idorden LIKE '"+ordenticket+"' ", null);
+        Cursor  cursorlista = bd.rawQuery("SELECT Numero,Nombre,Precio FROM Devueltostemporal WHERE idorden LIKE '"+orden+"' ", null);
 
         String Nombre = "";
         int Numero = 0;
@@ -223,6 +257,10 @@ public class MisVentasTicketDevolucion extends Fragment {
             Importe = Precio * Numero;
             listaproductos.add(new ProductoTicket(Numero,Nombre,Precio,Importe));
             adapter1.setProductoLista(listaproductos);
+            listanombres.add(Nombre);
+            listaimporte.add(Precio*Numero);
+            listaprecio.add(Precio);
+            listanumero.add( Numero);
         }
         ProductosTicketAdapter adapter = new ProductosTicketAdapter(getContext(),  listaproductos);
         recyclerView.setAdapter(adapter);
@@ -241,8 +279,60 @@ public class MisVentasTicketDevolucion extends Fragment {
         imprimirboton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Todavia por implementar",
-                        Toast.LENGTH_LONG).show();
+
+                //Datos Ticket
+                int idticket = 0;
+
+                Cursor cursorid3 = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion", null);
+                if(cursorid3.moveToFirst()){
+                    idticket = cursorid3.getInt(0);
+                }
+
+                cursorid3.close();
+
+                if(idticket != 0){
+                    int id = idticket;
+                }
+
+
+                final int finalIdticket = idticket;
+
+
+
+
+
+
+                datos.setTotal(totalnumero);
+                datos.setEfectivo(totalnumero);
+                datos.setFactura(String.valueOf(finalIdticket));
+                datos.setCif(ciftexto);
+                datos.setBase10((impuestos10baseimponiblenumero));
+                datos.setBase21(impuestos21baseimponiblenumero);
+                datos.setCuota10(impuestos10cuotanumero);
+                datos.setCuota21(impuestos21cuotanumero);
+                datos.setCambio(0.0);
+                datos.setDireccionFiscal(direccionfiscaltexto);
+                datos.setFecha(fechatexto);
+                datos.setNombreComercio(nombrecomerciotexto);
+                datos.setNombreFiscal(nombrefiscaltexto);
+                datos.setHora(horatexto);
+                datos.setPrecio(totalnumero);
+                datos.setNumero(String.valueOf(numerotelefono));
+                datos.setListArticulos(listanombres);
+                datos.setListPrecios(listaprecio);
+                datos.setListImportes(listaimporte);
+                datos.setListunidades(listanumero);
+
+
+                crearPDF.generarQr();
+
+                if (crearPDF.createPdf(datos.getNombreComercio(), datos.getNombreFiscal(), datos.getNumero(), datos.getDireccionFiscal(), datos.getCif(), datos.getFactura(), datos.getEfectivo(), datos.getCambio(), datos.getTotal(), datos.getBase10(), datos.getCuota10(), datos.getBase21(), datos.getCuota21(), listanombres, datos.getListunidades(), listaprecio, listaimporte)) {
+                    Toast.makeText(getContext(), "Factura creada con exito", Toast.LENGTH_LONG).show();
+                    MisVentasTicketDevolucion.Mostrar enviarticket = new Mostrar();
+                    enviarticket.execute();
+                } else {
+                    Toast.makeText(getContext(), "Factura no creada", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -258,5 +348,81 @@ public class MisVentasTicketDevolucion extends Fragment {
 
 
         return view;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class Mostrar extends AsyncTask<String, String, Boolean> {
+        private Date date = new Date();
+
+        @SuppressLint("SimpleDateFormat")
+        public Boolean doInBackground(String... params) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+            String fecha = dateFormat.format(this.date);
+
+            dateFormat = new SimpleDateFormat("HH:mm:ss");
+            String hora = dateFormat.format(this.date);
+            boolean resul;
+            HttpClient httpClient = new DefaultHttpClient();
+            File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/Factura_" + fecha + "&" + hora + ".pdf");
+
+            HttpPost post = new HttpPost("https://cr289fri24.execute-api.eu-west-1.amazonaws.com/test/uploadToS3");
+            post.setHeader("content-type", "application/json");
+            try {
+                JSONObject dato = new JSONObject();
+                dato.put("username", "0320002");
+                dato.put("menu_desc", "/Factura_23245");
+                dato.put("xml", false); // false: pdf, true: xml
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int nRead;
+                FileInputStream fis = new FileInputStream(f);
+                byte[] data = new byte[1024];
+                while ((nRead = fis.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, nRead);
+                }
+                buffer.flush();
+                dato.put("menu_photo", Base64.encodeToString(buffer.toByteArray(), Base64.DEFAULT));
+                StringEntity entity = new StringEntity(dato.toString());
+                post.setEntity(entity);
+                HttpResponse resp = httpClient.execute(post);
+                respStr = EntityUtils.toString(resp.getEntity());
+                StatusLine statusLine = resp.getStatusLine();
+                resul = statusLine.getStatusCode() == HttpStatus.SC_OK;
+
+            } catch (FileNotFoundException ex) {
+                Log.e("FileNotFoundException", "Error!", ex);
+                resul = false;
+
+            } catch (UnsupportedEncodingException ex) {
+                Log.e("UnsupportedEnco", "Error!", ex);
+                resul = false;
+
+            } catch (ClientProtocolException ex) {
+                Log.e("ClientProtocolException", "Error!", ex);
+                resul = false;
+
+            } catch (IOException ex) {
+                Log.e("IOException", "Error!", ex);
+                resul = false;
+
+            } catch (ParseException ex) {
+                Log.e("ParseException", "Error!", ex);
+                resul = false;
+
+            } catch (JSONException ex) {
+                Log.e("JSONException", "Error!", ex);
+                resul = false;
+
+            }
+            return resul;
+        }
+
+        public void onPostExecute(Boolean result) {
+            if (result) {
+                Toast.makeText(getContext(), "Subido Correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Error Servidor", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 }

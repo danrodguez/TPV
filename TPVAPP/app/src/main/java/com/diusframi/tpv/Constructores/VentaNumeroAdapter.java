@@ -1,5 +1,6 @@
 package com.diusframi.tpv.Constructores;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -71,6 +72,7 @@ public class VentaNumeroAdapter extends RecyclerView.Adapter<VentaNumeroAdapter.
             Iva = itemView.findViewById(R.id.iva);
         }
 
+        @SuppressLint("SetTextI18n")
         void bind(Carrito Articuloslista) {
 
             Nombre.setText(Articuloslista.getNombre());
@@ -87,125 +89,125 @@ public class VentaNumeroAdapter extends RecyclerView.Adapter<VentaNumeroAdapter.
                 Numero.setVisibility(View.GONE);
                 Menos.setVisibility(View.GONE);
             }
-            Nombre.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            Nombre.setOnClickListener(v -> {
 
-                    numeroarticulos = numeroarticulos + 1;
+                numeroarticulos = numeroarticulos + 1;
 
 
-                    if (numeroarticulos > 0) {
-                        mListener.cambiarcolorbotonanaranjaborrar();
-                        Menos.setVisibility(View.VISIBLE);
-                        Numero.setText("X " + numeroarticulos);
-                        Numero.setVisibility(View.VISIBLE);
-                        BaseDatos resg = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd = resg.getReadableDatabase();
+                if (numeroarticulos > 0) {
+                    mListener.cambiarcolorbotonanaranjaborrar();
+                    Menos.setVisibility(View.VISIBLE);
+                    Numero.setText("X " + numeroarticulos);
+                    Numero.setVisibility(View.VISIBLE);
+                    BaseDatos resg = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd = resg.getReadableDatabase();
 
 
-                        Cursor cursor = bd.rawQuery("SELECT * FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                    Cursor cursor = bd.rawQuery("SELECT * FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
 
-                        if (!cursor.moveToFirst()) {
-                            BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                            SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                            Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                            cursorselect.moveToFirst();
-                            Integer categoria = cursorselect.getInt(0);
-                            Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
-                            cursorselect2.moveToFirst();
-                            String categoriareal = cursorselect2.getString(0);
-                            String numerotokenizado = Numero.getText().toString();
-                            StringTokenizer st = new StringTokenizer(numerotokenizado, " ");
-                            String numeroreal = st.nextToken();
-                            String numeroreal2 = st.nextToken();
-                            String preciotokenizado = Precio.getText().toString();
-                            StringTokenizer stp = new StringTokenizer(preciotokenizado, " ");
-                            String precioreal = stp.nextToken();
-
-                            resg.articulonuevolistacompra(
-                                    categoriareal,
-                                    Nombre.getText().toString(),
-                                    Integer.parseInt(numeroreal2),
-                                    Double.parseDouble(precioreal),
-                                    Integer.parseInt(Iva.getText().toString())
-
-
-                            );
-
-
-                        } else {
-
-                            Cursor cursor2 = bd.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                            cursor2.moveToFirst();
-                            int numeroarticulos = cursor2.getInt(0);
-                            resg.actualizarnumeroarticulos(
-                                    Nombre.getText().toString(),
-                                    numeroarticulos + 1
-
-
-                            );
-                        }
-                    } else {
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
+                    if (!cursor.moveToFirst()) {
+                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
                         SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
+                        Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                        cursorselect.moveToFirst();
 
-                        if (cursor3.moveToFirst()) {
-                            mListener.cambiarcolorbotonanaranjaborrar();
-                        } else {
-                            mListener.cambiarcolorbotongrisborrar();
-                        }
+                        int categoria = cursorselect.getInt(0);
+                        Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
+                        cursorselect2.moveToFirst();
 
-                        Menos.setVisibility(View.GONE);
-                        Numero.setVisibility(View.GONE);
-                    }
-
-                }
-            });
-
-
-            Menos.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (numeroarticulos > 0) {
-                        mListener.cambiarcolorbotonanaranja();
-                        numeroarticulos--;
-                        Menos.setVisibility(View.VISIBLE);
-                        Numero.setText("X " + numeroarticulos);
-                        Numero.setVisibility(View.VISIBLE);
-
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
-                        cursor2.moveToFirst();
-                        int numeroarticulos = Integer.parseInt(cursor2.getString(0));
-
-                        resg2.actualizarnumeroarticulos(
+                        String categoriareal = cursorselect2.getString(0);
+                        String numerotokenizado = Numero.getText().toString();
+                        StringTokenizer st = new StringTokenizer(numerotokenizado, " ");
+                        String numeroreal = st.nextToken();
+                        String numeroreal2 = st.nextToken();
+                        String preciotokenizado = Precio.getText().toString();
+                        StringTokenizer stp = new StringTokenizer(preciotokenizado, " ");
+                        String precioreal = stp.nextToken();
+                        cursorselect2.close();
+                        resg.articulonuevolistacompra(
+                                categoriareal,
                                 Nombre.getText().toString(),
-                                numeroarticulos - 1
+                                Integer.parseInt(numeroreal2),
+                                Double.parseDouble(precioreal),
+                                Integer.parseInt(Iva.getText().toString())
 
 
                         );
 
+                        cursorselect.close();
+                    } else {
+
+                        Cursor cursor2 = bd.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                        cursor2.moveToFirst();
+
+                        int numeroarticulos = cursor2.getInt(0);
+                        resg.actualizarnumeroarticulos(
+                                Nombre.getText().toString(),
+                                numeroarticulos + 1
+
+
+                        );
+                        cursor.close();
+                        cursor2.close();
                     }
+                } else {
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
 
-                    if (numeroarticulos == 0) {
-                        BaseDatos resg2 = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
-                        SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                        Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
-
-                        if (cursor3.moveToFirst()) {
-                            mListener.cambiarcolorbotonanaranjaborrar();
-                        } else {
-                            mListener.cambiarcolorbotongrisborrar();
-                        }
-
-                        Menos.setVisibility(View.GONE);
-                        Numero.setVisibility(View.GONE);
+                    if (cursor3.moveToFirst()) {
+                        mListener.cambiarcolorbotonanaranjaborrar();
+                    } else {
+                        mListener.cambiarcolorbotongrisborrar();
                     }
+cursor3.close();
+                    Menos.setVisibility(View.GONE);
+                    Numero.setVisibility(View.GONE);
+                }
+
+            });
+
+
+            Menos.setOnClickListener(v -> {
+
+                if (numeroarticulos > 0) {
+                    mListener.cambiarcolorbotonanaranja();
+                    numeroarticulos--;
+                    Menos.setVisibility(View.VISIBLE);
+                    Numero.setText("X " + numeroarticulos);
+                    Numero.setVisibility(View.VISIBLE);
+
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    Cursor cursor2 = bd2.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + Nombre.getText().toString() + "'", null);
+                    cursor2.moveToFirst();
+                    int numeroarticulos = Integer.parseInt(cursor2.getString(0));
+                    cursor2.close();
+                    resg2.actualizarnumeroarticulos(
+                            Nombre.getText().toString(),
+                            numeroarticulos - 1
+
+
+                    );
 
                 }
+
+                if (numeroarticulos == 0) {
+                    BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
+                    SQLiteDatabase bd2 = resg2.getReadableDatabase();
+                    Cursor cursor3 = bd2.rawQuery("SELECT * FROM ArticulosVenta WHERE Numero > '0'", null);
+
+                    if (cursor3.moveToFirst()) {
+                        mListener.cambiarcolorbotonanaranjaborrar();
+                    } else {
+                        mListener.cambiarcolorbotongrisborrar();
+                    }
+
+                    cursor3.close();
+                    Menos.setVisibility(View.GONE);
+                    Numero.setVisibility(View.GONE);
+                }
+
             });
 
         }

@@ -16,8 +16,6 @@ public class Carrito {
         this.iva = iva;
     }
 
-    private boolean isChecked = false;
-
 
     public String getCategoria() {
         return categoria;

@@ -3,7 +3,6 @@ package com.diusframi.tpv.Fragments.TicketDeVenta;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,14 +26,11 @@ public class VentaCobroTarjeta extends AppCompatActivity {
         Intent intent = getIntent();
         DecimalFormat decim = new DecimalFormat("0.00");
         totalnumero = intent.getDoubleExtra("totalnumero", 0.0);
-        totaltext.setText(String.valueOf(decim.format(totalnumero))+"€");
-        linear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), PagoRealizadoTarjeta.class);
-                i.putExtra("importe", totalnumero);
-                startActivity(i);
-            }
+        totaltext.setText(decim.format(totalnumero) +"€");
+        linear.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), PagoRealizadoTarjeta.class);
+            i.putExtra("importe", totalnumero);
+            startActivity(i);
         });
     }
 }

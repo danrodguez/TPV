@@ -23,7 +23,6 @@
             app:theme="@style/ToolbarColoredBackArrow">
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -80,7 +79,6 @@
                 <TextView
                     android:layout_weight="2"
                     android:textColor="#0061F1"
-                    android:id="@+id/pagado2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margintop"
@@ -102,7 +100,6 @@
                 <TextView
                     android:layout_weight="2"
                     android:textColor="@color/black"
-                    android:id="@+id/Cambio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tarjeta"
@@ -113,7 +110,6 @@
                 <TextView
                     android:layout_weight="2"
                     android:textColor="@color/black"
-                    android:id="@+id/Cambio2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/_00_00"
@@ -159,7 +155,6 @@
             <Button
                 android:layout_marginBottom="20dp"
                 android:textColor="#0061F1"
-                android:id="@+id/continuar"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="70dp"

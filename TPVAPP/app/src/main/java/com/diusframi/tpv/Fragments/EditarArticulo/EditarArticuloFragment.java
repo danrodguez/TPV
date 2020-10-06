@@ -1,6 +1,5 @@
 package com.diusframi.tpv.Fragments.EditarArticulo;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
@@ -9,7 +8,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.Display;
@@ -19,9 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -34,18 +30,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Fragments.MisArticulos.MisarticulosFragment;
-import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.InputDinero;
 import com.diusframi.tpv.R;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.StringTokenizer;
-
-import static android.text.InputType.TYPE_CLASS_NUMBER;
-import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
-import static android.text.InputType.TYPE_NUMBER_FLAG_SIGNED;
 
 public class EditarArticuloFragment extends Fragment {
 
@@ -76,6 +66,16 @@ public class EditarArticuloFragment extends Fragment {
         if (nombreproducto == null) {
             nombreproducto = "";
         }
+        if (categoriaproducto == null) {
+            categoriaproducto = "";
+        }
+        if (ivaproducto == null) {
+            ivaproducto = "";
+        }
+        if (precioproducto == null) {
+            precioproducto = "";
+        }
+
 
         //Declaraciones
 
@@ -96,7 +96,7 @@ public class EditarArticuloFragment extends Fragment {
 
         BotonIVA = view.findViewById(R.id.ivaboton);
         preciovariable = view.findViewById(R.id.preciovariablecheck);
-        final BaseDatos sqLiteHelper = new BaseDatos(view.getContext(), "BDUsuarios", null, 1);
+        final BaseDatos sqLiteHelper = new BaseDatos(view.getContext(), null);
 
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -111,36 +111,29 @@ public class EditarArticuloFragment extends Fragment {
         //Hacer menu transparente
         drawerLayout.setDrawerElevation(0);
 
-        BaseDatos resg2 = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg2 = new BaseDatos(getContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
-        Cursor cursor = bd2.rawQuery("SELECT Categorias,Nombre,Precio,IVA FROM Articulos WHERE Favorito LIKE '1'", null);
+
 
         guardar.setEnabled(false);
 
 
+        assert categoriaproducto != null;
+        categoria.setText(categoriaproducto);
 
+        assert precioproducto != null;
+        importe.setText(precioproducto);
 
-        if(!categoriaproducto.equals("")){
-            categoria.setText(categoriaproducto);
-        }
+        assert ivaproducto != null;
+        BotonIVA.setText(ivaproducto);
 
-        if(!precioproducto.equals("")){
-            importe.setText(precioproducto);
-        }
-
-        if(!ivaproducto.equals("")){
-            BotonIVA.setText(ivaproducto);
-        }
-
-        if (!nombreproducto.equals("")) {
-            articulo.setText(nombreproducto);
-        }
-
-        if (preciovariable.isChecked()) {
-            importe.setEnabled(false);
-            importe.setText("");
-        }
-
+        articulo.setText(nombreproducto);
+        preciovariable.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (preciovariable.isChecked()) {
+                importe.setEnabled(false);
+                importe.setText("");
+            }
+        });
 
         if(!categoriaproducto.equals("") && !precioproducto.equals("") && !ivaproducto.equals("") && !nombreproducto.equals("")){
             guardar.setEnabled(true);
@@ -200,7 +193,6 @@ public class EditarArticuloFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if (s.toString().length() > 0
                         & BotonIVA.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & articulo.getText().toString().length() > 0
                 ) {
 
@@ -221,7 +213,6 @@ public class EditarArticuloFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 0
                         & BotonIVA.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & articulo.getText().toString().length() > 0
                        ) {
 
@@ -243,7 +234,6 @@ public class EditarArticuloFragment extends Fragment {
 
                 if (s.toString().length() > 0
                         & BotonIVA.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & articulo.getText().toString().length() > 0
                 ) {
 
@@ -266,7 +256,6 @@ public class EditarArticuloFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if (s.toString().length() > 0
                         & categoria.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & articulo.getText().toString().length() > 0
                 ) {
 
@@ -287,7 +276,6 @@ public class EditarArticuloFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 0
                         & categoria.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & articulo.getText().toString().length() > 0
                 ) {
 
@@ -308,7 +296,6 @@ public class EditarArticuloFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() > 0
                         & categoria.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & articulo.getText().toString().length() > 0
                 ) {
 
@@ -325,75 +312,12 @@ public class EditarArticuloFragment extends Fragment {
                 }
             }
         });        //Funcion que comprueba que nombrecomercial tiene texto y vuelve el boton de enviar de gris a naranja
-        importe.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.toString().length() > 0
-                        & BotonIVA.getText().toString().length() > 0
-                        & categoria.getText().toString().length() > 0
-                        & articulo.getText().toString().length() > 0
-                ) {
-                    guardar.setEnabled(true);
-                } else {
-                    guardar.setEnabled(false);
-                }
-
-                if (!guardar.isEnabled()) {
-                    guardar.setBackgroundResource(R.drawable.botongrisclaro);
-                } else {
-
-                    guardar.setBackgroundResource(R.drawable.botonnaranja);
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().length() > 0
-                        & BotonIVA.getText().toString().length() > 0
-                        & categoria.getText().toString().length() > 0
-                        & articulo.getText().toString().length() > 0
-                ) {
-
-                    guardar.setEnabled(true);
-                } else {
-                    guardar.setEnabled(false);
-                }
-
-                if (!guardar.isEnabled()) {
-                    guardar.setBackgroundResource(R.drawable.botongrisclaro);
-                } else {
-
-                    guardar.setBackgroundResource(R.drawable.botonnaranja);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().length() > 0
-                        & BotonIVA.getText().toString().length() > 0
-                        & categoria.getText().toString().length() > 0
-                        & articulo.getText().toString().length() > 0
-                ) {
-
-                    guardar.setEnabled(true);
-                } else {
-                    guardar.setEnabled(false);
-                }
-
-                if (!guardar.isEnabled()) {
-                    guardar.setBackgroundResource(R.drawable.botongrisclaro);
-                } else {
-
-                    guardar.setBackgroundResource(R.drawable.botonnaranja);
-                }
-            }
-        });        //Funcion que comprueba que nombrecomercial tiene texto y vuelve el boton de enviar de gris a naranja
+    //Funcion que comprueba que nombrecomercial tiene texto y vuelve el boton de enviar de gris a naranja
         articulo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if (s.toString().length() > 0
                         & BotonIVA.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & categoria.getText().toString().length() > 0
                 ) {
 
@@ -414,7 +338,6 @@ public class EditarArticuloFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 0
                         & BotonIVA.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & categoria.getText().toString().length() > 0
                 ) {
 
@@ -435,7 +358,6 @@ public class EditarArticuloFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() > 0
                         & BotonIVA.getText().toString().length() > 0
-                        & importe.getText().toString().length() > 0
                         & categoria.getText().toString().length() > 0
                 ) {
 
@@ -458,22 +380,24 @@ public class EditarArticuloFragment extends Fragment {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String importet = importe.getText().toString();
                 categorianombre = categoria.getText().toString();
-
-                importetexto = importe.getText().toString().replace(",",".");
-                articulonombre = articulo.getText().toString();
-                 String finalIvatexto = BotonIVA.getText().toString();;
+                if(importe.getText().toString().equals("")){
+                    importet = "0,0";
+                    importetexto = importet.replace(",",".");
+                }
+                    articulonombre = articulo.getText().toString();
+                    String finalIvatexto = BotonIVA.getText().toString();;
                     StringTokenizer token = new StringTokenizer(finalIvatexto, "%");
                     String ivasinporcentaje = token.nextToken();
                     ivadoble = Integer.parseInt(ivasinporcentaje);
                     DecimalFormat decim = new DecimalFormat("0.00");
-                    String importetext = importe.getText().toString().replace(",",".");
+                    String importetext = importet.replace(",",".");
 
                  importeint = Double.parseDouble(importetext);
 
 
-                BaseDatos resg = new BaseDatos(view.getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(view.getContext(), null);
                 SQLiteDatabase bd = resg.getReadableDatabase();
                 final Cursor cursortipos = bd.rawQuery("SELECT Nombre FROM Articulos WHERE Nombre = '" + articulonombre + "'", null);
 
@@ -486,8 +410,14 @@ public class EditarArticuloFragment extends Fragment {
                             ivadoble
                     );
 
-                    Intent i = new Intent(view.getContext(), Venta.class);
-                    startActivity(i);
+                    fragment = new MisarticulosFragment();
+                    drawerLayout.setVisibility(View.GONE);
+
+                    if (fragment != null) {
+                          FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_fragment, fragment);
+                        ft.commit();
+                    }
                     cursortipos.close();
                 } else {
 int id = 0;
@@ -504,8 +434,13 @@ int id = 0;
                             importeint,
                             ivadoble
                     );
-                    Intent i = new Intent(view.getContext(), Venta.class);
-                    startActivity(i);
+                    fragment = new MisarticulosFragment();
+                    drawerLayout.setVisibility(View.GONE);
+
+                    if (fragment != null) {
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_fragment, fragment);
+                        ft.commit();}
                     cursortipos2.close();
                 }
 
@@ -548,7 +483,7 @@ int id = 0;
 
         display.getSize(size);
 
-        BaseDatos resg = new BaseDatos(view.getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(view.getContext(), null);
         SQLiteDatabase bd = resg.getReadableDatabase();
         Cursor cursortipos = bd.rawQuery("SELECT DISTINCT Categoria FROM Categoriastabla", null);
         LinearLayout linearLayout = view.findViewById(R.id.botoneslinear);
@@ -623,7 +558,7 @@ int id = 0;
             @Override
             public void onClick(View v) {
                 String categoriatexto = categorianueva.getText().toString();
-                final BaseDatos sqLiteHelper = new BaseDatos(getContext(), "BDUsuarios", null, 1);
+                final BaseDatos sqLiteHelper = new BaseDatos(getContext(), null);
 
 
                 sqLiteHelper.CrearCategoria(

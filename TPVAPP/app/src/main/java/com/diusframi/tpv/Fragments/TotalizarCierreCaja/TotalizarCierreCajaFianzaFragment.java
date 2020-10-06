@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -169,7 +168,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getContext(), null);
                 SQLiteDatabase bd = resg.getWritableDatabase();
 
 
@@ -241,6 +240,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 saldoinicialnumero = Double.parseDouble(numerofianzatexto);
                 fianzanumero = saldoinicialnumero;
 
+                resg.saldoinicial(saldoinicialnumero,id);
                 //Ventas Efectivo
                 if (!hoy) {
                     cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
@@ -278,7 +278,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 //Recuento efectivo declarado en intent arriba
 
                 //Total calculado efectivo
-                totalcalculadonumeroefectivo = ventasefectivonumero;
+                totalcalculadonumeroefectivo = (ventasefectivonumero + movcajanumero) - devolucionesnumero;
 
 
 
@@ -320,9 +320,9 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                     tarjetanumero = cursortarjeta.getDouble(0);
                 }
 
-                Double precio10 = 0.0;
+                double precio10 = 0.0;
                 int numero10 = 0;
-                Double precio21 = 0.0;
+                double precio21 = 0.0;
                 int numero21 = 0;
 
                 //Impuestos 10% cuota
@@ -394,6 +394,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 Intent i = new Intent(getContext(), ArqueoTotalizarCierreCaja.class);
                 i.putExtra("hora", hora);
                 i.putExtra("fecha", dia);
+                i.putExtra("id",id);
                 i.putExtra("numeroarqueo", numeroarqueotexto);
                 i.putExtra("numventas", numventasnumero);
                 i.putExtra("ventas", ventasnumero);
@@ -476,7 +477,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
 
         aceptar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getContext(), null);
                 resg.CrearArqueo(numeroarqueotexto, numventasnumero, ventasnumero, movcajanumero, totaldevolucionesnumero, totalcalculadonumero, saldoinicialnumero, ventasefectivonumero, entradasnumero, salidasnumero,
                         devolucionesnumero, calculadoefectivonumero, recuentoefectivonumero, descuadrenumero, retiradaefectivonumero, fianzanumero, efectivonumero, tarjetanumero, impuestos10baseimponiblenumero,impuestos10cuotanumero, impuestos21baseimponiblenumero,impuestos21cuotanumero);
                 Date c2 = Calendar.getInstance().getTime();

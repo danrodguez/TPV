@@ -22,7 +22,6 @@
             app:theme="@style/ToolbarColoredBackArrow">
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -45,20 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <CheckBox
-                    android:id="@+id/checkb"
-                    android:gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
 
-                <TextView
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:textColor="#0061F1"
-                    android:textSize="18sp"
-                    android:text="@string/marcar_todo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
 
                 <LinearLayout
                     android:gravity="end"

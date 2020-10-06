@@ -1,6 +1,5 @@
 package com.diusframi.tpv.Fragments.MisVentas;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,21 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Constructores.Articulo;
-import com.diusframi.tpv.Constructores.ArticuloAdapter;
 import com.diusframi.tpv.Constructores.ProductoTicket;
 import com.diusframi.tpv.Constructores.ProductosTicketAdapter;
 import com.diusframi.tpv.Fragments.Correo;
@@ -114,7 +107,7 @@ public class MisVentasTicketRegalo extends Fragment {
             orden = bundle.getString("orden", orden);
         }
 
-        BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(getContext(), null);
         SQLiteDatabase bd = resg.getReadableDatabase();
 
         cursorfechahoratotal = bd.rawQuery("SELECT Fecha,Hora,Total,Cambio FROM Ordenes WHERE id LIKE '"+orden+"'", null);
@@ -150,7 +143,7 @@ public class MisVentasTicketRegalo extends Fragment {
 
 
 
-        BaseDatos resg2 = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg2 = new BaseDatos(getContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
 
         cursorcomercialfiscal = bd2.rawQuery("SELECT nombrefiscal,nombrecomercial,cif,domiciliofiscal,localidadfiscal,codigopostalfiscal,provinciafiscal,logo FROM Usuarios WHERE activo LIKE 1", null);

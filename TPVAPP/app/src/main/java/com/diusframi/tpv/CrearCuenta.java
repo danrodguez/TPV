@@ -37,7 +37,7 @@ public class CrearCuenta extends AppCompatActivity {
         boton = findViewById(R.id.CrearCuenta);
         emailedittext = findViewById(R.id.emaileditregistro);
         crearcontrasena = findViewById(R.id.crearcontrasenaedit);
-        final BaseDatos sqLiteHelper = new BaseDatos(this, "BDUsuarios", null, 1);
+        final BaseDatos sqLiteHelper = new BaseDatos(this, null);
 
 
 //funcion obligatoria para permisos de numero de serie
@@ -151,37 +151,33 @@ public class CrearCuenta extends AppCompatActivity {
         });
         final byte[] vacio = new byte[0];
 
-        boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkData();
-                sqLiteHelper.insertDataUsuarios(
-                        emailedittext.getText().toString(),
-                        crearcontrasena.getText().toString(),
-                        cifedit.getText().toString(),
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        vacio,
-                        1
+        boton.setOnClickListener(v -> {
+            checkData();
+            sqLiteHelper.insertDataUsuarios(
+                    emailedittext.getText().toString(),
+                    crearcontrasena.getText().toString(),
+                    cifedit.getText().toString(),
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    vacio
 
 
-                );
-                Intent i = new Intent(getApplicationContext(), ConfiguracionInicial.class);
-                i.putExtra("email", emailedittext.getText().toString());
-                i.putExtra("contrasena", crearcontrasena.getText().toString());
-                i.putExtra("cif", cifedit.getText().toString());
-                startActivity(i);
-            }
+            );
+            Intent i = new Intent(getApplicationContext(), ConfiguracionInicial.class);
+            i.putExtra("email", emailedittext.getText().toString());
+            i.putExtra("contrasena", crearcontrasena.getText().toString());
+            i.putExtra("cif", cifedit.getText().toString());
+            startActivity(i);
         });
     }
 

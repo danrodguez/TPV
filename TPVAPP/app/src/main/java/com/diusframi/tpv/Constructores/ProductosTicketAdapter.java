@@ -36,7 +36,7 @@ public class ProductosTicketAdapter extends RecyclerView.Adapter<ProductosTicket
     public ProductosTicketAdapter.MultiViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.productosticketconfiguracion, viewGroup, false);
 
-        return new ProductosTicketAdapter.MultiViewHolder(view);
+        return new MultiViewHolder(view);
     }
 
 
@@ -50,7 +50,7 @@ public class ProductosTicketAdapter extends RecyclerView.Adapter<ProductosTicket
         return ProductoLista.size();
     }
 
-    class MultiViewHolder extends RecyclerView.ViewHolder {
+    static class MultiViewHolder extends RecyclerView.ViewHolder {
         TextView Unidades,Articulos,Precio,Importe;
 
 

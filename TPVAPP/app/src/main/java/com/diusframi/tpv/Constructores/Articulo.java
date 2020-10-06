@@ -17,8 +17,6 @@ public class Articulo {
         this.base = base;
     }
 
-    private boolean isChecked = false;
-
     public String getCategoria() {
         return categoria;
     }
@@ -37,10 +35,6 @@ public class Articulo {
 
     public Integer getFavorito() {
         return favorito;
-    }
-
-    public void setFavorito(Integer favorito) {
-        this.favorito = favorito;
     }
 
     public Double getPrecio() {

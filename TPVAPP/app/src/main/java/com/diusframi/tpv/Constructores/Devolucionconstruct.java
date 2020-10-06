@@ -1,20 +1,37 @@
 package com.diusframi.tpv.Constructores;
 
 public class Devolucionconstruct {
-     Integer Orden;
+    Integer Orden;
+     Integer Ordenticket;
     String articulo;
     Integer unidad;
     Double precio;
     boolean chequeado;
 
 
-
-    public Devolucionconstruct(String articulo, Integer unidad, Double precio, Integer orden, boolean chequeado) {
+    public Devolucionconstruct(Integer orden, Integer ordenticket, String articulo, Integer unidad, Double precio, boolean chequeado) {
+        Orden = orden;
+        Ordenticket = ordenticket;
         this.articulo = articulo;
         this.unidad = unidad;
         this.precio = precio;
-        this.Orden = orden;
         this.chequeado = chequeado;
+    }
+
+    public Integer getOrden() {
+        return Orden;
+    }
+
+    public void setOrden(Integer orden) {
+        Orden = orden;
+    }
+
+    public Integer getOrdenticket() {
+        return Ordenticket;
+    }
+
+    public void setOrdenticket(Integer ordenticket) {
+        Ordenticket = ordenticket;
     }
 
     public String getArticulo() {
@@ -41,13 +58,6 @@ public class Devolucionconstruct {
         this.precio = precio;
     }
 
-    public Integer getOrden() {
-        return Orden;
-    }
-
-    public void setOrden(Integer orden) {
-        Orden = orden;
-    }
     public boolean isChequeado() {
         return chequeado;
     }
@@ -55,5 +65,4 @@ public class Devolucionconstruct {
     public void setChequeado(boolean chequeado) {
         this.chequeado = chequeado;
     }
-
 }

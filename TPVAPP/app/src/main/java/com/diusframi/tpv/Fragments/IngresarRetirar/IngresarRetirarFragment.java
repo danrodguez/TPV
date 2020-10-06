@@ -115,27 +115,20 @@ public class IngresarRetirarFragment extends Fragment {
         importeedit.setFilters(new InputDinero[]{dinero});
 
 
-        aceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ingresar.getId() == radiog.getCheckedRadioButtonId()) {
+        aceptar.setOnClickListener(view1 -> {
+            if (ingresar.getId() == radiog.getCheckedRadioButtonId()) {
 
-                    openDialogIngresar();
+                openDialogIngresar();
 
-                } else if (retirar.getId() == radiog.getCheckedRadioButtonId()) {
-                    openDialogRetirar();
-                }
+            } else if (retirar.getId() == radiog.getCheckedRadioButtonId()) {
+                openDialogRetirar();
             }
-
         });
 
 
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), Venta.class);
-                startActivity(i);
-            }
+        cancelar.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), Venta.class);
+            startActivity(i);
         });
 
 
@@ -150,7 +143,7 @@ public class IngresarRetirarFragment extends Fragment {
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.activity_ingresardialog, null);
-        final BaseDatos sqLiteHelper = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        final BaseDatos sqLiteHelper = new BaseDatos(getContext(), null);
         DecimalFormat decim = new DecimalFormat("#.00");
         dineroingresado = Double.valueOf(importeedit.getText().toString());
         motivo = motivoedit.getText().toString();
@@ -175,27 +168,25 @@ public class IngresarRetirarFragment extends Fragment {
 
         display.getSize(size);
 
-        aceptarboton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        aceptarboton.setOnClickListener(v -> {
 
-                sqLiteHelper.actualizarcajaingresar(
-                        dineroingresado
-                );
-                fragment = new IngresarRetirarFragment();
+            sqLiteHelper.actualizarcajaingresar(
+                    dineroingresado
+            );
+            fragment = new IngresarRetirarFragment();
+            drawerLayout.setVisibility(View.GONE);
+
+            if (fragment != null) {
+
+
+                Fragment fragment = new IngresarRetirarFragment();
+                FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_fragment, fragment);
+                ft.commit();
                 drawerLayout.setVisibility(View.GONE);
 
-                if (fragment != null) {
-
-
-                    Fragment fragment = new IngresarRetirarFragment();
-                    FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_fragment, fragment);
-                    ft.commit();
-                    drawerLayout.setVisibility(View.GONE);
-
-                }
-                dialog.dismiss();
             }
+            dialog.dismiss();
         });
 
 
@@ -209,7 +200,7 @@ public class IngresarRetirarFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public void openDialogRetirar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        final BaseDatos sqLiteHelper = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        final BaseDatos sqLiteHelper = new BaseDatos(getContext(), null);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.activity_retirardialog, null);
         DecimalFormat decim = new DecimalFormat("#.00");
@@ -239,27 +230,25 @@ public class IngresarRetirarFragment extends Fragment {
 
         display.getSize(size);
 
-        aceptarboton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sqLiteHelper.actualizarcajaretirar(
-                        dineroretirado
-                );
+        aceptarboton.setOnClickListener(v -> {
+            sqLiteHelper.actualizarcajaretirar(
+                    dineroretirado
+            );
 
-                fragment = new IngresarRetirarFragment();
+            fragment = new IngresarRetirarFragment();
+            drawerLayout.setVisibility(View.GONE);
+
+            if (fragment != null) {
+
+
+                Fragment fragment = new IngresarRetirarFragment();
+                FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_fragment, fragment);
+                ft.commit();
                 drawerLayout.setVisibility(View.GONE);
 
-                if (fragment != null) {
-
-
-                    Fragment fragment = new IngresarRetirarFragment();
-                    FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_fragment, fragment);
-                    ft.commit();
-                    drawerLayout.setVisibility(View.GONE);
-
-                }
-                           dialog.dismiss();
             }
+                       dialog.dismiss();
         });
 
 

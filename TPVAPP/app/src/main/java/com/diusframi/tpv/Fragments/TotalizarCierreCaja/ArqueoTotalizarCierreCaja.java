@@ -8,9 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,10 +17,6 @@ import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
 
@@ -82,7 +76,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
     Double impuestos21baseimponiblenumero = 0.0;
     Double impuestos10cuotanumero = 0.0;
     Double impuestos21cuotanumero = 0.0;
-
+    Integer id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +84,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         setContentView(R.layout.activity_arqueo_totalizar_cierre_caja);
 
         Intent intent = getIntent();
+        id = intent.getIntExtra("id",0);
         fechatexto = intent.getLongExtra("fecha", 0);
         horatexto = intent.getStringExtra("hora");
         numeroarqueotexto = intent.getStringExtra("numeroarqueo");
@@ -98,8 +93,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         movcajanumero = intent.getDoubleExtra("movcaja", 0);
         totaldevolucionesnumero = intent.getDoubleExtra("totaldevoluciones", 0);
         totalcalculadonumero = intent.getDoubleExtra("totalcalculado", 0);
-        saldoinicialnumero = intent.getDoubleExtra("saldoinicial", 0);
-        ventasefectivonumero = intent.getDoubleExtra("ventasefectivo", 0);
+         ventasefectivonumero = intent.getDoubleExtra("ventasefectivo", 0);
         entradasnumero = intent.getDoubleExtra("entradas", 0);
         salidasnumero = intent.getDoubleExtra("salidas", 0);
         devolucionesnumero = intent.getDoubleExtra("devoluciones", 0);
@@ -142,7 +136,14 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         impuesto21cuota = findViewById(R.id.cuota21text);
         volverboton = findViewById(R.id.volver);
 
+        BaseDatos resg = new BaseDatos(getApplicationContext(), null);
+        SQLiteDatabase bd = resg.getWritableDatabase();
+        id = id - 1;
+         Cursor cursorefectivo = bd.rawQuery("SELECT SaldoInicial FROM SaldoInicial WHERE idticket = '"+id+"'", null);
 
+        if (cursorefectivo.moveToNext()) {
+            saldoinicialnumero = cursorefectivo.getDouble(0);
+        }
 
         if (descuadrenumero < 0) {
             Descuadre.setTextColor(Color.RED);
@@ -158,7 +159,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         String anio = fechastring.substring(0, 4);
         String fechatextocompleto = dia + "/" + mes + "/" + anio;
 
-        BaseDatos resg2 = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
+        BaseDatos resg2 = new BaseDatos(getApplicationContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
 
         @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT nombrecomercial FROM Usuarios WHERE activo  LIKE 1", null);

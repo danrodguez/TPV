@@ -16,7 +16,6 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -29,11 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Constructores.Arqueo;
-import com.diusframi.tpv.Constructores.ArqueoAdapter;
 import com.diusframi.tpv.Constructores.MiVenta;
 import com.diusframi.tpv.Constructores.MiVentaAdapter;
-import com.diusframi.tpv.Fragments.MisArqueos.MisArqueosFragment;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 import com.google.android.material.navigation.NavigationView;
@@ -57,7 +53,6 @@ public class MisVentasFragment extends Fragment implements Ticket {
     CalendarView calendario;
     String fecha;
     String numero = "";
-    EditText numeroedit;
     int filtrocalendario = 0;
     int filtronumero = 0;
     int i = 0;
@@ -98,9 +93,9 @@ public class MisVentasFragment extends Fragment implements Ticket {
         drawerLayout.setDrawerElevation(0);
 
 
-        BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(getContext(), null);
         SQLiteDatabase bd = resg.getReadableDatabase();
-        Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes", null);
+        Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes ORDER BY id DESC", null);
 
         String id;
         String fecha;
@@ -120,8 +115,8 @@ public class MisVentasFragment extends Fragment implements Ticket {
 
 
         }
-
-        Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones", null);
+cursor.close();
+        Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones ORDER BY id DESC", null);
 
         String id2;
         String fecha2;
@@ -141,7 +136,7 @@ public class MisVentasFragment extends Fragment implements Ticket {
 
 
         }
-
+cursor2.close();
 
 
         adapter.setMisVentasLista(lista);
@@ -159,104 +154,81 @@ public class MisVentasFragment extends Fragment implements Ticket {
         }
 
 
-        salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), Venta.class);
-                startActivity(i);
-            }
+        salir.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), Venta.class);
+            startActivity(i);
         });
 
 
-        filtrocalendario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialogcalendario();
-            }
-        });
+        filtrocalendario.setOnClickListener(v -> openDialogcalendario());
 
-        filtronumero.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialognumero();
-            }
-        });
+        filtronumero.setOnClickListener(v -> openDialognumero());
 
-        filtroqr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialogqr();
-            }
-        });
+        filtroqr.setOnClickListener(v -> openDialogqr());
 
 //Boton resetea la lista y quita los filtros
-        quitarfiltros.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        quitarfiltros.setOnClickListener(v -> {
 
 
-                quitarfiltros.setBackgroundResource(R.drawable.botongrisclaro);
-                quitarfiltros.setEnabled(false);
+            quitarfiltros.setBackgroundResource(R.drawable.botongrisclaro);
+            quitarfiltros.setEnabled(false);
 
-                lista.clear();
+            lista.clear();
 
 
 
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                SQLiteDatabase bd = resg.getReadableDatabase();
-                Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes", null);
+            BaseDatos resg1 = new BaseDatos(getContext(), null);
+            SQLiteDatabase bd1 = resg1.getReadableDatabase();
+            Cursor cursor1 = bd1.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes  ORDER BY id DESC", null);
 
-                String id;
-                String fecha;
-                String total;
-
-
-                while (cursor.moveToNext()) {
-                    id = cursor.getString(0);
-                    fecha = cursor.getString(1);
-                    total = cursor.getString(2);
-                    if (i == 0) {
-                        i = 1;
-                    } else if (i == 1) {
-                        i = 0;
-                    }
-                    lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i,false));
+            String id1;
+            String fecha1;
+            String total1;
 
 
+            while (cursor1.moveToNext()) {
+                id1 = cursor1.getString(0);
+                fecha1 = cursor1.getString(1);
+                total1 = cursor1.getString(2);
+                if (i == 0) {
+                    i = 1;
+                } else if (i == 1) {
+                    i = 0;
                 }
-
-                Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones", null);
-
-                String id2;
-                String fecha2;
-                String total2;
+                lista.add(new MiVenta(Integer.parseInt(id1), fecha1, Double.parseDouble(total1), i,false));
 
 
-                while (cursor2.moveToNext()) {
-                    id2 = cursor2.getString(0);
-                    fecha2 = cursor2.getString(1);
-                    total2 = cursor2.getString(2);
+            }
+cursor1.close();
+            Cursor cursor21 = bd1.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  ORDER BY id DESC", null);
 
-                    lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
-
-
-                }
+            String id21;
+            String fecha21;
+            String total21;
 
 
+            while (cursor21.moveToNext()) {
+                id21 = cursor21.getString(0);
+                fecha21 = cursor21.getString(1);
+                total21 = cursor21.getString(2);
 
-                adapter.setMisVentasLista(lista);
-                cursor.close();
-                bd.close();
-                adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
-                recyclerView.setAdapter(adapter);
-
-
+                lista.add(new MiVenta(Integer.parseInt(id21), fecha21, Double.parseDouble(total21), i,true));
 
 
-    }
+            }
+
+cursor21.close();
+
+            adapter.setMisVentasLista(lista);
+            cursor1.close();
+            bd1.close();
+            adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
+            recyclerView.setAdapter(adapter);
 
 
-    });
+
+
+});
         return view;
     }
 
@@ -283,18 +255,15 @@ public class MisVentasFragment extends Fragment implements Ticket {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         fecha = df.format(c);
-        calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            //show the selected date as a toast
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int day) {
-                month = month + 1;
-                @SuppressLint("DefaultLocale") String formattedday = String.format("%02d", day);
-                @SuppressLint("DefaultLocale") String formattedmonth = String.format("%02d", month);
-                fecha = year + formattedmonth + formattedday;
+        //show the selected date as a toast
+        calendario.setOnDateChangeListener((view1, year, month, day) -> {
+            month = month + 1;
+            @SuppressLint("DefaultLocale") String formattedday = String.format("%02d", day);
+            @SuppressLint("DefaultLocale") String formattedmonth = String.format("%02d", month);
+            fecha = year + formattedmonth + formattedday;
 
 
 
-            }
         });
         // Create the alert dialog
         final AlertDialog dialog = builder.create();
@@ -306,16 +275,134 @@ public class MisVentasFragment extends Fragment implements Ticket {
 
 
         //Boton cancelar no usa el filtro
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        cancelar.setOnClickListener(v -> {
+            lista.clear();
+
+            filtrocalendario = 0;
+            quitarfiltrobotoncolor();
+
+            BaseDatos resg = new BaseDatos(getContext(), null);
+            SQLiteDatabase bd = resg.getReadableDatabase();
+            Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes  ORDER BY id DESC", null);
+
+            String id;
+            String fecha;
+            String total;
+
+
+            while (cursor.moveToNext()) {
+                id = cursor.getString(0);
+                fecha = cursor.getString(1);
+                total = cursor.getString(2);
+                if (i == 0) {
+                    i = 1;
+                } else if (i == 1) {
+                    i = 0;
+                }
+                lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i,false));
+
+
+            }
+            cursor.close();
+
+            Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  ORDER BY id DESC", null);
+
+            String id2;
+            String fecha2;
+            String total2;
+
+
+            while (cursor2.moveToNext()) {
+                id2 = cursor2.getString(0);
+                fecha2 = cursor2.getString(1);
+                total2 = cursor2.getString(2);
+
+                lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
+
+
+            }
+
+cursor2.close();
+
+            adapter.setMisVentasLista(lista);
+            cursor.close();
+            bd.close();
+            adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
+            recyclerView.setAdapter(adapter);
+
+            dialog.dismiss();
+        });
+
+        //Boton filtrar filtra la lista por calendario
+        filtrar.setOnClickListener(v -> {
+
+            filtrocalendario = 1;
+
+
+            quitarfiltros.setBackgroundResource(R.drawable.botonnaranja);
+            quitarfiltros.setEnabled(true);
+
+             String fechatexto = fecha;
+
+            if (fechatexto != null) {
+
+                ArrayList<MiVenta> lista = new ArrayList<>();
+                BaseDatos resg = new BaseDatos(getContext(), null);
+                SQLiteDatabase bd = resg.getReadableDatabase();
+
+                Cursor cursor2 = bd.rawQuery("SELECT Id,FechaTexto,Total FROM Ordenes WHERE FechaTexto LIKE '" + fechatexto + "'  ORDER BY id DESC", null);
+
+                int id;
+                double total;
+                String fechat;
+
+                while (cursor2.moveToNext()) {
+                    id = cursor2.getInt(0);
+                    fechat = cursor2.getString(1);
+                    total = cursor2.getDouble(2);
+                    if (i == 0) {
+                        i = 1;
+                    } else if (i == 1) {
+                        i = 0;
+                    }
+                    lista.add(new MiVenta(id, fechat, total, i, false));
+
+                }
+
+                Cursor cursor3 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  WHERE FechaTexto LIKE '" + fechatexto +"'  ORDER BY id DESC", null);
+
+                String id2;
+                String fecha2;
+                String total2;
+
+
+                while (cursor3.moveToNext()) {
+                    id2 = cursor3.getString(0);
+                    fecha2 = cursor3.getString(1);
+                    total2 = cursor3.getString(2);
+
+                    lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
+
+
+                }
+
+
+                cursor2.close();
+                cursor3.close();
+                bd.close();
+                MiVentaAdapter adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
+                recyclerView.setAdapter(adapter);
+                adapter.setMisVentasLista(lista);
+
+            }else{
                 lista.clear();
 
-                filtrocalendario = 0;
-                quitarfiltrobotoncolor();
 
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+
+
+                BaseDatos resg = new BaseDatos(getContext(), null);
                 SQLiteDatabase bd = resg.getReadableDatabase();
-                Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes", null);
+                Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes  ORDER BY id DESC", null);
 
                 String id;
                 String fecha;
@@ -331,143 +418,20 @@ public class MisVentasFragment extends Fragment implements Ticket {
                     } else if (i == 1) {
                         i = 0;
                     }
-                    lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i,false));
-
-
-                }
-
-                Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones", null);
-
-                String id2;
-                String fecha2;
-                String total2;
-
-
-                while (cursor2.moveToNext()) {
-                    id2 = cursor2.getString(0);
-                    fecha2 = cursor2.getString(1);
-                    total2 = cursor2.getString(2);
-
-                    lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
-
+                    lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i, true));
+                    adapter.setMisVentasLista(lista);
 
                 }
 
-
-
-                adapter.setMisVentasLista(lista);
                 cursor.close();
                 bd.close();
                 adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
                 recyclerView.setAdapter(adapter);
-
+                adapter.setMisVentasLista(lista);
                 dialog.dismiss();
             }
 
-        });
-
-        //Boton filtrar filtra la lista por calendario
-        filtrar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                filtrocalendario = 1;
-
-
-                quitarfiltros.setBackgroundResource(R.drawable.botonnaranja);
-                quitarfiltros.setEnabled(true);
-
-                 String fechatexto = fecha;
-
-                if (fechatexto != null) {
-
-                    ArrayList<MiVenta> lista = new ArrayList<>();
-                    BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                    SQLiteDatabase bd = resg.getReadableDatabase();
-
-                    Cursor cursor2 = bd.rawQuery("SELECT Id,FechaTexto,Total FROM Ordenes WHERE FechaTexto LIKE '" + fechatexto + "'", null);
-
-                    int id;
-                    Double descuadre;
-                    double total;
-                    String fechat;
-
-                    while (cursor2.moveToNext()) {
-                        id = cursor2.getInt(0);
-                        fechat = cursor2.getString(1);
-                        total = cursor2.getDouble(2);
-                        if (i == 0) {
-                            i = 1;
-                        } else if (i == 1) {
-                            i = 0;
-                        }
-                        lista.add(new MiVenta(id, fechat, total, i, false));
-
-                    }
-
-                    Cursor cursor3 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  WHERE FechaTexto LIKE '" + fechatexto +"'", null);
-
-                    String id2;
-                    String fecha2;
-                    String total2;
-
-
-                    while (cursor3.moveToNext()) {
-                        id2 = cursor3.getString(0);
-                        fecha2 = cursor3.getString(1);
-                        total2 = cursor3.getString(2);
-
-                        lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
-
-
-                    }
-
-
-                    cursor2.close();
-                    cursor3.close();
-                    bd.close();
-                    MiVentaAdapter adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
-                    recyclerView.setAdapter(adapter);
-                    adapter.setMisVentasLista(lista);
-
-                }else{
-                    lista.clear();
-
-
-
-
-                    BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                    SQLiteDatabase bd = resg.getReadableDatabase();
-                    Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes", null);
-
-                    String id;
-                    String fecha;
-                    String total;
-
-
-                    while (cursor.moveToNext()) {
-                        id = cursor.getString(0);
-                        fecha = cursor.getString(1);
-                        total = cursor.getString(2);
-                        if (i == 0) {
-                            i = 1;
-                        } else if (i == 1) {
-                            i = 0;
-                        }
-                        lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i, true));
-                        adapter.setMisVentasLista(lista);
-
-                    }
-
-                    cursor.close();
-                    bd.close();
-                    adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
-                    recyclerView.setAdapter(adapter);
-                    adapter.setMisVentasLista(lista);
-                    dialog.dismiss();
-                }
-
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         });
 
 
@@ -502,111 +466,44 @@ public class MisVentasFragment extends Fragment implements Ticket {
 
 
         //Boton cancelar no usa el filtro
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                lista.clear();
+        cancelar.setOnClickListener(v -> {
+            lista.clear();
 
 
-                filtronumero = 0;
-                quitarfiltrobotoncolor();
+            filtronumero = 0;
+            quitarfiltrobotoncolor();
 
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                SQLiteDatabase bd = resg.getReadableDatabase();
-                Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes", null);
+            BaseDatos resg = new BaseDatos(getContext(), null);
+            SQLiteDatabase bd = resg.getReadableDatabase();
+            Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes  ORDER BY id DESC", null);
 
-                String id;
-                String fecha;
-                String total;
-
-
-                while (cursor.moveToNext()) {
-                    id = cursor.getString(0);
-                    fecha = cursor.getString(1);
-                    total = cursor.getString(2);
-                    if (i == 0) {
-                        i = 1;
-                    } else if (i == 1) {
-                        i = 0;
-                    }
-                    lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i,false));
+            String id;
+            String fecha;
+            String total;
 
 
+            while (cursor.moveToNext()) {
+                id = cursor.getString(0);
+                fecha = cursor.getString(1);
+                total = cursor.getString(2);
+                if (i == 0) {
+                    i = 1;
+                } else if (i == 1) {
+                    i = 0;
                 }
-
-                Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones", null);
-
-                String id2;
-                String fecha2;
-                String total2;
+                lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i,false));
 
 
-                while (cursor2.moveToNext()) {
-                    id2 = cursor2.getString(0);
-                    fecha2 = cursor2.getString(1);
-                    total2 = cursor2.getString(2);
-
-                    lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
-
-
-                }
-
-
-
-                adapter.setMisVentasLista(lista);
-                cursor.close();
-                bd.close();
-                adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
-                recyclerView.setAdapter(adapter);
-                dialog.dismiss();
             }
 
-        });
-
-        //Boton filtrar filtra la lista por calendario
-        filtrar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                filtronumero = 1;
-
-
-                quitarfiltros.setBackgroundResource(R.drawable.botonnaranja);
-                quitarfiltros.setEnabled(true);
-                 numero = numeroedit.getText().toString();
-                lista.clear();
-
-                                                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
-                                SQLiteDatabase bd = resg.getReadableDatabase();
-                                Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes WHERE id LIKE '"+numero+"'", null);
-
-                                String id;
-                                String fecha;
-                                String total;
-
-
-                                while (cursor.moveToNext()) {
-                                    id = cursor.getString(0);
-                                    fecha = cursor.getString(1);
-                                    total = cursor.getString(2);
-                                    if (i == 0) {
-                                        i = 1;
-                                    } else if (i == 1) {
-                                        i = 0;
-                                    }
-                                    lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i, false));
-                                                                  }
-
-
-
-
-
-            Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  WHERE id LIKE '"+numero+"'", null);
+            Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  ORDER BY id DESC", null);
 
             String id2;
             String fecha2;
             String total2;
 
 
-                while (cursor2.moveToNext()) {
+            while (cursor2.moveToNext()) {
                 id2 = cursor2.getString(0);
                 fecha2 = cursor2.getString(1);
                 total2 = cursor2.getString(2);
@@ -615,14 +512,77 @@ public class MisVentasFragment extends Fragment implements Ticket {
 
 
             }
-                adapter.setMisVentasLista(lista);
-                                cursor.close();
-                                bd.close();
-                                adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
-                                recyclerView.setAdapter(adapter);
 
-                dialog.dismiss();
-            }
+cursor2.close();
+
+            adapter.setMisVentasLista(lista);
+            cursor.close();
+            bd.close();
+            adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
+            recyclerView.setAdapter(adapter);
+            dialog.dismiss();
+        });
+
+        //Boton filtrar filtra la lista por calendario
+        filtrar.setOnClickListener(v -> {
+
+            filtronumero = 1;
+
+
+            quitarfiltros.setBackgroundResource(R.drawable.botonnaranja);
+            quitarfiltros.setEnabled(true);
+             numero = numeroedit.getText().toString();
+            lista.clear();
+
+                                            BaseDatos resg = new BaseDatos(getContext(), null);
+                            SQLiteDatabase bd = resg.getReadableDatabase();
+                            Cursor cursor = bd.rawQuery("SELECT id,FechaTexto,Total FROM Ordenes WHERE id LIKE '"+numero+"'  ORDER BY id DESC", null);
+
+                            String id;
+                            String fecha;
+                            String total;
+
+
+                            while (cursor.moveToNext()) {
+                                id = cursor.getString(0);
+                                fecha = cursor.getString(1);
+                                total = cursor.getString(2);
+                                if (i == 0) {
+                                    i = 1;
+                                } else if (i == 1) {
+                                    i = 0;
+                                }
+                                lista.add(new MiVenta(Integer.parseInt(id), fecha, Double.parseDouble(total), i, false));
+                                                              }
+
+
+cursor.close();
+
+
+        Cursor cursor2 = bd.rawQuery("SELECT id,FechaTexto,Total FROM Devoluciones  WHERE id LIKE '"+numero+"'  ORDER BY id DESC", null);
+
+        String id2;
+        String fecha2;
+        String total2;
+
+
+            while (cursor2.moveToNext()) {
+            id2 = cursor2.getString(0);
+            fecha2 = cursor2.getString(1);
+            total2 = cursor2.getString(2);
+
+            lista.add(new MiVenta(Integer.parseInt(id2), fecha2, Double.parseDouble(total2), i,true));
+
+
+        }
+            cursor2.close();
+            adapter.setMisVentasLista(lista);
+                            cursor.close();
+                            bd.close();
+                            adapter = new MiVentaAdapter(MisVentasFragment.this,getContext(), lista);
+                            recyclerView.setAdapter(adapter);
+
+            dialog.dismiss();
         });
 
         dialog.show();
@@ -656,18 +616,10 @@ public class MisVentasFragment extends Fragment implements Ticket {
 
 
         //Boton cancelar no usa el filtro
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        cancelar.setOnClickListener(v -> dialog.dismiss());
 
         //Boton filtrar filtra la lista por calendario
-        filtrar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        filtrar.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 

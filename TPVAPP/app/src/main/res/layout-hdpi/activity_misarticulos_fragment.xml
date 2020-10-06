@@ -28,7 +28,6 @@
             app:theme="@style/ToolbarColoredBackArrow">
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -45,7 +44,6 @@
 
 
             <HorizontalScrollView
-                android:id="@+id/botones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margintop"

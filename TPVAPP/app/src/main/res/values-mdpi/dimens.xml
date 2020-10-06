@@ -1,24 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="text_sizegrande">20sp</dimen>
     <dimen name="text_sizepequeno">15sp</dimen>
-    <dimen name="text_sizemuygrande">30sp</dimen>
     <dimen name="text_size">13sp</dimen>
     <dimen name="margin">15dp</dimen>
     <dimen name="margintop">8dp</dimen>
     <dimen name="margingrande">40dp</dimen>
-    <dimen name="logo">32dp</dimen>
     <dimen name="tamanoboton">55dp</dimen>
-    <dimen name="margindrawable">30sp</dimen>
     <dimen name="minimotamano">100dp</dimen>
     <dimen name="minimotamano2">200dp</dimen>
     <dimen name="design_navigation_icon_size" tools:override="true">40dp</dimen>
-    <dimen name="text_sizegrandemenu">50sp</dimen>
-    <dimen name="marginenorme">140dp</dimen>
-    <dimen name="minimotamanopequeno">50dp</dimen>
-    <dimen name="tamanoboton2">140dp</dimen>
-    <dimen name="tamanoboton3">50dp</dimen>
-    <dimen name="tamanobotongrande">120dp</dimen>
     <dimen name="gridview">250sp</dimen>
-    <dimen name="tamanobotonpeq">30dp</dimen>
 
 </resources>

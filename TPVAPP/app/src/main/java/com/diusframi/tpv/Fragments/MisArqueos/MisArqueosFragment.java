@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,9 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Constructores.Arqueo;
 import com.diusframi.tpv.Constructores.ArqueoAdapter;
-import com.diusframi.tpv.Constructores.MiVenta;
-import com.diusframi.tpv.Constructores.MiVentaAdapter;
-import com.diusframi.tpv.Fragments.MisVentas.MisVentasFragment;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 import com.google.android.material.navigation.NavigationView;
@@ -92,7 +88,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
         drawerLayout.setDrawerElevation(0);
 
 
-        BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(getContext(), null);
         SQLiteDatabase bd = resg.getReadableDatabase();
         Cursor cursor = bd.rawQuery("SELECT id,Fecha,Descuadre,TotalCalculado FROM Arqueos", null);
 
@@ -155,7 +151,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
                     quitarfiltrosboton.setEnabled(false);
 
                 lista.clear();
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getContext(), null);
                 SQLiteDatabase bd = resg.getReadableDatabase();
 
                 Cursor cursor = bd.rawQuery("SELECT id,Fecha,Descuadre,TotalCalculado FROM Arqueos", null);
@@ -253,7 +249,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
                 lista.clear();
                 filtrocalendario = 0;
                 quitarfiltrobotoncolor();
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getContext(), null);
                 SQLiteDatabase bd = resg.getReadableDatabase();
                 Cursor cursor = bd.rawQuery("SELECT id,Fecha,Descuadre,TotalCalculado FROM Arqueos", null);
 
@@ -300,7 +296,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
                 if (fechatexto != null) {
 
                     ArrayList<Arqueo> lista = new ArrayList<>();
-                    BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                    BaseDatos resg = new BaseDatos(getContext(), null);
                     SQLiteDatabase bd = resg.getReadableDatabase();
 
                     Cursor cursor = bd.rawQuery("SELECT id,Fecha,Descuadre,TotalCalculado FROM Arqueos WHERE FechaTexto LIKE '" + fechatexto + "'", null);
@@ -335,7 +331,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
 
 
 
-                    BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                    BaseDatos resg = new BaseDatos(getContext(), null);
                     SQLiteDatabase bd = resg.getReadableDatabase();
 
 
@@ -426,7 +422,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
                 lista.clear();
                 filtronumero = 0;
              quitarfiltrobotoncolor();
-                BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                BaseDatos resg = new BaseDatos(getContext(), null);
                 SQLiteDatabase bd = resg.getReadableDatabase();
                 Cursor cursor = bd.rawQuery("SELECT id,Fecha,Descuadre,TotalCalculado FROM Arqueos", null);
 
@@ -471,7 +467,7 @@ public class MisArqueosFragment extends Fragment implements Arqueoint {
                 String n = numero;
 
                     ArrayList<Arqueo> lista = new ArrayList<>();
-                    BaseDatos resg = new BaseDatos(getContext(), "BaseDatos", null, 1);
+                    BaseDatos resg = new BaseDatos(getContext(), null);
                     SQLiteDatabase bd = resg.getReadableDatabase();
 
                     Cursor cursor = bd.rawQuery("SELECT id,Fecha,Descuadre,TotalCalculado FROM Arqueos WHERE id LIKE '" + numero + "'", null);

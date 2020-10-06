@@ -17,10 +17,6 @@ public class ProductoTicket {
         return unidad;
     }
 
-    public void setUnidad(Integer unidad) {
-        this.unidad = unidad;
-    }
-
     public String getArticulos() {
         return articulos;
     }
@@ -31,10 +27,6 @@ public class ProductoTicket {
 
     public Double getPreciou() {
         return preciou;
-    }
-
-    public void setPreciou(Double preciou) {
-        this.preciou = preciou;
     }
 
     public Double getImporte() {

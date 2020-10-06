@@ -14,14 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Fragments.MisArticulos.Editararticulo;
-import com.diusframi.tpv.Fragments.MisArticulos.MisarticulosFragment;
-import com.diusframi.tpv.Fragments.MisVentas.MisVentasTicketEfectivo;
-import com.diusframi.tpv.Fragments.MisVentas.MisVentasTicketTarjeta;
 import com.diusframi.tpv.Fragments.MisVentas.Ticket;
 import com.diusframi.tpv.R;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -85,7 +79,7 @@ public class MiVentaAdapter extends RecyclerView.Adapter<MiVentaAdapter.MultiVie
         void bind(final MiVenta MisVentasLista) {
             int i = MisVentasLista.getI();
 
-            BaseDatos resg = new BaseDatos(context, "BaseDatos", null, 1);
+            BaseDatos resg = new BaseDatos(context, null);
             SQLiteDatabase bd = resg.getReadableDatabase();
 
 if(!MisVentasLista.isDevolucion()){

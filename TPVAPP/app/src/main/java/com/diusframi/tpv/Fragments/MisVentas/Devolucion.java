@@ -10,16 +10,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
+import com.diusframi.tpv.Constructores.Articulo;
+import com.diusframi.tpv.Constructores.ArticuloAdapter;
 import com.diusframi.tpv.Constructores.DevolucionAdapter;
 import com.diusframi.tpv.Constructores.Devolucionconstruct;
 import com.diusframi.tpv.Constructores.numerodevolucion;
+import com.diusframi.tpv.Fragments.MisArticulos.MisarticulosFragment;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 public class Devolucion extends AppCompatActivity implements numerodevolucion {
     Button cancelarboton;
     Button devolverboton;
+    @SuppressLint("StaticFieldLeak")
     public static CheckBox checkbox;
     TextView tickettext;
     TextView total;
@@ -38,7 +41,11 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
     String textoid = "";
     String devolvernumero = "0.0";
     RecyclerView recyclerView;
+    int ordenticket = 0;
+    DevolucionAdapter adapter1;
+    int orden = 0;
     ArrayList<Devolucionconstruct> listadevoluciones = new ArrayList<>();
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +54,10 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
         recyclerView = findViewById(R.id.RecyclerView);
         cancelarboton = findViewById(R.id.cancelar);
         devolverboton = findViewById(R.id.devolver);
-        checkbox = findViewById(R.id.checkb);
         tickettext = findViewById(R.id.ticket);
         total = findViewById(R.id.totalticket);
         devolver = findViewById(R.id.totaldevolver);
-
-        BaseDatos resg3 = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
+        BaseDatos resg3 = new BaseDatos(getApplicationContext(), null);
         SQLiteDatabase bd2 = resg3.getReadableDatabase();
 
         @SuppressLint("Recycle") Cursor cursortexto = bd2.rawQuery("SELECT TextoTicket FROM TextoTicketDevolucion", null);
@@ -62,17 +67,23 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
 
         }
 
+
+
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
         ordentexto = extras.getString("orden");}
 
         tickettext.setText(textoid+""+ordentexto);
 
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DevolucionAdapter adapter1 = new DevolucionAdapter(Devolucion.this, this, listadevoluciones);
+        adapter1 = new DevolucionAdapter(Devolucion.this, this, listadevoluciones);
         recyclerView.setAdapter(adapter1);
 
-        int orden = Integer.parseInt(ordentexto);
+
+//NUMERO TICKET
+         ordenticket = Integer.parseInt(ordentexto);
+
 
         @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT Total FROM Ordenes WHERE id LIKE '"+ordentexto+"'", null);
 
@@ -87,25 +98,35 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
 
 
 
-        int idticket = 0;
 
+        int idticket = 0;
+        int idticket2;
 
         Cursor cursorid3 = bd2.rawQuery("SELECT NumeroDevolucion FROM TextoTicketDevolucion", null);
         if(cursorid3.moveToFirst()){
             idticket = cursorid3.getInt(0);
         }
+cursorid3.close();
+        Cursor cursorid4 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id DESC", null);
+        if(cursorid4.moveToFirst()){
+            idticket2 = cursorid4.getInt(0);
+            idticket2 = idticket2 + 1;
+        }else{
+            idticket2 = 1;
+        }
 
-
-
+cursorid4.close();
         if(idticket != 0){
             orden = idticket;
             resg3.borrarnumerodevolucion();
+        }else{
+            orden = idticket2;
         }
 
 
 
 
-        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre,Precio,Numero FROM Vendidos WHERE idorden  LIKE '"+orden+"'", null);
+        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre,Precio,Numero FROM Vendidos WHERE idorden  LIKE '"+ordenticket+"'", null);
 
         double precio;
         String nombre;
@@ -116,11 +137,10 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
             precio = cursor2.getDouble(1);
             numero = cursor2.getInt(2);
 
-            @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Nombre,Numero FROM Devueltos WHERE idorden  LIKE '"+orden+"'", null);
+            @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Nombre,Numero FROM Devueltos WHERE idticket LIKE '"+ordenticket+"'", null);
 
-            String nombred = "";
-            int numerod = 0;
-            boolean chequeado = false;
+            String nombred;
+            int numerod;
             while(cursor3.moveToNext ()){
                 nombred = cursor3.getString(0);
                 numerod = cursor3.getInt(1);
@@ -131,13 +151,13 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
             }
 
 
-
+    
             if(numero==1){
-                listadevoluciones.add(new Devolucionconstruct(nombre,numero,precio,orden, chequeado));
+                listadevoluciones.add(new Devolucionconstruct(orden, ordenticket, nombre,numero,precio, false));
             }else{
 
                 for (int inumero=0;inumero < numero; inumero++){
-                    listadevoluciones.add(new Devolucionconstruct(nombre,1,precio,orden,chequeado));
+                    listadevoluciones.add(new Devolucionconstruct(orden, ordenticket, nombre,1,precio, false));
                 }
             }
 
@@ -149,56 +169,45 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
         recyclerView.setAdapter(adapter);
 
 
-        cancelarboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                i.putExtra("misventas","si");
-                i.putExtra("ticketventa","");
-                startActivity(i);
-            }
+        cancelarboton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            i.putExtra("misventas","si");
+            i.putExtra("ticketventa","");
+            startActivity(i);
         });
 
         final int finalOrden = orden;
 
-        devolverboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        devolverboton.setOnClickListener(v -> {
 
 
 
-                Integer id = finalOrden;
-
-                BaseDatos resg3 = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
-                SQLiteDatabase bd = resg3.getReadableDatabase();
-
-                double totalt = 0.0;
-    double preciot = 0.0;
-    int numerot = 0;
-                @SuppressLint("Recycle") Cursor cursor3 = bd.rawQuery("SELECT Total FROM Devoluciones WHERE  idticket  LIKE'"+id+"'", null);
-                if (!cursor3.moveToFirst()){
-
-                    @SuppressLint("Recycle") Cursor cursor4 = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE idorden  LIKE '"+id+"'", null);
-                    while (cursor4.moveToNext()){
-                        preciot=cursor4.getDouble(0);
-                         numerot = cursor4.getInt(1);
-                        totalt = totalt + (preciot * numerot);
-                    }
-
-
-                    resg3.anadirdatosdevolucion(id,totalt,Integer.parseInt(ordentexto));
-                }else{
-                    @SuppressLint("Recycle") Cursor cursor4 = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE idorden  LIKE '"+id+"'", null);
-                    while (cursor4.moveToNext()){
-                        totalt=cursor4.getDouble(0)*cursor4.getInt(1);
-                    }
-                    resg3.actualizardatosdevolucion(totalt,Integer.parseInt(ordentexto));
-                }
-
-
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
+            int id = finalOrden;
+            BaseDatos resg31 = new BaseDatos(getApplicationContext(), null);
+            SQLiteDatabase bd = resg31.getReadableDatabase();
+            if(id ==0){
+                id = 1;
             }
+            double totalt = 0.0;
+            double preciot;
+            int numerot;
+
+
+                @SuppressLint("Recycle") Cursor cursor4 = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE idorden  LIKE '"+id+"'", null);
+            while (cursor4.moveToNext()){
+                preciot=cursor4.getDouble(0);
+                numerot = cursor4.getInt(1);
+                totalt = totalt + (preciot * numerot);
+            }
+
+
+
+                resg31.anadirdatosdevolucion(finalOrden,totalt,Integer.parseInt(ordentexto));
+
+
+
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            startActivity(i);
         });
 
         if(devolver.getText()=="0,00" ||devolver.getText()=="0.00"){
@@ -209,7 +218,7 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
 
     @Override
     public void sumar(Double numero) {
-        Double numerototal = 0.0;
+        Double numerototal;
         try {  numerototal = Double.parseDouble(devolver.getText().toString());
         } catch (NumberFormatException e)
         { String numerotexto = devolver.getText().toString().replace(",", "."); numerototal = Double.parseDouble(numerotexto); }
@@ -226,7 +235,7 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
 
     @Override
     public void restar(Double numero) {
-        double numerototal = 0.0;
+        double numerototal;
         try {  numerototal = Double.parseDouble(devolver.getText().toString());
         } catch (NumberFormatException e)
         { String numerotexto = devolver.getText().toString().replace(",", "."); numerototal = Double.parseDouble(numerotexto); }
@@ -239,41 +248,10 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
         }
 
     }
-    @Override
-    public void checkall() {
-        BaseDatos resg3 = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
-        SQLiteDatabase bd2 = resg3.getReadableDatabase();
-        DevolucionAdapter adapter1 = new DevolucionAdapter(Devolucion.this, this, listadevoluciones);
-        @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre,Precio,Numero FROM Vendidos WHERE idorden  LIKE '" + ordentexto + "'", null);
-        double precio;
-        String nombre;
-        int numero;
-        boolean chequeado = true;
-        listadevoluciones.clear();
-        while (cursor2.moveToNext()) {
-            nombre = cursor2.getString(0);
-            precio = cursor2.getDouble(1);
-            numero = cursor2.getInt(2);
 
-            if (numero == 1) {
 
-                listadevoluciones.add(new Devolucionconstruct(nombre, numero, precio, Integer.parseInt(ordentexto), chequeado));
 
-            } else {
 
-                for (int inumero = 0; inumero < numero; inumero++) {
-                    listadevoluciones.add(new Devolucionconstruct(nombre, 1, precio, Integer.parseInt(ordentexto), chequeado));
-                }
-            }
-            adapter1.notifyDataSetChanged();
-
-            adapter1.setDevolucionconstructLista(listadevoluciones);
-            adapter1.notifyDataSetChanged();
-        }
-
-        DevolucionAdapter adapter = new DevolucionAdapter(Devolucion.this, getApplicationContext(), listadevoluciones);
-        recyclerView.setAdapter(adapter);
-        }
 
     @Override
     public void cambiarbotonanaranja() {

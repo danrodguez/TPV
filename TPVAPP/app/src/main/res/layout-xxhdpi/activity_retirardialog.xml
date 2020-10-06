@@ -12,7 +12,6 @@
         android:textColor="@color/black"
         android:layout_margin="20dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/entradatexto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/retirada_de_efectivo_realizada" />
@@ -28,7 +27,6 @@
         <TextView
             android:textSize="25sp"
             android:textColor="@color/black"
-            android:id="@+id/encajatexto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/en_caja" />
@@ -54,7 +52,6 @@
         <TextView
             android:textSize="25sp"
             android:textColor="@color/black"
-            android:id="@+id/encajatexto2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/motivo" />

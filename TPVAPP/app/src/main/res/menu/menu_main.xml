@@ -15,7 +15,12 @@
             android:id="@+id/nav_misarticulos"
             android:icon="@drawable/misarticulos"
             android:title="@string/menu_misarticulos" />
-        
+
+        <item
+            android:id="@+id/nav_miscategorias"
+            android:icon="@drawable/categorias"
+            android:title="@string/menu_miscategorias" />
+
         <item
             android:id="@+id/nav_misventas"
             android:icon="@drawable/misventas"
@@ -26,9 +31,7 @@
             android:title="@string/menu_misarqueos" />
     </group>
 
-    <group
-        android:id="@+id/group1"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_ingresarretirar"
             android:icon="@drawable/ingresarretirar"
@@ -41,9 +44,7 @@
     </group>
 
 
-    <group
-        android:id="@+id/group2"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_cerrarsesion"
             android:icon="@drawable/cerrarsesion"

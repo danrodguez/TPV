@@ -68,7 +68,7 @@ public class ArticuloAdaptercategoria extends RecyclerView.Adapter<ArticuloAdapt
     }
 
     class MultiViewHolder extends RecyclerView.ViewHolder {
-        BaseDatos resg = new BaseDatos(itemView.getContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(itemView.getContext(), null);
         Integer favoritos;
         TextView Nombre, Precio;
         ImageView Favorito;
@@ -108,7 +108,7 @@ public class ArticuloAdaptercategoria extends RecyclerView.Adapter<ArticuloAdapt
             @SuppressLint("UseCompatLoadingForDrawables") Drawable img = context.getResources().getDrawable(R.drawable.estrellablanca);
             img.setBounds(0, 0, 20, 20);
 
-            BaseDatos resg2 = new BaseDatos(context, "BaseDatos", null, 1);
+            BaseDatos resg2 = new BaseDatos(context, null);
             SQLiteDatabase bd2 = resg2.getReadableDatabase();
             Cursor cursor = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '"+Articuloslista.getCategoria()+"'", null);
 
@@ -135,7 +135,7 @@ public class ArticuloAdaptercategoria extends RecyclerView.Adapter<ArticuloAdapt
                 @Override
                 public void onClick(View v) {
 
-                    BaseDatos resg2 = new BaseDatos(context, "BaseDatos", null, 1);
+                    BaseDatos resg2 = new BaseDatos(context, null);
                     SQLiteDatabase database = resg2.getWritableDatabase();
                     String sql = " DELETE FROM Articulos WHERE Nombre = ?;";
 

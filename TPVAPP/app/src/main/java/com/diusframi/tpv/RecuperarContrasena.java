@@ -25,8 +25,8 @@ public class RecuperarContrasena extends AppCompatActivity {
         emailedit = findViewById(R.id.emailrecuperacionedit);
         contrasenaedit = findViewById(R.id.ContrasenarecuperacionEdit);
 
-        BaseDatos resg = new BaseDatos(this, "BDUsuarios", null, 1);
-        BaseDatos resg2 = new BaseDatos(this, "BDUsuarios", null, 1);
+        BaseDatos resg = new BaseDatos(this, null);
+        BaseDatos resg2 = new BaseDatos(this, null);
         final SQLiteDatabase bd = resg.getReadableDatabase();
         final SQLiteDatabase bdw = resg2.getReadableDatabase();
         emailtexto = emailedit.getText().toString();

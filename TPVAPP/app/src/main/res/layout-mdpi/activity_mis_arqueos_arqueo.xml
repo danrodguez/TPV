@@ -567,14 +567,12 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearlinea1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin"
                     android:visibility="gone">
 
                     <View
-                        android:id="@+id/linea1"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/primary" />
@@ -776,14 +774,12 @@
 
 
                 <LinearLayout
-                    android:id="@+id/linearlinea2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin"
                     android:visibility="gone">
 
                     <View
-                        android:id="@+id/linea2"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/primary" />
@@ -791,14 +787,12 @@
 
 
                 <LinearLayout
-                    android:id="@+id/linearlinea3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin"
                     android:visibility="gone">
 
                     <View
-                        android:id="@+id/linea3"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/primary" />
@@ -836,6 +830,30 @@
                 tools:ignore="NestedWeights" />
 
 
+            <ImageButton
+                android:layout_weight="2"
+                android:id="@+id/imprimir"
+                android:background="@drawable/bordeazul"
+                android:src="@drawable/impresora"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginEnd="@dimen/margintop"
+                android:layout_height="@dimen/tamanoboton"
+                android:layout_width="0dp"
+                android:contentDescription="@string/impresora" />
+
+            <ImageButton
+                android:layout_weight="2"
+                android:id="@+id/correo"
+                android:background="@drawable/bordeazul"
+                android:src="@drawable/correo"
+                android:padding="15dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_height="@dimen/tamanoboton"
+                android:layout_width="0dp"
+                android:contentDescription="@string/correo" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

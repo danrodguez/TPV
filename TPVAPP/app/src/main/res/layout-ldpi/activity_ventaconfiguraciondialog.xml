@@ -20,7 +20,6 @@
         <ImageView
             android:clickable="false"
             android:padding="10dp"
-            android:id="@+id/imagenlineas"
             android:layout_width="93dp"
             android:layout_height="wrap_content"
             android:src="@drawable/borrarlinea" />
@@ -29,7 +28,6 @@
             android:clickable="false"
             android:textSize="20sp"
             android:textAllCaps="false"
-            android:id="@+id/botoneditar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
@@ -55,7 +53,6 @@
 
         <ImageView
             android:clickable="false"
-            android:id="@+id/imagenarticulo"
             android:layout_width="93dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -65,7 +62,6 @@
             android:clickable="false"
             android:textSize="20sp"
             android:textAllCaps="false"
-            android:id="@+id/botonefectivo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
@@ -92,7 +88,6 @@
         <ImageView
             android:clickable="false"
             android:padding="8dp"
-            android:id="@+id/imagenborrar"
             android:layout_width="93dp"
             android:layout_height="wrap_content"
             android:src="@drawable/papelera" />
@@ -101,7 +96,6 @@
             android:clickable="false"
             android:textSize="20sp"
             android:textAllCaps="false"
-            android:id="@+id/botonborrar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"

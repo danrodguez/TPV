@@ -63,7 +63,6 @@ public class MisArqueosArqueo extends AppCompatActivity {
     Cursor cursornumventas;
     long horalong = 0;
     String numeroarqueotexto = "";
-    String numerofianzatexto = "";
     String arqueo = "";
     long fechatexto = 0;
     long horatexto = 0;
@@ -139,7 +138,7 @@ String horat = "";
         DecimalFormat decim = new DecimalFormat("0.00");
 
 
-        BaseDatos resg2 = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
+        BaseDatos resg2 = new BaseDatos(getApplicationContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
 
         @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT nombrecomercial FROM Usuarios WHERE activo  LIKE 1", null);
@@ -149,7 +148,7 @@ String horat = "";
         }
 
 
-        BaseDatos resg = new BaseDatos(getApplicationContext(), "BaseDatos", null, 1);
+        BaseDatos resg = new BaseDatos(getApplicationContext(), null);
         SQLiteDatabase bd = resg.getWritableDatabase();
 
 
@@ -287,9 +286,9 @@ String horat = "";
             tarjetanumero = cursortarjeta.getDouble(0);
         }
 
-        Double precio10 = 0.0;
+        double precio10 = 0.0;
         int numero10 = 0;
-        Double precio21 = 0.0;
+        double precio21 = 0.0;
         int numero21 = 0;
         //Impuestos 10% cuota
         if (!hoy) {

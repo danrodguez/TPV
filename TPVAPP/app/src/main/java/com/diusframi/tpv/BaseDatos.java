@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -17,7 +17,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 
     //Constructor
-    public BaseDatos(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public BaseDatos(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, "BaseDatos", factory, 1);
     }
 
@@ -68,11 +68,11 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 
         //El carrito actual
-        String sentenciaSQL18 = "CREATE TABLE ArticulosVenta (idarticuloventa INTEGER PRIMARY KEY, Categorias STRING, Nombre TEXT, Numero INTEGER, Precio DOUBLE,Iva Integer,Base DOUBLE, CONSTRAINT FK_Categoria FOREIGN KEY (Categorias) REFERENCES  Categoriastabla(id));";
+        String sentenciaSQL18 = "CREATE TABLE ArticulosVenta (idarticuloventa INTEGER PRIMARY KEY, Categorias TEXT, Nombre TEXT, Numero INTEGER, Precio DOUBLE,Iva Integer,Base DOUBLE, CONSTRAINT FK_Categoria FOREIGN KEY (Categorias) REFERENCES  Categoriastabla(id));";
         db.execSQL(sentenciaSQL18);
 
         //Articulos vendidos
-        String sentenciaSQL19 = "CREATE TABLE Vendidos (idorden INTEGER, Categorias STRING, Nombre TEXT, Numero INTEGER, Precio DOUBLE,Iva Integer,Base DOUBLE) ;";
+        String sentenciaSQL19 = "CREATE TABLE Vendidos (idorden INTEGER, Categorias TEXT, Nombre TEXT, Numero INTEGER, Precio DOUBLE,Iva Integer,Base DOUBLE) ;";
         db.execSQL(sentenciaSQL19);
 
         //Datos adicionales de los articulos vendidos
@@ -99,51 +99,23 @@ public class BaseDatos extends SQLiteOpenHelper {
         db.execSQL(sentenciaSQL24);
 
         //Articulos devueltos
-        String sentenciaSQL25 = "CREATE TABLE Devueltos (idorden INTEGER, Nombre TEXT, Numero INTEGER) ;";
+        String sentenciaSQL25 = "CREATE TABLE Devueltos (idorden INTEGER, Nombre TEXT, Numero INTEGER,idticket INTEGER) ;";
         db.execSQL(sentenciaSQL25);
 
         //Articulos devueltos temporal
-        String sentenciaSQL26 = "CREATE TABLE Devueltostemporal (idorden INTEGER, Categorias STRING, Nombre TEXT, Numero INTEGER, Precio DOUBLE,Iva Integer,Base DOUBLE,TipoPago String) ;";
+        String sentenciaSQL26 = "CREATE TABLE Devueltostemporal (idorden INTEGER, Categorias TEXT, Nombre TEXT, Numero INTEGER, Precio DOUBLE,Iva Integer,Base DOUBLE,TipoPago String,idticket INTEGER) ;";
         db.execSQL(sentenciaSQL26);
 
         //Devoluciones
-        String sentenciaSQL27 = "CREATE TABLE Devoluciones (id INTEGER , Fecha Long,FechaTexto String, Hora Long, HoraTexto Long,Total DOUBLE, TipoPago String,Arqueado String,Cambio Double,idticket INTEGER UNIQUE, CONSTRAINT FK_devolucion FOREIGN KEY (idticket) REFERENCES  Devueltostemporal(idorden));";
+        String sentenciaSQL27 = "CREATE TABLE Devoluciones (id INTEGER PRIMARY KEY AUTOINCREMENT, Fecha Long,FechaTexto String, Hora Long, HoraTexto Long,Total DOUBLE, TipoPago String,Arqueado String,Cambio Double,idticket INTEGER, CONSTRAINT FK_devolucion FOREIGN KEY (idticket) REFERENCES  Devueltostemporal(idorden));";
         db.execSQL(sentenciaSQL27);
 
-
+        //Saldo inicial
+        String sentenciaSQL28 = "CREATE TABLE SaldoInicial (SaldoInicial DOUBLE,idticket INTEGER);";
+        db.execSQL(sentenciaSQL28);
         //Para el siguiente numero de ticket en crear cuenta hacer una tabla y si hay el numero ahi lo coge, cuando lo coge lo elimina, asi el siguiente si mira esa tabla esta vacia, table ticket y devolucion entonces si coges uno, pones null ese y dejas el otro
     }
 
-    //Funcion para insertar texto de ticket
-    public void inserttextoiddevolucion(Integer textoticket) {
-
-        SQLiteDatabase database = getWritableDatabase();
-        String sql = "UPDATE TextoTicketDevolucion SET NumeroDevolucion = ?";
-
-        SQLiteStatement statement = database.compileStatement(sql);
-        statement.clearBindings();
-
-        statement.bindLong(1, textoticket);
-
-
-        statement.executeInsert();
-    }
-
-
-    //Funcion para insertar texto de ticket
-    public void inserttextoidventa(Integer textoticket) {
-
-        SQLiteDatabase database = getWritableDatabase();
-        String sql = "UPDATE TextoTicketDevolucion SET NumeroTicket = ?";
-
-        SQLiteStatement statement = database.compileStatement(sql);
-        statement.clearBindings();
-
-        statement.bindLong(1, textoticket);
-
-
-        statement.executeInsert();
-    }
 
     //Funcion para insertar texto de ticket
     public void borrarnumeroticket() {
@@ -238,8 +210,21 @@ public class BaseDatos extends SQLiteOpenHelper {
     }
 
 
+//insert saldo inicial, contiene numerodeticket, para mostrar busca el saldo inicial del ticket anterior
+public void saldoinicial (Double saldoinicial,Integer idticket){
+    SQLiteDatabase database = getWritableDatabase();
+    String sql = "INSERT INTO SaldoInicial VALUES (?, ?)";
+
+    SQLiteStatement statement = database.compileStatement(sql);
+    statement.clearBindings();
+
+    statement.bindDouble(1, saldoinicial);
+    statement.bindLong(2, idticket);
 
 
+
+    statement.executeInsert();
+}
 
     //Funcion para actualizar los datos de un usuario
     public void UpdateDataUsuarios(String email, String contrasena, String cif, String nombrecomercial, String nombrefiscal,
@@ -313,7 +298,7 @@ public class BaseDatos extends SQLiteOpenHelper {
     //Funcion para crear un usuario
     public void insertDataUsuarios(String email, String contrasena, String cif, String nombrecomercial, String nombrefiscal,
                                    String domiciliocomercial, String localidadcomercial, String codigopostalcomercial, String provinciacomercial, String telefonocomercial,
-                                   String domiciliofiscal, String localidadfiscal, String codigopostalfiscal, String provinciafiscal, String telefonofiscal, byte[] logo, Integer activo) {
+                                   String domiciliofiscal, String localidadfiscal, String codigopostalfiscal, String provinciafiscal, String telefonofiscal, byte[] logo) {
 
         SQLiteDatabase database = getWritableDatabase();
         String sql = "INSERT INTO Usuarios VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
@@ -353,10 +338,10 @@ public class BaseDatos extends SQLiteOpenHelper {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         String diatexto = df.format(c);
-        Long dia = Long.parseLong(diatexto);
+        long dia = Long.parseLong(diatexto);
         SimpleDateFormat df2 = new SimpleDateFormat("HHmmss", Locale.getDefault());
         String hora = df2.format(c);
-        Long horad =Long.parseLong(hora);
+        long horad =Long.parseLong(hora);
         SimpleDateFormat df3 = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String hora2 = df3.format(c);
 
@@ -417,24 +402,6 @@ public class BaseDatos extends SQLiteOpenHelper {
     }
 
 
-    //Funcion para meter todos los datos complementarios a una devolucion
-    public void actualizardatosdevolucion(Double Total,int id) {
-
-
-        SQLiteDatabase database = getWritableDatabase();
-        String sql2 = "UPDATE Devoluciones SET Total = '"+Total+"' WHERE idticket LIKE '"+id+"'";
-
-
-        SQLiteStatement statement2 = database.compileStatement(sql2);
-
-
-
-        statement2.clearBindings();
-
-
-        statement2.executeUpdateDelete();
-
-    }
 
     //Funcion para meter todos los datos complementarios a una devolucion
     public void anadirdatosdevolucion(Integer id,Double Total, Integer idticket) {
@@ -442,10 +409,10 @@ public class BaseDatos extends SQLiteOpenHelper {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         String diatexto = df.format(c);
-        Long dia = Long.parseLong(diatexto);
+        long dia = Long.parseLong(diatexto);
         SimpleDateFormat df2 = new SimpleDateFormat("HHmmss", Locale.getDefault());
         String hora = df2.format(c);
-        Long horad =Long.parseLong(hora);
+        long horad =Long.parseLong(hora);
         SimpleDateFormat df3 = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String hora2 = df3.format(c);
 
@@ -473,86 +440,6 @@ public class BaseDatos extends SQLiteOpenHelper {
 
     }
 
-    //Funcion para meter todos los datos complementarios a una orden
-    public void anadirdatosorden(int id,Double Total) {
-
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        String diatexto = df.format(c);
-        Long dia = Long.parseLong(diatexto);
-        SimpleDateFormat df2 = new SimpleDateFormat("HHmmss", Locale.getDefault());
-        String hora = df2.format(c);
-        Long horad =Long.parseLong(hora);
-        SimpleDateFormat df3 = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String hora2 = df3.format(c);
-
-
-
-        SQLiteDatabase database = getWritableDatabase();
-        String sql2 = "INSERT INTO Ordenes (id,Fecha,FechaTexto,Hora,HoraTexto,Total) VALUES (?,?,?,?,?,?)";
-        String sql3 = "DELETE FROM ArticulosVenta";
-
-        SQLiteStatement statement2 = database.compileStatement(sql2);
-        SQLiteStatement statement3 = database.compileStatement(sql3);
-
-
-        statement2.clearBindings();
-        statement3.clearBindings();
-
-        statement2.bindLong(1, id);
-        statement2.bindLong(2, dia);
-        statement2.bindString(3, diatexto);
-        statement2.bindLong(4, horad);
-        statement2.bindString(5, hora2);
-        statement2.bindDouble(6, Total);
-
-
-        statement2.executeInsert();
-        statement3.executeUpdateDelete();
-    }
-
-    //Funcion para crear nueva orden y borra el carrito
-    public void crearnuevadevoluciontemporal(int idorden, String categoria, String nombre, int numero, double precio, int iva) {
-
-        SQLiteDatabase database = getWritableDatabase();
-
-
-        String sql2 = "INSERT INTO Devueltostemporal (idorden, Categorias, Nombre, Numero, Precio, Iva,Base) VALUES (?,?,?,?,?,?,?)";
-        String sql3 = "INSERT INTO Devueltos (idorden, Nombre, Numero) VALUES (?,?,?)";
-
-        SQLiteStatement statement2 = database.compileStatement(sql2);
-        statement2.clearBindings();
-
-        Double Base = precio - ((precio * 10) / 100);
-
-        statement2.bindDouble(1, idorden);
-        statement2.bindString(2, categoria);
-        statement2.bindString(3, nombre);
-        statement2.bindDouble(4, numero);
-        statement2.bindDouble(5, precio);
-        statement2.bindDouble(6, iva);
-        statement2.bindDouble(7, Base);
-
-
-
-
-
-        SQLiteStatement statement = database.compileStatement(sql3);
-        statement.clearBindings();
-
-
-
-        statement.bindDouble(1, idorden);
-        statement.bindString(2, nombre);
-        statement.bindLong(3, numero);
-
-
-
-        statement2.executeInsert();
-        statement.executeInsert();
-
-
-    }
 
     //Funcion para crear nueva orden y borra el carrito
     public void actualizardevoluciontemporal(Integer numero, String nombre ,int idorden) {
@@ -596,6 +483,89 @@ public class BaseDatos extends SQLiteOpenHelper {
     }
 
 
+    //Funcion para meter todos los datos complementarios a una orden
+    public void anadirdatosorden(int id,Double Total) {
+
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        String diatexto = df.format(c);
+        long dia = Long.parseLong(diatexto);
+        SimpleDateFormat df2 = new SimpleDateFormat("HHmmss", Locale.getDefault());
+        String hora = df2.format(c);
+        long horad =Long.parseLong(hora);
+        SimpleDateFormat df3 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String hora2 = df3.format(c);
+
+
+
+        SQLiteDatabase database = getWritableDatabase();
+        String sql2 = "INSERT INTO Ordenes (id,Fecha,FechaTexto,Hora,HoraTexto,Total) VALUES (?,?,?,?,?,?)";
+        String sql3 = "DELETE FROM ArticulosVenta";
+
+        SQLiteStatement statement2 = database.compileStatement(sql2);
+        SQLiteStatement statement3 = database.compileStatement(sql3);
+
+
+        statement2.clearBindings();
+        statement3.clearBindings();
+
+        statement2.bindLong(1, id);
+        statement2.bindLong(2, dia);
+        statement2.bindString(3, diatexto);
+        statement2.bindLong(4, horad);
+        statement2.bindString(5, hora2);
+        statement2.bindDouble(6, Total);
+
+
+        statement2.executeInsert();
+        statement3.executeUpdateDelete();
+    }
+
+    //Funcion para crear nueva orden y borra el carrito
+    public void crearnuevadevoluciontemporal(int idorden, String categoria, String nombre, int numero, double precio, int iva,int idticket) {
+
+        SQLiteDatabase database = getWritableDatabase();
+
+
+        String sql2 = "INSERT INTO Devueltostemporal (idorden,Categorias, Nombre, Numero, Precio, Iva,Base,idticket) VALUES (?,?,?,?,?,?,?,?)";
+        String sql3 = "INSERT INTO Devueltos (idorden,Nombre, Numero,idticket) VALUES (?,?,?,?)";
+
+        SQLiteStatement statement2 = database.compileStatement(sql2);
+        statement2.clearBindings();
+
+        double Base = precio - ((precio * 10) / 100);
+
+
+        statement2.bindLong(1, idorden);
+        statement2.bindString(2, categoria);
+        statement2.bindString(3, nombre);
+        statement2.bindDouble(4, numero);
+        statement2.bindDouble(5, precio);
+        statement2.bindDouble(6, iva);
+        statement2.bindDouble(7, Base);
+        statement2.bindLong(8, idticket);
+
+
+
+
+        SQLiteStatement statement = database.compileStatement(sql3);
+        statement.clearBindings();
+
+
+        statement.bindLong(1, idorden);
+        statement.bindString(2, nombre);
+        statement.bindLong(3, numero);
+        statement.bindLong(4, idticket);
+
+
+        statement2.executeInsert();
+        statement.executeInsert();
+
+
+    }
+
+
+
     //Funcion para crear nueva orden y borra el carrito
     public void crearnuevaorden(int idorden, String categoria, String nombre, int numero, double precio, int iva) {
 
@@ -609,7 +579,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 
 
 
-        Double Base = precio - ((precio * 10) / 100);
+        double Base = precio - ((precio * 10) / 100);
 
         statement.bindDouble(1, idorden);
         statement.bindString(2, categoria);
@@ -785,7 +755,7 @@ public class BaseDatos extends SQLiteOpenHelper {
         SQLiteStatement statement = database.compileStatement(sql);
         statement.clearBindings();
 
-        Double Base = precio - ((precio * 10) / 100);
+        double Base = precio - ((precio * 10) / 100);
 
         statement.bindString(1, categoria);
         statement.bindString(2, nombre);
@@ -803,7 +773,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 
         SQLiteDatabase database = getWritableDatabase();
         String sql = "INSERT INTO Articulos(Categorias,Nombre,Favorito,Precio,IVA,Base) VALUES (?,?,?,?,?,?)";
-        Double Base;
+        double Base;
         SQLiteStatement statement = database.compileStatement(sql);
         statement.clearBindings();
         if (precio == null) {
@@ -825,6 +795,37 @@ public class BaseDatos extends SQLiteOpenHelper {
         statement.executeInsert();
     }
 
+    //Funcion para crear un articulo
+    public void Creararticulovariable(String Categorias, String nombre, int favorito, Double precio, int iva) {
+
+        SQLiteDatabase database = getWritableDatabase();
+        String sql = "INSERT INTO Articulos(Categorias,Nombre,Favorito,Precio,IVA,Base) VALUES (?,?,?,?,?,?)";
+        double Base;
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+        if (precio == null) {
+            precio = 0.0;
+            Base = 0.0;
+        } else {
+            Base = precio - ((precio * 10) / 100);
+        }
+        SQLiteDatabase databaseread = getReadableDatabase();
+        int categoriafinal = 0;
+        Cursor cursortipos = databaseread.rawQuery("SELECT id From Categoriastabla WHERE Categoria ='" + Categorias + "'", null);
+        if (cursortipos.moveToNext()) {
+            categoriafinal = cursortipos.getInt(0);
+        }
+
+        statement.bindLong(1, categoriafinal);
+        statement.bindString(2, nombre);
+        statement.bindDouble(3, favorito);
+        statement.bindDouble(4, precio);
+        statement.bindDouble(5, iva);
+        statement.bindDouble(6, Base);
+
+
+        statement.executeInsert();
+    }
     public void Updatearticulo(String categoria, String nombre, Double precio, int iva) {
         SQLiteDatabase database = getWritableDatabase();
         SQLiteDatabase databaseread = getReadableDatabase();
@@ -833,6 +834,8 @@ public class BaseDatos extends SQLiteOpenHelper {
         if (cursortipos.moveToNext()) {
             categoriafinal = Integer.parseInt(cursortipos.getString(0));
         }
+
+        cursortipos.close();
         String sql = "UPDATE Articulos SET Categorias = '" + categoriafinal + "',Precio = ?,IVA = ?,Base = ? WHERE Nombre = ?";
         SQLiteStatement statement = database.compileStatement(sql);
 
