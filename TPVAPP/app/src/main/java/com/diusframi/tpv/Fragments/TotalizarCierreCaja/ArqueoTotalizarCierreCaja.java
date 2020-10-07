@@ -61,6 +61,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
     Double totaldevolucionesnumero = 0.0;
     Double totalcalculadonumero = 0.0;
     Double saldoinicialnumero = 0.0;
+    Double nuevosaldoinicialnumero = 0.0;
     Double ventasefectivonumero = 0.0;
     Double entradasnumero = 0.0;
     Double salidasnumero = 0.0;
@@ -84,6 +85,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         setContentView(R.layout.activity_arqueo_totalizar_cierre_caja);
 
         Intent intent = getIntent();
+        nuevosaldoinicialnumero = intent.getDoubleExtra("saldoinicial",0);
         id = intent.getIntExtra("id",0);
         fechatexto = intent.getLongExtra("fecha", 0);
         horatexto = intent.getStringExtra("hora");
@@ -189,7 +191,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         Descuadre.setText(String.valueOf(decim.format(descuadrenumero)));
         RetiradaEfectivo.setText(String.valueOf(decim.format(retiradaefectivonumero)));
         Fianza.setText(String.valueOf(decim.format(fianzanumero)));
-        Efectivo.setText(String.valueOf(decim.format(efectivonumero)));
+        Efectivo.setText(String.valueOf(decim.format(calculadoefectivonumero)));
         Tarjeta.setText(String.valueOf(decim.format(tarjetanumero)));
         impuesto10baseimponible.setText(String.valueOf(decim.format(impuestos10baseimponiblenumero)));
         impuesto10cuota.setText(String.valueOf(decim.format(impuestos10cuotanumero)));

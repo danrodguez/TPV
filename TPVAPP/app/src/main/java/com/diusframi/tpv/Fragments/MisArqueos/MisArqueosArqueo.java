@@ -51,7 +51,10 @@ public class MisArqueosArqueo extends AppCompatActivity {
     TextView impuesto21baseimponible;
     TextView impuesto21cuota;
 
-
+    Cursor cursormovcaja;
+    Cursor cursorretiradaefectivo;
+    Cursor cursordescuadre;
+    Cursor cursorrecuentoefectivo;
     Cursor cursorentradas;
     Cursor cursorventas;
     Cursor cursorfecha;
@@ -61,6 +64,8 @@ public class MisArqueosArqueo extends AppCompatActivity {
     Cursor cursor10baseimponible;
     Cursor cursor21baseimponible;
     Cursor cursornumventas;
+    Cursor cursortotalcalculado;
+    Cursor cursorcalculadoefectivo;
     long horalong = 0;
     String numeroarqueotexto = "";
     String arqueo = "";
@@ -132,7 +137,7 @@ public class MisArqueosArqueo extends AppCompatActivity {
 
 
          arqueo = getIntent().getStringExtra("arqueoid");
-String horat = "";
+        String horat = "";
 
 
         DecimalFormat decim = new DecimalFormat("0.00");
@@ -153,7 +158,7 @@ String horat = "";
 
 
         //Fecha
-        cursorfecha = bd.rawQuery("SELECT Fecha,Hora,SaldoInicial,HoraTexto FROM Arqueos ORDER BY Fecha ASC", null);
+        cursorfecha = bd.rawQuery("SELECT Fecha,Hora,SaldoInicial,HoraTexto,Fianza FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
 
 
         if (cursorfecha.moveToNext()) {
@@ -161,6 +166,7 @@ String horat = "";
             horatexto = cursorfecha.getLong(1);
             saldoinicialnumero = cursorfecha.getDouble(2);
             horat = cursorfecha.getString(3);
+            fianzanumero = cursorfecha.getDouble(4);
         }
         horalong = horatexto;
         if (fechatexto == 0 && horatexto ==0) {
@@ -189,47 +195,48 @@ String horat = "";
         String fechatextocompleto = dia + "/" + mes + "/" + anio;
 
         //Ventas
-        if (!hoy) {
-            cursorventas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' ", null);
 
-        } else {
-            cursorventas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes ", null);
-        }
+            cursorventas = bd.rawQuery("SELECT Ventas FROM Arqueos WHERE id LIKE '"+arqueo+"' ", null);
+
+
         if (cursorventas.moveToNext()) {
             ventasnumero = cursorventas.getDouble(0);
         }
 
         // Numero de ventas
-        if (!hoy) {
-            cursornumventas = bd.rawQuery("SELECT COUNT(*) FROM Ordenes WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' ", null);
 
-        } else {
-            cursornumventas = bd.rawQuery("SELECT COUNT(*) FROM Ordenes ", null);
-        }
+
+            cursornumventas = bd.rawQuery("SELECT NumeroVentas FROM Arqueos WHERE id LIKE '"+arqueo+"' ", null);
+
         if (cursornumventas.moveToNext()) {
             numventasnumero = cursornumventas.getInt(0);
         }
 
 
         //Total calculado
-        totalcalculadonumero = ventasnumero + movcajanumero - devolucionesnumero;
+        cursortotalcalculado = bd.rawQuery("SELECT TotalCalculado FROM Arqueos WHERE id LIKE '"+arqueo+"' ", null);
+
+        if (cursortotalcalculado.moveToNext()) {
+            totalcalculadonumero = cursortotalcalculado.getDouble(0);
+        }
+
+
+
 
 
 
 
         //Ventas Efectivo
-        cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'", null);
+        cursorefectivo = bd.rawQuery("SELECT VentasEfectivo FROM Arqueos WHERE id LIKE '"+arqueo+"' ", null);
         if (cursorefectivo.moveToNext()) {
             ventasefectivonumero = cursorefectivo.getDouble(0);
         }
 
 
         //Entradas
-        if (!hoy) {
-            cursorentradas = bd.rawQuery("SELECT SUM(Entradas) FROM CuadreCaja WHERE Fecha >= '" + fecha + "'AND Hora >= '" + horalong + "' ", null);
-        } else {
-            cursorentradas = bd.rawQuery("SELECT  SUM(Entradas) FROM CuadreCaja", null);
-        }
+
+            cursorentradas = bd.rawQuery("SELECT  Entradas FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
 
         if (cursorentradas.moveToNext()) {
 
@@ -237,105 +244,106 @@ String horat = "";
         }
 
         //Salidas
-        if (!hoy) {
-            cursorsalidas = bd.rawQuery("SELECT  SUM(Salidas) FROM CuadreCaja WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' ", null);
-        } else {
-            cursorsalidas = bd.rawQuery("SELECT  SUM(Salidas) FROM CuadreCaja", null);
-        }
+
+            cursorsalidas = bd.rawQuery("SELECT Salidas FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
 
         if (cursorsalidas.moveToNext()) {
             salidasnumero = cursorsalidas.getDouble(0);
         }
 
         //Calculado efectivo
-        calculadoefectivonumero = fianzanumero + ventasefectivonumero + entradasnumero - salidasnumero - devolucionesnumero;
 
-        //Recuento efectivo declarado en intent arriba
+        cursorcalculadoefectivo = bd.rawQuery("SELECT CalculadoEfectivo FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
+
+        if (cursorcalculadoefectivo.moveToNext()) {
+            calculadoefectivonumero = cursorcalculadoefectivo.getDouble(0);
+        }
+
+        //Recuento efectivo
+        cursorrecuentoefectivo = bd.rawQuery("SELECT RecuentoEfectivo FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
+
+        if (cursorrecuentoefectivo.moveToNext()) {
+            recuentoefectivonumero = cursorrecuentoefectivo.getDouble(0);
+        }
+
+
 
         //Descuadre
-        descuadrenumero = recuentoefectivonumero - totalcalculadonumero;
-        descuadrenumero = Math.round(descuadrenumero * 100.0) / 100.0;
+        cursordescuadre = bd.rawQuery("SELECT Descuadre FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
+
+        if (cursordescuadre.moveToNext()) {
+            descuadrenumero = cursordescuadre.getDouble(0);
+        }
+
 
 
         //Retirada efectivo
-        retiradaefectivonumero = fianzanumero - recuentoefectivonumero;
+        cursorretiradaefectivo = bd.rawQuery("SELECT RetiradaEfectivo FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
+
+        if (cursorretiradaefectivo.moveToNext()) {
+            retiradaefectivonumero = cursorretiradaefectivo.getDouble(0);
+        }
+
+
 
         //Fianza es saldo inicial
 
 
         //Ventas Efectivo
-        if (!hoy) {
-            cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-        }else{
-            cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'", null);
-        }
+            cursorefectivo = bd.rawQuery("SELECT Efectivo FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
         if (cursorefectivo.moveToNext()) {
-            ventasefectivonumero = cursorefectivo.getDouble(0);
+            efectivonumero = cursorefectivo.getDouble(0);
         }
 
 
 
         //Tarjeta
-        if(!hoy){
-            cursortarjeta = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Tarjeta' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-        }else{
-            cursortarjeta = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Tarjeta'", null);
-        }
+        cursortarjeta = bd.rawQuery("SELECT Tarjeta FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
 
         if (cursortarjeta.moveToNext()) {
             tarjetanumero = cursortarjeta.getDouble(0);
         }
 
-        double precio10 = 0.0;
-        int numero10 = 0;
-        double precio21 = 0.0;
-        int numero21 = 0;
+
+
+
         //Impuestos 10% cuota
-        if (!hoy) {
-            cursor10baseimponible = bd.rawQuery("SELECT Vendidos.Precio,Vendidos.Numero FROM Vendidos INNER JOIN Ordenes ON Ordenes.id = Vendidos.idorden WHERE Vendidos.Iva = '10' AND Ordenes.Fecha >= '" + fecha + "' AND Ordenes.Hora >= '" + horalong + "'", null);
 
-        } else {
-            cursor10baseimponible = bd.rawQuery("SELECT Precio,Numero  FROM Vendidos WHERE Iva = '10'", null);
-        }
+            cursor10baseimponible = bd.rawQuery("SELECT Impuestos10baseimponible,Impuestos10cuota  FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
         while (cursor10baseimponible.moveToNext()) {
-            precio10 = cursor10baseimponible.getDouble(0);
-            numero10 = cursor10baseimponible.getInt(1);
-            total10numero = (precio10*numero10) + total10numero ;
+            impuestos10baseimponiblenumero = cursor10baseimponible.getDouble(0);
+            impuestos10cuotanumero = cursor10baseimponible.getDouble(1);
         }
 
-        impuestos10cuotanumero = (total10numero*10)/100;
 
-
-        //Impuestos 10% base imponible
-        impuestos10baseimponiblenumero = total10numero - impuestos10cuotanumero;
 
 
 
         //Impuestos 21% cuota
-        if (!hoy) {
-            cursor21baseimponible = bd.rawQuery("SELECT Ven.Precio,Ven.Numero FROM Vendidos AS Ven JOIN Ordenes As Ord WHERE Ven.Iva = '21' AND Ord.Fecha >= '" + fecha + "' AND Ord.Hora >= '" + horalong + "'", null);
-        }else{
-            cursor21baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Vendidos WHERE Iva = '21'", null);
-        }
+        cursor21baseimponible = bd.rawQuery("SELECT Impuestos21baseimponible,Impuestos21cuota  FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
+
         while (cursor21baseimponible.moveToNext()) {
-            precio21 = cursor21baseimponible.getDouble(0);
-            numero21 = cursor21baseimponible.getInt(1);
-            total21numero = total21numero + (precio21*numero21);
+            impuestos21baseimponiblenumero = cursor21baseimponible.getDouble(0);
+            impuestos21cuotanumero = cursor21baseimponible.getDouble(1);
         }
-
-        impuestos21cuotanumero =  (total21numero*21)/100;
-
-
-        //Impuestos 21% base imponible
-        impuestos21baseimponiblenumero = total21numero - impuestos21cuotanumero;
 
 
         //Movimiento de caja
-        movcajanumero = entradasnumero - salidasnumero;
+        cursormovcaja = bd.rawQuery("SELECT  MovimientosCaja FROM Arqueos WHERE id LIKE '"+arqueo+"'", null);
 
-        //Fianza
+        while (cursormovcaja.moveToNext()) {
+            movcajanumero = cursormovcaja.getDouble(0);
 
-        fianzanumero = saldoinicialnumero;
+        }
+
+
 
 
 

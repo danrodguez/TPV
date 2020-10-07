@@ -404,7 +404,7 @@ public void saldoinicial (Double saldoinicial,Integer idticket){
 
 
     //Funcion para meter todos los datos complementarios a una devolucion
-    public void anadirdatosdevolucion(Integer id,Double Total, Integer idticket) {
+    public void anadirdatosdevolucion(Integer id,Double Total, Integer idticket,String tipopago) {
 
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
@@ -417,7 +417,7 @@ public void saldoinicial (Double saldoinicial,Integer idticket){
         String hora2 = df3.format(c);
 
         SQLiteDatabase database = getWritableDatabase();
-        String sql2 = "INSERT INTO Devoluciones (id,Fecha,FechaTexto,Hora,HoraTexto,Total,idticket) VALUES (?,?,?,?,?,?,?)";
+        String sql2 = "INSERT INTO Devoluciones (id,Fecha,FechaTexto,Hora,HoraTexto,Total,idticket,TipoPago) VALUES (?,?,?,?,?,?,?,?)";
 
 
         SQLiteStatement statement2 = database.compileStatement(sql2);
@@ -435,6 +435,7 @@ public void saldoinicial (Double saldoinicial,Integer idticket){
         statement2.bindString(5, hora2);
         statement2.bindDouble(6, Total);
         statement2.bindLong(7, idticket);
+        statement2.bindString(8, tipopago);
 
         statement2.executeInsert();
 

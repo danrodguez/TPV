@@ -68,6 +68,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
     Double movcajanumero = 0.0;
     Double totaldevolucionesnumero = 0.0;
     Double totalcalculadonumero = 0.0;
+    Double nuevosaldoinicialnumero = 0.0;
     Double saldoinicialnumero = 0.0;
     Double ventasefectivonumero = 0.0;
     Double entradasnumero = 0.0;
@@ -237,10 +238,10 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
 
                 //Fianza
                 numerofianzatexto = importe.getText().toString();
-                saldoinicialnumero = Double.parseDouble(numerofianzatexto);
-                fianzanumero = saldoinicialnumero;
+                nuevosaldoinicialnumero = Double.parseDouble(numerofianzatexto);
 
-                resg.saldoinicial(saldoinicialnumero,id);
+
+                resg.saldoinicial(nuevosaldoinicialnumero,id);
                 //Ventas Efectivo
                 if (!hoy) {
                     cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
@@ -263,6 +264,25 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
 
                     entradasnumero = cursorentradas.getDouble(0);
                 }
+                //Devoluciones efectivo
+                if(!hoy) {
+                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones  WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' AND TipoPago LIKE 'Efectivo'", null);
+                }else{
+                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones WHERE TipoPago LIKE 'Efectivo'", null);
+                }
+                if (cursordevoluciones.moveToNext()) {
+                    devolucionesnumero = cursordevoluciones.getDouble(0);
+                }
+
+                //Devoluciones
+                if(!hoy) {
+                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones  WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
+                }else{
+                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones", null);
+                }
+                if (cursordevoluciones.moveToNext()) {
+                    totaldevolucionesnumero = cursordevoluciones.getDouble(0);
+                }
 
                 //Salidas
                 if (!hoy) {
@@ -276,14 +296,14 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 }
 
                 //Recuento efectivo declarado en intent arriba
-
+                //Movimiento de caja
+                movcajanumero = entradasnumero - salidasnumero;
                 //Total calculado efectivo
                 totalcalculadonumeroefectivo = (ventasefectivonumero + movcajanumero) - devolucionesnumero;
 
 
 
-                //Retirada efectivo
-                retiradaefectivonumero = fianzanumero - recuentoefectivonumero;
+
 
                 //Fianza es saldo inicial
 
@@ -298,15 +318,6 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                     efectivonumero = cursorefectivo.getDouble(0);
                 }
 
-                //Devoluciones
-                if(!hoy) {
-                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones  WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-                }else{
-                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones", null);
-                }
-                if (cursordevoluciones.moveToNext()) {
-                    devolucionesnumero = cursordevoluciones.getDouble(0);
-                }
 
 
                 //Tarjeta
@@ -364,14 +375,23 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 impuestos21baseimponiblenumero = total21numero - impuestos21cuotanumero;
 
 
-                //Movimiento de caja
-                movcajanumero = entradasnumero - salidasnumero;
+
 
                 //Total calculado
                 totalcalculadonumero = ventasnumero + movcajanumero - devolucionesnumero;
 
+
+                id = id - 1;
+                Cursor cursorefectivo = bd.rawQuery("SELECT SaldoInicial FROM SaldoInicial WHERE idticket = '"+id+"'", null);
+
+                if (cursorefectivo.moveToNext()) {
+                    saldoinicialnumero = cursorefectivo.getDouble(0);
+                }
+                fianzanumero = nuevosaldoinicialnumero;
+                //Retirada efectivo
+                retiradaefectivonumero = saldoinicialnumero - recuentoefectivonumero;
                 //Calculado efectivo
-                calculadoefectivonumero = ventasefectivonumero + entradasnumero - salidasnumero;
+                calculadoefectivonumero = (ventasefectivonumero + movcajanumero + saldoinicialnumero) - devolucionesnumero;
 
                 //Descuadre
                 descuadrenumero = recuentoefectivonumero - calculadoefectivonumero ;

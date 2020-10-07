@@ -43,6 +43,7 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
     RecyclerView recyclerView;
     int ordenticket = 0;
     DevolucionAdapter adapter1;
+    String tipopago = "";
     int orden = 0;
     ArrayList<Devolucionconstruct> listadevoluciones = new ArrayList<>();
     @SuppressLint("SetTextI18n")
@@ -85,11 +86,11 @@ public class Devolucion extends AppCompatActivity implements numerodevolucion {
          ordenticket = Integer.parseInt(ordentexto);
 
 
-        @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT Total FROM Ordenes WHERE id LIKE '"+ordentexto+"'", null);
+        @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT Total,TipoPago FROM Ordenes WHERE id LIKE '"+ordentexto+"'", null);
 
             while (cursor.moveToNext()) {
                 totalnumero = cursor.getDouble(0);
-
+                tipopago = cursor.getString(1);
             }
 
         DecimalFormat decim = new DecimalFormat("0.00");
@@ -202,7 +203,7 @@ cursorid4.close();
 
 
 
-                resg31.anadirdatosdevolucion(finalOrden,totalt,Integer.parseInt(ordentexto));
+                resg31.anadirdatosdevolucion(finalOrden,totalt,Integer.parseInt(ordentexto),tipopago);
 
 
 
