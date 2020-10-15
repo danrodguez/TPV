@@ -170,6 +170,9 @@ public class MisVentasTicketDevolucion extends Fragment {
         while (cursor4.moveToNext()) {
             TextoTicket2 = cursor4.getString(0);
         }
+        cursor3.close();
+        cursor4.close();
+        cursor5.close();
         facturatexto = TextoTicket+orden;
         facturatexto2 = TextoTicket2+ordenticket;
 
@@ -205,10 +208,10 @@ public class MisVentasTicketDevolucion extends Fragment {
             imagenview.setImageBitmap(theImage);}
 
 
-    Double precio10 = 0.0;
-        int numero10 = 0;
-        Double precio21 = 0.0;
-        int numero21 = 0;
+        double precio10;
+        int numero10;
+        double precio21;
+        int numero21;
 
 
         Cursor  cursor10baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva = '10' AND idorden LIKE '"+orden+"' ", null);
@@ -218,7 +221,7 @@ public class MisVentasTicketDevolucion extends Fragment {
             numero10 = cursor10baseimponible.getInt(1);
             total10numero = total10numero + (precio10 * numero10);
         }
-
+cursor10baseimponible.close();
         impuestos10cuotanumero = (total10numero*10)/100;
 
         Cursor  cursor21baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva = '21' AND idorden LIKE '"+orden+"' ", null);
@@ -228,7 +231,7 @@ public class MisVentasTicketDevolucion extends Fragment {
             numero21 = cursor21baseimponible.getInt(1);
             total21numero =total21numero + (precio21 * numero21);
         }
-
+cursor21baseimponible.close();
         impuestos21cuotanumero = (total21numero*21)/100;
 
         impuestos10baseimponiblenumero = total10numero - impuestos10cuotanumero;
@@ -262,6 +265,7 @@ public class MisVentasTicketDevolucion extends Fragment {
             listaprecio.add(Precio);
             listanumero.add( Numero);
         }
+        cursorlista.close();
         ProductosTicketAdapter adapter = new ProductosTicketAdapter(getContext(),  listaproductos);
         recyclerView.setAdapter(adapter);
 

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,52 +49,41 @@ String nombre = "";
 
         guardar.setEnabled(false);
         guardar.setBackgroundResource(R.drawable.botongrisclaro);
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
-            }
+        cancelar.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            startActivity(i);
         });
 
 //sumar el articulo a ArticulosVendidos
-        guardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        guardar.setOnClickListener(v -> {
 
-                BaseDatos resg = new BaseDatos(getApplicationContext(), null);
-                SQLiteDatabase bd = resg.getReadableDatabase();
-                @SuppressLint("Recycle") Cursor cursor = bd.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + nombre + "'", null);
-                if (cursor.moveToNext()) {
-                    categoria = cursor.getString(0);
-                }
-                @SuppressLint("Recycle") Cursor cursor2 = bd.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + nombre + "'", null);
-                if (cursor2.moveToNext()) {
-                    numero = cursor2.getInt(0);
-                    numero = numero + 1;
-                } else {
-                    numero = 1;
-                }
-                double preciotexto = Double.parseDouble(precio.getText().toString());
-
-                StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
-                String ivacortado = tokens.nextToken();
-                int iva = Integer.parseInt(ivacortado);
-                resg.articulonuevolistacompra(categoria, nombre, numero, preciotexto, iva);
-
-                resg.Creararticulovariable(categoria,nombre,0,preciotexto,iva);
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
+            BaseDatos resg = new BaseDatos(getApplicationContext(), null);
+            SQLiteDatabase bd = resg.getReadableDatabase();
+            @SuppressLint("Recycle") Cursor cursor = bd.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + nombre + "'", null);
+            if (cursor.moveToNext()) {
+                categoria = cursor.getString(0);
             }
+            @SuppressLint("Recycle") Cursor cursor2 = bd.rawQuery("SELECT Numero FROM ArticulosVenta WHERE Nombre LIKE '" + nombre + "'", null);
+            if (cursor2.moveToNext()) {
+                numero = cursor2.getInt(0);
+                numero = numero + 1;
+            } else {
+                numero = 1;
+            }
+            double preciotexto = Double.parseDouble(precio.getText().toString());
+
+            StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
+            String ivacortado = tokens.nextToken();
+            int iva = Integer.parseInt(ivacortado);
+            resg.articulonuevolistacompra(categoria, nombre, numero, preciotexto, iva);
+
+            resg.Creararticulovariable(categoria,nombre,0,preciotexto,iva);
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            startActivity(i);
         });
 
 
-        BotonIVA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialogarticuloiva();
-            }
-        });
+        BotonIVA.setOnClickListener(view -> openDialogarticuloiva());
 
     }
 
@@ -128,40 +116,31 @@ String nombre = "";
 
 
         // Set negative/no button click listener
-        iva21boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ivatexto = iva21boton.getText().toString();
-                BotonIVA.setText(ivatexto);
-                guardar.setEnabled(true);
-                guardar.setBackgroundResource(R.drawable.botonnaranja);
-                dialog.dismiss();
+        iva21boton.setOnClickListener(v -> {
+            String ivatexto = iva21boton.getText().toString();
+            BotonIVA.setText(ivatexto);
+            guardar.setEnabled(true);
+            guardar.setBackgroundResource(R.drawable.botonnaranja);
+            dialog.dismiss();
 
-            }
         });
 
 
 
-        iva10boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ivatexto = iva10boton.getText().toString();
-                BotonIVA.setText(ivatexto);
-                guardar.setEnabled(true);
-                guardar.setBackgroundResource(R.drawable.botonnaranja);
-                dialog.dismiss();
+        iva10boton.setOnClickListener(v -> {
+            String ivatexto = iva10boton.getText().toString();
+            BotonIVA.setText(ivatexto);
+            guardar.setEnabled(true);
+            guardar.setBackgroundResource(R.drawable.botonnaranja);
+            dialog.dismiss();
 
-            }
         });
 
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ivatexto = "";
-                BotonIVA.setText(ivatexto);
-                dialog.dismiss();
+        cancelar.setOnClickListener(v -> {
+            String ivatexto = "";
+            BotonIVA.setText(ivatexto);
+            dialog.dismiss();
 
-            }
         });
 
         // Display the custom alert dialog on interface

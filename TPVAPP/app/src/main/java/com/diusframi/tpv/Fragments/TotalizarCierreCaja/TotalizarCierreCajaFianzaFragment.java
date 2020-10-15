@@ -1,6 +1,7 @@
 package com.diusframi.tpv.Fragments.TotalizarCierreCaja;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -44,16 +44,21 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
     EditText importe;
     ActionBarDrawerToggle Actionbar;
 
+    Cursor cursorhora;
     Cursor cursorentradas;
     Cursor cursorventas;
     Cursor cursorfecha;
     Cursor cursorsalidas;
     Cursor cursortarjeta;
     Cursor cursorefectivo;
+    Cursor cursorefectivo2;
     Cursor cursornumeroarqueo;
     Cursor cursor10baseimponible;
     Cursor cursor21baseimponible;
     Cursor cursornumventas;
+    Cursor cursornumventasfechamas;
+    Cursor cursornumventasactual;
+    Cursor cursornumventastodo;
     Cursor cursordevoluciones;
     Boolean hoy = false;
     long fecha = 0;
@@ -67,13 +72,16 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
     Double ventasnumero = 0.0;
     Double movcajanumero = 0.0;
     Double totaldevolucionesnumero = 0.0;
+    Double totaldevolucionesnumero10 = 0.0;
+    Double totaldevolucionesnumero21 = 0.0;
     Double totalcalculadonumero = 0.0;
     Double nuevosaldoinicialnumero = 0.0;
     Double saldoinicialnumero = 0.0;
     Double ventasefectivonumero = 0.0;
     Double entradasnumero = 0.0;
     Double salidasnumero = 0.0;
-    Double devolucionesnumero = 0.0;
+    Double devolucionesnumeroefectivo = 0.0;
+    Double devolucionesnumerotarjeta = 0.0;
     Double calculadoefectivonumero = 0.0;
     Double recuentoefectivonumero = 0.0;
     Double descuadrenumero = 0.0;
@@ -174,14 +182,22 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
 
 
                 //Fecha
-                cursorfecha = bd.rawQuery("SELECT Hora,Fecha FROM Arqueos ORDER BY Fecha,Hora DESC", null);
-
+                cursorfecha = bd.rawQuery("SELECT Fecha FROM Arqueos ORDER BY Fecha DESC", null);
 
                 if (cursorfecha.moveToNext()) {
-                    hora = cursorfecha.getLong(0);
-                    fecha = cursorfecha.getLong(1);
+                    fecha = cursorfecha.getLong(0);
+
                 }
-            horalong = hora;
+                cursorhora = bd.rawQuery("SELECT Hora FROM Arqueos WHERE Fecha LIKE '"+fecha+"'ORDER BY Hora DESC", null);
+
+                if (cursorhora.moveToNext()) {
+                    hora = cursorhora.getLong(0);
+
+                }
+
+
+
+                horalong = hora;
 
                 if (fecha == 0 && hora==0) {
 
@@ -196,6 +212,8 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
 
                     hoy = true;
                 }
+
+
                 //NumeroArqueo
                 cursornumeroarqueo = bd.rawQuery("SELECT id FROM Arqueos ORDER BY id DESC", null);
 
@@ -210,28 +228,67 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 id = id + 1;
                 numeroarqueotexto = aniotexto + "/" + id;
 
+
+
                 //Ventas
-                if (!hoy) {
-                    cursorventas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' ", null);
+                String a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Ordenes WHERE Fecha > '" + fecha + "'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total)  FROM Ordenes WHERE Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        ventasnumero = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
 
-                } else {
-                    cursorventas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes ", null);
                 }
-                if (cursorventas.moveToNext()) {
-                     ventasnumero = cursorventas.getDouble(0);
 
-                }
+
+                    if (!hoy && a.equals("")) {
+                        cursorventas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE Fecha == '" + fecha + "' AND Hora >= '" + horalong + "' ", null);
+                        if (cursorventas.moveToNext()) {
+                            ventasnumero = cursorventas.getDouble(0);
+
+                        }
+
+                    } else if(hoy && a.equals("")) {
+                        cursorventas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes ", null);
+                        if (cursorventas.moveToNext()) {
+                            ventasnumero = cursorventas.getDouble(0);
+
+                        }
+                    }
+
+
+
 
                 // Numero de ventas
-                if (!hoy) {
-                    cursornumventas = bd.rawQuery("SELECT COUNT(*) FROM Ordenes WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Ordenes WHERE Fecha > '" + fecha + "'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT COUNT(*) FROM Ordenes WHERE Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        numventasnumero = cursornumventasfechamas.getInt(0);
+                        a = "si";
+                    }
 
-                } else {
-                    cursornumventas = bd.rawQuery("SELECT COUNT(*) FROM Ordenes ", null);
                 }
-                if (cursornumventas.moveToNext()) {
-                    numventasnumero = cursornumventas.getInt(0);
-                }
+
+
+
+
+    if (!hoy && a.equals("")) {
+        cursornumventasactual = bd.rawQuery("SELECT COUNT(*) FROM Ordenes WHERE Fecha == '" + fecha + "' AND Hora >= '" + horalong + "'", null);
+        if (cursornumventasactual.moveToNext()) {
+            numventasnumero = cursornumventasactual.getInt(0);
+        }
+
+    } else if (hoy && a.equals("")){
+           cursornumventastodo = bd.rawQuery("SELECT COUNT(*) FROM Ordenes ", null);
+        if (cursornumventastodo.moveToNext()) {
+            numventasnumero = cursornumventastodo.getInt(0);
+        }
+      }
+
 
 
 
@@ -239,67 +296,243 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 //Fianza
                 numerofianzatexto = importe.getText().toString();
                 nuevosaldoinicialnumero = Double.parseDouble(numerofianzatexto);
-
-
                 resg.saldoinicial(nuevosaldoinicialnumero,id);
+
+
+
                 //Ventas Efectivo
-                if (!hoy) {
-                    cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-                }else{
-                    cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'", null);
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Ordenes WHERE Fecha > '" + fecha + "' AND TipoPago = 'Efectivo' ", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        ventasefectivonumero = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
                 }
-                if (cursorefectivo.moveToNext()) {
-                    ventasefectivonumero = cursorefectivo.getDouble(0);
+
+
+                if (!hoy && a.equals("")) {
+                    cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
+                    if (cursorefectivo.moveToNext()) {
+                        ventasefectivonumero = cursorefectivo.getDouble(0);
+                    }
+
+                }else  if (hoy && a.equals("")){
+                    cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'", null);
+                    if (cursorefectivo.moveToNext()) {
+                        ventasefectivonumero = cursorefectivo.getDouble(0);
+                    }
+
                 }
 
 
                 //Entradas
-                if (!hoy) {
-                    cursorentradas = bd.rawQuery("SELECT SUM(Entradas) FROM CuadreCaja WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong +"'", null);
-                } else {
-                    cursorentradas = bd.rawQuery("SELECT  SUM(Entradas) FROM CuadreCaja", null);
+
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT  Entradas  FROM CuadreCaja WHERE Fecha > '" + fecha + "'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Entradas) FROM CuadreCaja WHERE Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        entradasnumero = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
                 }
 
-                if (cursorentradas.moveToNext()) {
 
-                    entradasnumero = cursorentradas.getDouble(0);
+                if (!hoy && a.equals("")) {
+                    cursorentradas = bd.rawQuery("SELECT SUM(Entradas) FROM CuadreCaja WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong +"'", null);
+                    if (cursorentradas.moveToNext()) {
+
+                        entradasnumero = cursorentradas.getDouble(0);
+                    }
+                } else if (hoy && a.equals("")){
+                    cursorentradas = bd.rawQuery("SELECT  SUM(Entradas) FROM CuadreCaja", null);
+                    if (cursorentradas.moveToNext()) {
+
+                        entradasnumero = cursorentradas.getDouble(0);
+                    }
+                }
+
+                //Devoluciones tarjeta
+
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Devoluciones WHERE Fecha > '" + fecha + "' AND TipoPago LIKE 'Tarjeta'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones WHERE Fecha > '" + fecha + "' AND TipoPago LIKE 'Tarjeta'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        devolucionesnumerotarjeta = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
+                }
+
+                if (!hoy && a.equals("")) {
+                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones  WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' AND TipoPago LIKE 'Tarjeta'", null);
+                    if (cursordevoluciones.moveToNext()) {
+                        devolucionesnumerotarjeta = cursordevoluciones.getDouble(0);
+                    }
+                }else if (hoy && a.equals("")) {
+                    cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones WHERE TipoPago LIKE 'Tarjeta'", null);
+                    if (cursordevoluciones.moveToNext()) {
+                        devolucionesnumerotarjeta = cursordevoluciones.getDouble(0);
+                    }
                 }
                 //Devoluciones efectivo
-                if(!hoy) {
+
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Devoluciones WHERE Fecha > '" + fecha + "' AND TipoPago LIKE 'Efectivo'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones WHERE Fecha > '" + fecha + "' AND TipoPago LIKE 'Efectivo'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        devolucionesnumeroefectivo = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
+                }
+
+                if (!hoy && a.equals("")) {
                     cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones  WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "' AND TipoPago LIKE 'Efectivo'", null);
-                }else{
+                    if (cursordevoluciones.moveToNext()) {
+                        devolucionesnumeroefectivo = cursordevoluciones.getDouble(0);
+                    }
+                }else if (hoy && a.equals("")) {
                     cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones WHERE TipoPago LIKE 'Efectivo'", null);
+                    if (cursordevoluciones.moveToNext()) {
+                        devolucionesnumeroefectivo = cursordevoluciones.getDouble(0);
+                    }
                 }
-                if (cursordevoluciones.moveToNext()) {
-                    devolucionesnumero = cursordevoluciones.getDouble(0);
+
+                //Devoluciones 10
+                a = "";
+
+Double precio;
+Integer numero;
+
+                cursornumventasfechamas = bd.rawQuery("SELECT Precio FROM Devueltostemporal INNER JOIN Devoluciones ON Devoluciones.id = Devueltostemporal.idorden WHERE Devoluciones.Fecha > '" + fecha + "' AND DevueltosTemporal.Iva LIKE '10'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal INNER JOIN Devoluciones ON Devoluciones.id = Devueltostemporal.idorden WHERE Devoluciones.Fecha > '" + fecha + "' AND DevueltosTemporal.Iva LIKE '10'", null);
+                    while (cursornumventasfechamas.moveToNext()){
+                        precio = cursornumventasfechamas.getDouble(0);
+                        numero = cursornumventasfechamas.getInt(1);
+                        totaldevolucionesnumero10 = (precio*numero) + totaldevolucionesnumero10 ;
+                        a = "si";
+                    }
+
                 }
+
+
+
+                if (!hoy && a.equals("")) {
+                    cursordevoluciones = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal  INNER JOIN Devoluciones ON Devoluciones.id = Devueltostemporal.idorden WHERE Devoluciones.Fecha >= '" + fecha + "' AND Devoluciones.Hora >= '" + horalong + "' AND DevueltosTemporal.Iva LIKE '10'", null);
+                    while (cursordevoluciones.moveToNext()) {
+                        precio = cursordevoluciones.getDouble(0);
+                        numero = cursordevoluciones.getInt(1);
+                        totaldevolucionesnumero10 = (precio*numero) + totaldevolucionesnumero10 ;
+                    }
+                }else if (hoy && a.equals("")) {
+                    cursordevoluciones = bd.rawQuery("SELECT Precio,NumeroFROM Devueltostemporal WHERE Iva LIKE '10'", null);
+                    while (cursordevoluciones.moveToNext()) {
+                        precio = cursordevoluciones.getDouble(0);
+                        numero = cursordevoluciones.getInt(1);
+                        totaldevolucionesnumero10 = (precio*numero) + totaldevolucionesnumero10 ;
+                    }
+                }
+
+
+                //Devoluciones 21
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Precio FROM Devueltostemporal INNER JOIN Devoluciones ON Devoluciones.id = Devueltostemporal.idorden WHERE Devoluciones.Fecha > '" + fecha + "' AND DevueltosTemporal.Iva LIKE '21'", null);
+                while (cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal INNER JOIN Devoluciones ON Devoluciones.id = Devueltostemporal.idorden WHERE Devoluciones.Fecha > '" + fecha + "' AND DevueltosTemporal.Iva LIKE '21'", null);
+                    while (cursornumventasfechamas.moveToNext()){
+                        precio = cursordevoluciones.getDouble(0);
+                        numero = cursordevoluciones.getInt(1);
+                        totaldevolucionesnumero21 = (precio*numero) + totaldevolucionesnumero21 ;
+                        a = "si";
+                    }
+
+                }
+
+
+
+                if (!hoy && a.equals("")) {
+                    cursordevoluciones = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal  INNER JOIN Devoluciones ON Devoluciones.id = Devueltostemporal.idorden WHERE Devoluciones.Fecha >= '" + fecha + "' AND Devoluciones.Hora >= '" + horalong + "' AND DevueltosTemporal.Iva LIKE '21'", null);
+                    while (cursordevoluciones.moveToNext()) {
+                        precio = cursordevoluciones.getDouble(0);
+                        numero = cursordevoluciones.getInt(1);
+                        totaldevolucionesnumero21 = (precio*numero) + totaldevolucionesnumero21 ;
+                    }
+                }else if (hoy && a.equals("")) {
+                    cursordevoluciones = bd.rawQuery("SELECT Precio,Numero FROM Devueltostemporal WHERE Iva LIKE '21'", null);
+                    while (cursordevoluciones.moveToNext()) {
+                        precio = cursordevoluciones.getDouble(0);
+                        numero = cursordevoluciones.getInt(1);
+                        totaldevolucionesnumero21 = (precio*numero) + totaldevolucionesnumero21 ;
+                    }
+                }
+
+
 
                 //Devoluciones
-                if(!hoy) {
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Devoluciones WHERE Fecha > '" + fecha + "'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones WHERE Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        totaldevolucionesnumero = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
+                }
+
+
+
+                if (!hoy && a.equals("")) {
                     cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones  WHERE Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-                }else{
+                    if (cursordevoluciones.moveToNext()) {
+                        totaldevolucionesnumero = cursordevoluciones.getDouble(0);
+                    }
+                }else if (hoy && a.equals("")) {
                     cursordevoluciones = bd.rawQuery("SELECT SUM(Total) FROM Devoluciones", null);
+                    if (cursordevoluciones.moveToNext()) {
+                        totaldevolucionesnumero = cursordevoluciones.getDouble(0);
+                    }
                 }
-                if (cursordevoluciones.moveToNext()) {
-                    totaldevolucionesnumero = cursordevoluciones.getDouble(0);
-                }
+
 
                 //Salidas
-                if (!hoy) {
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Salidas FROM CuadreCaja WHERE Fecha > '" + fecha + "'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Salidas) FROM CuadreCaja WHERE Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        salidasnumero = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
+                }
+                if (!hoy && a.equals("")) {
                     cursorsalidas = bd.rawQuery("SELECT  SUM(Salidas) FROM CuadreCaja WHERE Fecha >= '" + fecha +"' AND Hora >= '" + horalong +"'", null);
-                } else {
+                    if (cursorsalidas.moveToNext()) {
+                        salidasnumero = cursorsalidas.getDouble(0);
+                    }
+                }else if (hoy && a.equals("")) {
                     cursorsalidas = bd.rawQuery("SELECT  SUM(Salidas) FROM CuadreCaja", null);
+                    if (cursorsalidas.moveToNext()) {
+                        salidasnumero = cursorsalidas.getDouble(0);
+                    }
                 }
 
-                if (cursorsalidas.moveToNext()) {
-                    salidasnumero = cursorsalidas.getDouble(0);
-                }
+
 
                 //Recuento efectivo declarado en intent arriba
                 //Movimiento de caja
                 movcajanumero = entradasnumero - salidasnumero;
                 //Total calculado efectivo
-                totalcalculadonumeroefectivo = (ventasefectivonumero + movcajanumero) - devolucionesnumero;
+                totalcalculadonumeroefectivo = (ventasefectivonumero + movcajanumero) - devolucionesnumeroefectivo;
 
 
 
@@ -308,77 +541,137 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 //Fianza es saldo inicial
 
                 //Efectivo
-                if(!hoy){
-                    cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'  AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-                }else{
-                    cursorefectivo = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'", null);
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Ordenes WHERE Fecha > '" + fecha + "' AND TipoPago = 'Efectivo'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo' AND Fecha > '" + fecha + "'AND Hora > '" + horalong + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        efectivonumero = cursornumventasfechamas.getDouble(0);
+
+                        a = "si";
+                    }
+
+                }
+                if (!hoy && a.equals("")) {
+                    cursorefectivo2 = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'  AND Fecha == '" + fecha + "' AND Hora >= '" + horalong + "'", null);
+                    if (cursorefectivo2.moveToNext()) {
+                        efectivonumero = cursorefectivo2.getDouble(0);
+                    }
+
+
+                }else if (hoy && a.equals("")) {
+                    cursorefectivo2 = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Efectivo'", null);
+                    if (cursorefectivo2.moveToNext()) {
+                        efectivonumero = cursorefectivo2.getDouble(0);
+
+                    }
+
                 }
 
-                if (cursorefectivo.moveToNext()) {
-                    efectivonumero = cursorefectivo.getDouble(0);
-                }
 
 
 
                 //Tarjeta
-                if(!hoy){
+                a = "";
+                cursornumventasfechamas = bd.rawQuery("SELECT Total FROM Ordenes WHERE Fecha > '" + fecha + "' AND TipoPago = 'Tarjeta'", null);
+                if(cursornumventasfechamas.moveToFirst()){
+                    cursornumventasfechamas = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Tarjeta' AND Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        tarjetanumero = cursornumventasfechamas.getDouble(0);
+                        a = "si";
+                    }
+
+                }
+                if (!hoy && a.equals("")) {
                     cursortarjeta = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Tarjeta' AND Fecha >= '" + fecha + "' AND Hora >= '" + horalong + "'", null);
-                }else{
+                    if (cursortarjeta.moveToNext()) {
+                        tarjetanumero = cursortarjeta.getDouble(0);
+                    }
+                }else if (hoy && a.equals("")) {
                     cursortarjeta = bd.rawQuery("SELECT SUM(Total) FROM Ordenes WHERE TipoPago = 'Tarjeta'", null);
+                    if (cursortarjeta.moveToNext()) {
+                        tarjetanumero = cursortarjeta.getDouble(0);
+                    }
                 }
 
-                if (cursortarjeta.moveToNext()) {
-                    tarjetanumero = cursortarjeta.getDouble(0);
-                }
 
-                double precio10 = 0.0;
-                int numero10 = 0;
-                double precio21 = 0.0;
-                int numero21 = 0;
+
+                double precio10;
+                int numero10;
+                double precio21;
+                int numero21;
 
                 //Impuestos 10% cuota
-                if (!hoy) {
+                a = "";
+
+                    cursornumventasfechamas = bd.rawQuery("SELECT Vendidos.Precio,Vendidos.Numero FROM Vendidos INNER JOIN Ordenes ON Ordenes.id = Vendidos.idorden WHERE Vendidos.Iva = '10' AND Ordenes.Fecha > '" + fecha + "'", null);
+                    if(cursornumventasfechamas.moveToFirst()){
+                        precio10 = cursor10baseimponible.getDouble(0);
+                        numero10 = cursor10baseimponible.getInt(1);
+                        total10numero = (precio10*numero10) + total10numero ;
+                        a = "si";
+                    }
+
+
+                if (!hoy && a.equals("")) {
                     cursor10baseimponible = bd.rawQuery("SELECT Vendidos.Precio,Vendidos.Numero FROM Vendidos INNER JOIN Ordenes ON Ordenes.id = Vendidos.idorden WHERE Vendidos.Iva = '10' AND Ordenes.Fecha >= '" + fecha + "' AND Ordenes.Hora >= '" + horalong + "'", null);
-
-                } else {
-                    cursor10baseimponible = bd.rawQuery("SELECT Precio,Numero  FROM Vendidos WHERE Iva = '10'", null);
+     while (cursor10baseimponible.moveToNext()) {
+                        precio10 = cursor10baseimponible.getDouble(0);
+                        numero10 = cursor10baseimponible.getInt(1);
+                        total10numero = (precio10*numero10) + total10numero ;
+                    }
+                }else if (hoy && a.equals("")) {
+                    cursor10baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Vendidos WHERE Iva = '10'", null);
+                    while (cursor10baseimponible.moveToNext()) {
+                        precio10 = cursor10baseimponible.getDouble(0);
+                        numero10 = cursor10baseimponible.getInt(1);
+                        total10numero = (precio10*numero10) + total10numero ;
+                    }
                 }
-                while (cursor10baseimponible.moveToNext()) {
-                     precio10 = cursor10baseimponible.getDouble(0);
-                     numero10 = cursor10baseimponible.getInt(1);
-                     total10numero = (precio10*numero10) + total10numero ;
-                }
 
-                impuestos10cuotanumero = (total10numero*10)/100;
-
-
-                //Impuestos 10% base imponible
-                impuestos10baseimponiblenumero = total10numero - impuestos10cuotanumero;
+              total10numero =  total10numero - totaldevolucionesnumero10;
+                impuestos10baseimponiblenumero = total10numero/1.10;
+                impuestos10cuotanumero =  total10numero -impuestos10baseimponiblenumero;
 
 
                 //Impuestos 21% cuota
-                if (!hoy) {
-                    cursor21baseimponible = bd.rawQuery("SELECT Ven.Precio,Ven.Numero FROM Vendidos AS Ven JOIN Ordenes As Ord WHERE Ven.Iva = '21' AND Ord.Fecha >= '" + fecha + "' AND Ord.Hora >= '" + horalong + "'", null);
-                }else{
-                    cursor21baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Vendidos WHERE Iva = '21'", null);
-                }
-                while (cursor21baseimponible.moveToNext()) {
+                a = "";
+
+                cursornumventasfechamas = bd.rawQuery("SELECT Vendidos.Precio,Vendidos.Numero FROM Vendidos INNER JOIN Ordenes ON Ordenes.id = Vendidos.idorden WHERE Vendidos.Iva = '21' AND Ordenes.Fecha > '" + fecha + "'", null);
+                if(cursornumventasfechamas.moveToFirst()){
                     precio21 = cursor21baseimponible.getDouble(0);
                     numero21 = cursor21baseimponible.getInt(1);
-                    total21numero = total21numero + (precio21*numero21);
+                    total21numero = (precio21*numero21) + total10numero ;
+                    a = "si";
                 }
 
-                impuestos21cuotanumero =  (total21numero*21)/100;
+
+                if (!hoy && a.equals("")) {
+                    cursor21baseimponible = bd.rawQuery("SELECT Vendidos.Precio,Vendidos.Numero FROM Vendidos INNER JOIN Ordenes ON Ordenes.id = Vendidos.idorden WHERE Vendidos.Iva = '21' AND Ordenes.Fecha >= '" + fecha + "' AND Ordenes.Hora >= '" + horalong + "'", null);
+                    while (cursor21baseimponible.moveToNext()) {
+                        precio21 = cursor21baseimponible.getDouble(0);
+                        numero21 = cursor21baseimponible.getInt(1);
+                        total21numero = (precio21*numero21) + total21numero ;
+                    }
+                }else if (hoy && a.equals("")) {
+                    cursor21baseimponible = bd.rawQuery("SELECT Precio,Numero FROM Vendidos WHERE Iva = '21'", null);
+                    while (cursor21baseimponible.moveToNext()) {
+                        precio21 = cursor21baseimponible.getDouble(0);
+                        numero21 = cursor21baseimponible.getInt(1);
+                        total21numero = (precio21*numero21) + total21numero ;
+                    }
+                }
+
 
 
                 //Impuestos 21% base imponible
-                impuestos21baseimponiblenumero = total21numero - impuestos21cuotanumero;
-
+                impuestos21baseimponiblenumero = total21numero/1.21;
+                impuestos21cuotanumero =  total21numero -impuestos21baseimponiblenumero;
 
 
 
                 //Total calculado
-                totalcalculadonumero = ventasnumero + movcajanumero - devolucionesnumero;
+                totalcalculadonumero = ventasnumero + movcajanumero - totaldevolucionesnumero;
 
 
                 id = id - 1;
@@ -387,20 +680,25 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 if (cursorefectivo.moveToNext()) {
                     saldoinicialnumero = cursorefectivo.getDouble(0);
                 }
+                cursorefectivo.close();
                 fianzanumero = nuevosaldoinicialnumero;
                 //Retirada efectivo
-                retiradaefectivonumero = saldoinicialnumero - recuentoefectivonumero;
+                retiradaefectivonumero = recuentoefectivonumero - fianzanumero;
                 //Calculado efectivo
-                calculadoefectivonumero = (ventasefectivonumero + movcajanumero + saldoinicialnumero) - devolucionesnumero;
+                calculadoefectivonumero = (ventasefectivonumero + movcajanumero + saldoinicialnumero) - devolucionesnumeroefectivo;
+
+
+                tarjetanumero = tarjetanumero - devolucionesnumerotarjeta;
+
 
                 //Descuadre
                 descuadrenumero = recuentoefectivonumero - calculadoefectivonumero ;
                 descuadrenumero = Math.round(descuadrenumero * 100.0) / 100.0;
-                if (recuentoefectivonumero < totalcalculadonumeroefectivo) {
+                if (recuentoefectivonumero < calculadoefectivonumero) {
                     openDialogfianza();
                 } else {
                     resg.CrearArqueo(numeroarqueotexto, numventasnumero, ventasnumero, movcajanumero, totaldevolucionesnumero, totalcalculadonumero, saldoinicialnumero, ventasefectivonumero, entradasnumero, salidasnumero,
-                            devolucionesnumero, calculadoefectivonumero, recuentoefectivonumero, descuadrenumero, retiradaefectivonumero, fianzanumero, efectivonumero, tarjetanumero, impuestos10baseimponiblenumero,impuestos10cuotanumero, impuestos21baseimponiblenumero,impuestos21cuotanumero);
+                            devolucionesnumeroefectivo, calculadoefectivonumero, recuentoefectivonumero, descuadrenumero, retiradaefectivonumero, fianzanumero, calculadoefectivonumero, tarjetanumero, impuestos10baseimponiblenumero,impuestos10cuotanumero, impuestos21baseimponiblenumero,impuestos21cuotanumero);
 
 
 
@@ -425,13 +723,13 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 i.putExtra("ventasefectivo", ventasefectivonumero);
                 i.putExtra("entradas", entradasnumero);
                 i.putExtra("salidas", salidasnumero);
-                i.putExtra("devoluciones", devolucionesnumero);
+                i.putExtra("devoluciones", devolucionesnumeroefectivo);
                 i.putExtra("calculadoefectivo", calculadoefectivonumero);
                 i.putExtra("recuentoefectivo", recuentoefectivonumero);
                 i.putExtra("descuadre", descuadrenumero);
                 i.putExtra("retiradaefectivo", retiradaefectivonumero);
                 i.putExtra("fianza", fianzanumero);
-                i.putExtra("efectivo", efectivonumero);
+                i.putExtra("efectivo", calculadoefectivonumero);
                 i.putExtra("tarjeta", tarjetanumero);
                 i.putExtra("impuestos10baseimponible", impuestos10baseimponiblenumero);
                 i.putExtra("impuestos10cuota", impuestos10cuotanumero);
@@ -464,7 +762,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
         DecimalFormat decim = new DecimalFormat("0.00");
 
         encajatext.setText(String.valueOf(decim.format(recuentoefectivonumero)));
-        calculadotext.setText(String.valueOf(decim.format(totalcalculadonumeroefectivo)));
+        calculadotext.setText(String.valueOf(decim.format(calculadoefectivonumero)));
         if(descuadrenumero<0) {
         descuadretext.setTextColor(Color.RED);
         }
@@ -499,7 +797,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
             public void onClick(View v) {
                 BaseDatos resg = new BaseDatos(getContext(), null);
                 resg.CrearArqueo(numeroarqueotexto, numventasnumero, ventasnumero, movcajanumero, totaldevolucionesnumero, totalcalculadonumero, saldoinicialnumero, ventasefectivonumero, entradasnumero, salidasnumero,
-                        devolucionesnumero, calculadoefectivonumero, recuentoefectivonumero, descuadrenumero, retiradaefectivonumero, fianzanumero, efectivonumero, tarjetanumero, impuestos10baseimponiblenumero,impuestos10cuotanumero, impuestos21baseimponiblenumero,impuestos21cuotanumero);
+                        devolucionesnumeroefectivo, calculadoefectivonumero, recuentoefectivonumero, descuadrenumero, retiradaefectivonumero, fianzanumero, efectivonumero, tarjetanumero, impuestos10baseimponiblenumero,impuestos10cuotanumero, impuestos21baseimponiblenumero,impuestos21cuotanumero);
                 Date c2 = Calendar.getInstance().getTime();
                 SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
                 String diatexto = df2.format(c2);
@@ -520,7 +818,7 @@ public class TotalizarCierreCajaFianzaFragment extends Fragment {
                 i.putExtra("ventasefectivo", ventasefectivonumero);
                 i.putExtra("entradas", entradasnumero);
                 i.putExtra("salidas", salidasnumero);
-                i.putExtra("devoluciones", devolucionesnumero);
+                i.putExtra("devoluciones", devolucionesnumeroefectivo);
                 i.putExtra("calculadoefectivo", calculadoefectivonumero);
                 i.putExtra("recuentoefectivo", recuentoefectivonumero);
                 i.putExtra("descuadre", descuadrenumero);

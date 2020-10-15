@@ -1,4 +1,5 @@
 include ':etickets-Sdk-debug'
+include ':etickets-Sdk-debug'
 include ':eTicketLibrary'
 include ':etickets-Sdk-debug'
 include ':etickets-Sdk-debug'

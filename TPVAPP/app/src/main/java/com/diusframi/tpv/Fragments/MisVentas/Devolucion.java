@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -16,12 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Constructores.Articulo;
-import com.diusframi.tpv.Constructores.ArticuloAdapter;
 import com.diusframi.tpv.Constructores.DevolucionAdapter;
 import com.diusframi.tpv.Constructores.Devolucionconstruct;
 import com.diusframi.tpv.Constructores.numerodevolucion;
-import com.diusframi.tpv.Fragments.MisArticulos.MisarticulosFragment;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 

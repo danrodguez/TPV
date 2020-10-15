@@ -6,14 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -93,10 +95,8 @@ public class MisArqueosArqueo extends AppCompatActivity {
     Double impuestos21baseimponiblenumero = 0.0;
     Double impuestos10cuotanumero = 0.0;
     Double impuestos21cuotanumero = 0.0;
-    Double total10numero = 0.0;
-    Double total21numero = 0.0;
     Boolean hoy = false;
-    Integer id = 0;
+
 
 
     @Override
@@ -383,12 +383,9 @@ public class MisArqueosArqueo extends AppCompatActivity {
 
 
         //Boton volver va a Venta
-        volverboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
-            }
+        volverboton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            startActivity(i);
         });
 
 

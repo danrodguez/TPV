@@ -54,7 +54,6 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
     String horatexto;
     String numeroarqueotexto;
     String nombrecomercialtexto;
-    String numerofianzatexto;
     Integer numventasnumero = 0;
     Double ventasnumero = 0.0;
     Double movcajanumero = 0.0;
@@ -151,7 +150,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
             Descuadre.setTextColor(Color.RED);
         }
 
-
+cursorefectivo.close();
         DecimalFormat decim = new DecimalFormat("0.00");
 
 
@@ -164,13 +163,13 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         BaseDatos resg2 = new BaseDatos(getApplicationContext(), null);
         SQLiteDatabase bd2 = resg2.getReadableDatabase();
 
-        @SuppressLint("Recycle") Cursor cursor = bd2.rawQuery("SELECT nombrecomercial FROM Usuarios WHERE activo  LIKE 1", null);
+      Cursor cursor = bd2.rawQuery("SELECT nombrecomercial FROM Usuarios WHERE activo  LIKE 1", null);
 
         if (cursor.moveToFirst()) {
             nombrecomercialtexto = cursor.getString(0);
         }
 
-
+cursor.close();
 
         nombrecomercio.setText(nombrecomercialtexto);
         numeroarqueo.setText(numeroarqueotexto);
@@ -181,7 +180,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         movimientocaja.setText(String.valueOf(decim.format(movcajanumero)));
         totaldevoluciones.setText(String.valueOf(decim.format(totaldevolucionesnumero)));
         TotalCalculado.setText(String.valueOf(decim.format(totalcalculadonumero)));
-        SaldoInicial.setText(String.valueOf(decim.format(saldoinicialnumero)));
+        SaldoInicial.setText(String.valueOf(decim.format(fianzanumero)));
         Ventasefectivo.setText(String.valueOf(decim.format(ventasefectivonumero)));
         Entradas.setText(String.valueOf(decim.format(entradasnumero)));
         Salidas.setText(String.valueOf(decim.format(salidasnumero)));
@@ -190,7 +189,7 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         recuentoefectivo.setText(String.valueOf(decim.format(recuentoefectivonumero)));
         Descuadre.setText(String.valueOf(decim.format(descuadrenumero)));
         RetiradaEfectivo.setText(String.valueOf(decim.format(retiradaefectivonumero)));
-        Fianza.setText(String.valueOf(decim.format(fianzanumero)));
+        Fianza.setText(String.valueOf(decim.format(saldoinicialnumero)));
         Efectivo.setText(String.valueOf(decim.format(calculadoefectivonumero)));
         Tarjeta.setText(String.valueOf(decim.format(tarjetanumero)));
         impuesto10baseimponible.setText(String.valueOf(decim.format(impuestos10baseimponiblenumero)));
@@ -199,12 +198,9 @@ public class  ArqueoTotalizarCierreCaja extends AppCompatActivity {
         impuesto21cuota.setText(String.valueOf(decim.format(impuestos21cuotanumero)));
 
 
-        volverboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
-            }
+        volverboton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            startActivity(i);
         });
 
 

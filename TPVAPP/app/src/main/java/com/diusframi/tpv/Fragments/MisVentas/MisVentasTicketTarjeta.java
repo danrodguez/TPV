@@ -160,10 +160,10 @@ public class MisVentasTicketTarjeta extends Fragment {
 
         Cursor  cursorlista = bd.rawQuery("SELECT Numero,Nombre,Precio FROM Vendidos WHERE idorden LIKE '"+orden+"' ", null);
 
-        String Nombre = "";
-        int Numero = 0;
-        double Precio = 0.0;
-        double Importe = 0.0;
+        String Nombre;
+        int Numero;
+        double Precio ;
+        double Importe;
 
         while (cursorlista.moveToNext()) {
             Numero = cursorlista.getInt(0);
@@ -265,66 +265,63 @@ cursor21baseimponible.close();
             startActivity(i);
         });
 
-        imprimirboton.setOnClickListener(new View.OnClickListener() {
-                                             @Override
-                                             public void onClick(View v) {
+        imprimirboton.setOnClickListener(v -> {
 
 
 
-                //Datos Ticket
-        int idticket = 0;
+//Datos Ticket
+int idticket = 0;
 
-        Cursor cursorid3 = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion", null);
-        if(cursorid3.moveToFirst()){
-            idticket = cursorid3.getInt(0);
-        }
+Cursor cursorid3 = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion", null);
+if(cursorid3.moveToFirst()){
+idticket = cursorid3.getInt(0);
+}
 
-        cursorid3.close();
+cursorid3.close();
 
-        if(idticket != 0){
-            int id = idticket;
-        }
+if(idticket != 0){
+int id = idticket;
+}
 
 
-        final int finalIdticket = idticket;
-
+final int finalIdticket = idticket;
 
 
 
 
 
-        datos.setTotal(totalnumero);
-        datos.setEfectivo(totalnumero);
-        datos.setFactura(String.valueOf(finalIdticket));
-        datos.setCif(ciftexto);
-        datos.setBase10((impuestos10baseimponiblenumero));
-        datos.setBase21(impuestos21baseimponiblenumero);
-        datos.setCuota10(impuestos10cuotanumero);
-        datos.setCuota21(impuestos21cuotanumero);
-        datos.setCambio(0.0);
-        datos.setDireccionFiscal(direccionfiscaltexto);
-        datos.setFecha(fechatexto);
-        datos.setNombreComercio(nombrecomerciotexto);
-        datos.setNombreFiscal(nombrefiscaltexto);
-        datos.setHora(horatexto);
-        datos.setPrecio(totalnumero);
-        datos.setNumero(String.valueOf(numerotelefono));
-        datos.setListArticulos(listanombres);
-        datos.setListPrecios(listaprecio);
-        datos.setListImportes(listaimporte);
-        datos.setListunidades(listanumero);
+
+datos.setTotal(totalnumero);
+datos.setEfectivo(totalnumero);
+datos.setFactura(String.valueOf(finalIdticket));
+datos.setCif(ciftexto);
+datos.setBase10((impuestos10baseimponiblenumero));
+datos.setBase21(impuestos21baseimponiblenumero);
+datos.setCuota10(impuestos10cuotanumero);
+datos.setCuota21(impuestos21cuotanumero);
+datos.setCambio(0.0);
+datos.setDireccionFiscal(direccionfiscaltexto);
+datos.setFecha(fechatexto);
+datos.setNombreComercio(nombrecomerciotexto);
+datos.setNombreFiscal(nombrefiscaltexto);
+datos.setHora(horatexto);
+datos.setPrecio(totalnumero);
+datos.setNumero(String.valueOf(numerotelefono));
+datos.setListArticulos(listanombres);
+datos.setListPrecios(listaprecio);
+datos.setListImportes(listaimporte);
+datos.setListunidades(listanumero);
 
 
-        crearPDF.generarQr();
+crearPDF.generarQr();
 
-        if (crearPDF.createPdf(datos.getNombreComercio(), datos.getNombreFiscal(), datos.getNumero(), datos.getDireccionFiscal(), datos.getCif(), datos.getFactura(), datos.getEfectivo(), datos.getCambio(), datos.getTotal(), datos.getBase10(), datos.getCuota10(), datos.getBase21(), datos.getCuota21(), listanombres, datos.getListunidades(), listaprecio, listaimporte)) {
-            Toast.makeText(getContext(), "Factura creada con exito", Toast.LENGTH_LONG).show();
-            MisVentasTicketTarjeta.Mostrar enviarticket = new Mostrar();
-            enviarticket.execute();
-        } else {
-            Toast.makeText(getContext(), "Factura no creada", Toast.LENGTH_LONG).show();
-        }
-    }
+if (crearPDF.createPdf(datos.getNombreComercio(), datos.getNombreFiscal(), datos.getNumero(), datos.getDireccionFiscal(), datos.getCif(), datos.getFactura(), datos.getEfectivo(), datos.getCambio(), datos.getTotal(), datos.getBase10(), datos.getCuota10(), datos.getBase21(), datos.getCuota21(), listanombres, datos.getListunidades(), listaprecio, listaimporte)) {
+Toast.makeText(getContext(), "Factura creada con exito", Toast.LENGTH_LONG).show();
+Mostrar enviarticket = new Mostrar();
+enviarticket.execute();
+} else {
+Toast.makeText(getContext(), "Factura no creada", Toast.LENGTH_LONG).show();
+}
 });
 
         correoboton.setOnClickListener(v -> {

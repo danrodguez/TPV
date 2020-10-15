@@ -71,38 +71,31 @@ public class VentaIntroduceImporteEfectivo extends AppCompatActivity {
 
             }
         });
-        cancelarboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                startActivity(i);
-            }
+        cancelarboton.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            startActivity(i);
         });
 
 
-        cobrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DecimalFormat decim = new DecimalFormat("0.00");
-                String efectivotexto = efectivo.getText().toString();
-                Double efectivonumero = Double.parseDouble(efectivotexto);
-                Double importe = total;
-                if(efectivonumero<total){
-                    Toast toast2 =
-                            Toast.makeText(getApplicationContext(),
-                                    "Total mayor que efectivo", Toast.LENGTH_SHORT);
+        cobrar.setOnClickListener(view -> {
+            String efectivotexto = efectivo.getText().toString();
+            Double efectivonumero = Double.parseDouble(efectivotexto);
+            Double importe = total;
+            if(efectivonumero<total){
+                Toast toast2 =
+                        Toast.makeText(getApplicationContext(),
+                                "Total mayor que efectivo", Toast.LENGTH_SHORT);
 
 
 
-                    toast2.show();
-                }else{
-                    Intent i = new Intent(getApplicationContext(), PagoRealizadoEfectivo.class);
-                    i.putExtra("efectivo", efectivonumero);
-                    i.putExtra("importe", importe);
-                    startActivity(i);
-                }
-
+                toast2.show();
+            }else{
+                Intent i = new Intent(getApplicationContext(), PagoRealizadoEfectivo.class);
+                i.putExtra("efectivo", efectivonumero);
+                i.putExtra("importe", importe);
+                startActivity(i);
             }
+
         });
 
 

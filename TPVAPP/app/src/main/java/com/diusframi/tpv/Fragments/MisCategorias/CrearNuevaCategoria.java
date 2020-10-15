@@ -20,6 +20,8 @@ import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 
+
+
 public class CrearNuevaCategoria extends Fragment {
     DrawerLayout drawer;
     private Fragment fragment = null;
@@ -30,7 +32,8 @@ public class CrearNuevaCategoria extends Fragment {
         final View view = inflater.inflate(R.layout.activity_crear_nueva_categoria, container, false);
 categoria = view.findViewById(R.id.nombrecategoriaedit);
         drawer = view.findViewById(R.id.drawer_layout);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Mis Categorías");
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Mis Categorías");
+        assert getArguments() != null;
         nombrecategoria = getArguments().getString("nombrecategoria");
 
         if (nombrecategoria == null) {
@@ -50,38 +53,34 @@ categoria = view.findViewById(R.id.nombrecategoriaedit);
 
 
 
-        nuevoarticulo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        nuevoarticulo.setOnClickListener(v -> {
 
-           String    nombrecategoria2 = categoria.getText().toString();
+       String    nombrecategoria2 = categoria.getText().toString();
 
-                BaseDatos resg = new BaseDatos(view.getContext(), null);
-                SQLiteDatabase bd = resg.getWritableDatabase();
-                Cursor cursortipos = bd.rawQuery("SELECT Categoria FROM Categoriastabla WHERE Categoria = '" + nombrecategoria + "'", null);
+            BaseDatos resg = new BaseDatos(view.getContext(), null);
+            SQLiteDatabase bd = resg.getWritableDatabase();
+            Cursor cursortipos = bd.rawQuery("SELECT Categoria FROM Categoriastabla WHERE Categoria = '" + nombrecategoria + "'", null);
 
 
-                if (cursortipos.moveToNext()) {
-                    BaseDatos resg2 = new BaseDatos(view.getContext(), null);
+            if (cursortipos.moveToNext()) {
 
-                    Cursor cursortipos2 = bd.rawQuery("UPDATE Categoriastabla SET Categoria = '"+nombrecategoria2+"' WHERE Categoria = '"+nombrecategoria+"'", null);
+                Cursor cursortipos2 = bd.rawQuery("UPDATE Categoriastabla SET Categoria = '"+nombrecategoria2+"' WHERE Categoria = '"+nombrecategoria+"'", null);
 
-                    cursortipos2.moveToFirst();
-                    cursortipos2.close();
+                cursortipos2.moveToFirst();
+                cursortipos2.close();
 
-                    Intent i = new Intent(view.getContext(), Venta.class);
-                    startActivity(i);
-                } else {
-                    int id = 0;
+                Intent i = new Intent(view.getContext(), Venta.class);
+                startActivity(i);
+            } else {
 
-                    resg.CrearCategoria(
-                      nombrecategoria2
-                    );
-                    Intent i = new Intent(view.getContext(), Venta.class);
-                    startActivity(i);
-                }
-                cursortipos.close();
+
+                resg.CrearCategoria(
+                  nombrecategoria2
+                );
+                Intent i = new Intent(view.getContext(), Venta.class);
+                startActivity(i);
             }
+            cursortipos.close();
         });
 
 
@@ -96,7 +95,7 @@ categoria = view.findViewById(R.id.nombrecategoriaedit);
                     Bundle bundle = new Bundle();
                     bundle.putString("nombrecategoria", "");
                     fragment.setArguments(bundle);
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.content_fragment, fragment);
                     ft.commit();
                 }

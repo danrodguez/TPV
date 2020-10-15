@@ -118,61 +118,48 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MultiV
             bd2.close();
             cursor.close();
             final String finalCategoria = categoria;
-            Nombre.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.editararticulo(Nombre.getText().toString(), finalCategoria,Articuloslista.getIva().toString(),Articuloslista.getPrecio().toString());
-                }
+            Nombre.setOnClickListener(v -> mListener.editararticulo(Nombre.getText().toString(), finalCategoria,Articuloslista.getIva().toString(),Articuloslista.getPrecio().toString()));
+
+            Borrar.setOnClickListener(v -> {
+
+                BaseDatos resg21 = new BaseDatos(context, null);
+                SQLiteDatabase database = resg21.getWritableDatabase();
+                String sql = " DELETE FROM Articulos WHERE Nombre = ?;";
+
+                SQLiteStatement statement = database.compileStatement(sql);
+                statement.clearBindings();
+
+                statement.bindString(1, Articuloslista.getNombre());
+
+
+                statement.executeUpdateDelete();
+
+
+                ArticulosLista.remove(Articuloslista);
+                mListener2.refrescar(ArticulosLista);
+
+
             });
 
-            Borrar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    BaseDatos resg2 = new BaseDatos(context, null);
-                    SQLiteDatabase database = resg2.getWritableDatabase();
-                    String sql = " DELETE FROM Articulos WHERE Nombre = ?;";
+            Favorito.setOnClickListener(v -> {
 
-                    SQLiteStatement statement = database.compileStatement(sql);
-                    statement.clearBindings();
-
-                    statement.bindString(1, Articuloslista.getNombre());
-
-
-                    statement.executeUpdateDelete();
-
-
+                if (favoritos == 0) {
+                    Favorito.setImageResource(R.drawable.estrella);
+                    resg.actualizafavorito(1, Nombre.getText().toString());
+                    favoritos = 1;
                     ArticulosLista.remove(Articuloslista);
                     mListener2.refrescar(ArticulosLista);
 
 
-                }
-            });
-
-
-            Favorito.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (favoritos == 0) {
-                        Favorito.setImageResource(R.drawable.estrella);
-                        resg.actualizafavorito(1, Nombre.getText().toString());
-                        favoritos = 1;
-                        ArticulosLista.remove(Articuloslista);
-                        mListener2.refrescar(ArticulosLista);
-
-
-                    } else if (favoritos == 1) {
-                        Favorito.setImageResource(R.drawable.estrellavacia);
-                        resg.actualizafavorito(0, Nombre.getText().toString());
-                        favoritos = 0;
-                        ArticulosLista.remove(Articuloslista);
-                        mListener2.refrescar(ArticulosLista);
-
-                    }
+                } else if (favoritos == 1) {
+                    Favorito.setImageResource(R.drawable.estrellavacia);
+                    resg.actualizafavorito(0, Nombre.getText().toString());
+                    favoritos = 0;
+                    ArticulosLista.remove(Articuloslista);
+                    mListener2.refrescar(ArticulosLista);
 
                 }
-
 
             });
         }

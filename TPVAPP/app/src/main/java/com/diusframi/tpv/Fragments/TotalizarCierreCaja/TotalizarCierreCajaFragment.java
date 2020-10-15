@@ -59,30 +59,24 @@ public class TotalizarCierreCajaFragment extends Fragment {
         importe.setFilters(new InputDinero[]{dinero});
 
 
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), Venta.class);
-                startActivity(i);
-            }
+        cancelar.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), Venta.class);
+            startActivity(i);
         });
 
-        continuar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double recuentoefectivo;
-                String importetexto = importe.getText().toString();
-                recuentoefectivo = Double.parseDouble(importetexto);
+        continuar.setOnClickListener(v -> {
+            double recuentoefectivo;
+            String importetexto = importe.getText().toString();
+            recuentoefectivo = Double.parseDouble(importetexto);
 
 
-                Fragment fragment = new TotalizarCierreCajaFianzaFragment();
-                Bundle bundle = new Bundle();
-                bundle.putDouble("recuentoefectivo", recuentoefectivo);
-                fragment.setArguments(bundle);
-                FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_fragment, fragment);
-                ft.commit();
-            }
+            Fragment fragment = new TotalizarCierreCajaFianzaFragment();
+            Bundle bundle = new Bundle();
+            bundle.putDouble("recuentoefectivo", recuentoefectivo);
+            fragment.setArguments(bundle);
+            FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_fragment, fragment);
+            ft.commit();
         });
 
         importe.addTextChangedListener(new TextWatcher() {

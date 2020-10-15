@@ -19,14 +19,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Constructores.ProductoTicket;
 import com.diusframi.tpv.Constructores.ProductosTicketAdapter;
-import com.diusframi.tpv.Fragments.TicketDeVenta.PagoRealizadoTarjeta;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.R;
 import com.example.etickets_sdk.DatosCajaR;
@@ -271,67 +272,64 @@ bd2.close();
             startActivity(i);
         });
 
-        imprimirboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imprimirboton.setOnClickListener(v -> {
 
 
 
-                //Datos Ticket
+            //Datos Ticket
 
 
-                int idticket = 0;
+            int idticket = 0;
 
-                Cursor cursorid3 = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion", null);
-                if(cursorid3.moveToFirst()){
-                    idticket = cursorid3.getInt(0);
-                }
+            Cursor cursorid3 = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion", null);
+            if(cursorid3.moveToFirst()){
+                idticket = cursorid3.getInt(0);
+            }
 
-                cursorid3.close();
+            cursorid3.close();
 
-                if(idticket != 0){
-                    id = idticket;
-                }
+            if(idticket != 0){
+                id = idticket;
+            }
 
 
-        final int finalIdticket = idticket;
-
+    final int finalIdticket = idticket;
 
 
 
 
 
-                    datos.setTotal(totalnumero);
-                    datos.setEfectivo(totalnumero);
-                    datos.setFactura(String.valueOf(finalIdticket));
-                    datos.setCif(ciftexto);
-                    datos.setBase10((impuestos10baseimponiblenumero));
-                    datos.setBase21(impuestos21baseimponiblenumero);
-                    datos.setCuota10(impuestos10cuotanumero);
-                    datos.setCuota21(impuestos21cuotanumero);
-                    datos.setCambio(0.0);
-                    datos.setDireccionFiscal(direccionfiscaltexto);
-                    datos.setFecha(fechatexto);
-                    datos.setNombreComercio(nombrecomerciotexto);
-                    datos.setNombreFiscal(nombrefiscaltexto);
-                    datos.setHora(horatexto);
-                    datos.setPrecio(totalnumero);
-                    datos.setNumero(String.valueOf(numerotelefono));
-                    datos.setListArticulos(listanombres);
-                    datos.setListPrecios(listaprecio);
-                    datos.setListImportes(listaimporte);
-                    datos.setListunidades(listanumero);
+
+                datos.setTotal(totalnumero);
+                datos.setEfectivo(totalnumero);
+                datos.setFactura(String.valueOf(finalIdticket));
+                datos.setCif(ciftexto);
+                datos.setBase10((impuestos10baseimponiblenumero));
+                datos.setBase21(impuestos21baseimponiblenumero);
+                datos.setCuota10(impuestos10cuotanumero);
+                datos.setCuota21(impuestos21cuotanumero);
+                datos.setCambio(0.0);
+                datos.setDireccionFiscal(direccionfiscaltexto);
+                datos.setFecha(fechatexto);
+                datos.setNombreComercio(nombrecomerciotexto);
+                datos.setNombreFiscal(nombrefiscaltexto);
+                datos.setHora(horatexto);
+                datos.setPrecio(totalnumero);
+                datos.setNumero(String.valueOf(numerotelefono));
+                datos.setListArticulos(listanombres);
+                datos.setListPrecios(listaprecio);
+                datos.setListImportes(listaimporte);
+                datos.setListunidades(listanumero);
 
 
-                    crearPDF.generarQr();
+                crearPDF.generarQr();
 
-                    if (crearPDF.createPdf(datos.getNombreComercio(), datos.getNombreFiscal(), datos.getNumero(), datos.getDireccionFiscal(), datos.getCif(), datos.getFactura(), datos.getEfectivo(), datos.getCambio(), datos.getTotal(), datos.getBase10(), datos.getCuota10(), datos.getBase21(), datos.getCuota21(), listanombres, datos.getListunidades(), listaprecio, listaimporte)) {
-                        Toast.makeText(getContext(), "Factura creada con exito", Toast.LENGTH_LONG).show();
-                        MisVentasTicketEfectivo.Mostrar enviarticket = new Mostrar();
-                        enviarticket.execute();
-                    } else {
-                        Toast.makeText(getContext(), "Factura no creada", Toast.LENGTH_LONG).show();
-                    }
+                if (crearPDF.createPdf(datos.getNombreComercio(), datos.getNombreFiscal(), datos.getNumero(), datos.getDireccionFiscal(), datos.getCif(), datos.getFactura(), datos.getEfectivo(), datos.getCambio(), datos.getTotal(), datos.getBase10(), datos.getCuota10(), datos.getBase21(), datos.getCuota21(), listanombres, datos.getListunidades(), listaprecio, listaimporte)) {
+                    Toast.makeText(getContext(), "Factura creada con exito", Toast.LENGTH_LONG).show();
+                    Mostrar enviarticket = new Mostrar();
+                    enviarticket.execute();
+                } else {
+                    Toast.makeText(getContext(), "Factura no creada", Toast.LENGTH_LONG).show();
                 }
             });
         correoboton.setOnClickListener(v -> Toast.makeText(getActivity(), "Factura creada y enviada",

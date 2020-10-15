@@ -334,10 +334,6 @@ public class Venta extends AppCompatActivity
                 recyclerView.setAdapter(adapter2);
 
 
-                if (btFavorito.isChecked()) {
-                    lineav.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
             } else {
                 while (cursor.moveToNext()) {
                     tipo = cursor.getString(0);
@@ -355,10 +351,10 @@ public class Venta extends AppCompatActivity
                 recyclerView.setAdapter(adapter);
 
 
-                if (btFavorito.isChecked()) {
-                    lineav.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
+            }
+            if (btFavorito.isChecked()) {
+                lineav.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
 
@@ -424,11 +420,6 @@ public class Venta extends AppCompatActivity
 
                     recyclerView.setAdapter(adapter2);
 
-                    if (btFavorito.isChecked()) {
-                        lineav.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-
                 } else {
                     while (cursor1.moveToNext()) {
                         tipo1 = cursor1.getString(0);
@@ -445,10 +436,10 @@ public class Venta extends AppCompatActivity
                     cursor1.close();
                     VentaAdapter adapter = new VentaAdapter(Venta.this, getApplicationContext(), lista1);
                     recyclerView.setAdapter(adapter);
-                    if (btFavorito.isChecked()) {
-                        lineav.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
+                }
+                if (btFavorito.isChecked()) {
+                    lineav.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
 
                 bd21.close();

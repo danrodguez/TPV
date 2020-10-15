@@ -246,75 +246,73 @@ cursorordentexto.close();
             dialog.dismiss();
         });
 
-        efectivo.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        efectivo.setOnClickListener(v -> {
 
-                ArrayList<ArticuloVenta> lista = new ArrayList<>();
-                totalnumero = 0;
-                orden = 0;
-                BaseDatos resg = new BaseDatos(getContext(), null);
-
-
-                SQLiteDatabase bd = resg.getReadableDatabase();
-                final Cursor cursor = bd.rawQuery("SELECT Categorias, Nombre, Numero, Precio, Iva FROM ArticulosVenta WHERE Numero > '0'", null);
-                String categorias;
-                String nombre;
-                int numero;
-                double precio;
-                int iva;
-                int numeroid = 0;
-
-                final Cursor cursorordentexto = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion ", null);
-
-                if (cursorordentexto.moveToNext()) {
-                    numeroid = cursorordentexto.getInt(0);
-                }
-cursorordentexto.close();
-                final Cursor cursororden = bd.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
-
-                if (cursororden.moveToNext()) {
-                    orden = cursororden.getInt(0);
-                }
+            ArrayList<ArticuloVenta> lista = new ArrayList<>();
+            totalnumero = 0;
+            orden = 0;
+            BaseDatos resg = new BaseDatos(getContext(), null);
 
 
-                if(orden == 0){
-                    orden = 1;
-                }else{
-                    orden = orden + 1;
+            SQLiteDatabase bd = resg.getReadableDatabase();
+            final Cursor cursor = bd.rawQuery("SELECT Categorias, Nombre, Numero, Precio, Iva FROM ArticulosVenta WHERE Numero > '0'", null);
+            String categorias;
+            String nombre;
+            int numero;
+            double precio;
+            int iva;
+            int numeroid = 0;
 
-                }
+            final Cursor cursorordentexto = bd.rawQuery("SELECT NumeroTicket FROM TextoTicketDevolucion ", null);
 
-
-                if(numeroid!=0){
-                    orden = numeroid;
-                }
-
-                while (cursor.moveToNext()) {
-                    categorias = cursor.getString(0);
-                    nombre = cursor.getString(1);
-                    numero = cursor.getInt(2);
-                    precio = cursor.getDouble(3);
-                    iva = cursor.getInt(4);
-                    totalnumero = totalnumero + (precio*numero);
-                    lista.add(new ArticuloVenta(categorias, nombre, numero, precio, iva));
-
-                    resg.crearnuevaorden(orden, categorias, nombre, numero, precio, iva);
-
-
-                }
-                cursor.close();
-                bd.close();
-                cursororden.close();
-
-
-
-
-
-                Intent i = new Intent(getContext(), VentaIntroduceImporteEfectivo.class);
-                i.putExtra("totalnumero", totalnumero);
-                startActivity(i);
-                dialog.dismiss();
+            if (cursorordentexto.moveToNext()) {
+                numeroid = cursorordentexto.getInt(0);
             }
+cursorordentexto.close();
+            final Cursor cursororden = bd.rawQuery("SELECT id FROM Ordenes ORDER BY id DESC", null);
+
+            if (cursororden.moveToNext()) {
+                orden = cursororden.getInt(0);
+            }
+
+
+            if(orden == 0){
+                orden = 1;
+            }else{
+                orden = orden + 1;
+
+            }
+
+
+            if(numeroid!=0){
+                orden = numeroid;
+            }
+
+            while (cursor.moveToNext()) {
+                categorias = cursor.getString(0);
+                nombre = cursor.getString(1);
+                numero = cursor.getInt(2);
+                precio = cursor.getDouble(3);
+                iva = cursor.getInt(4);
+                totalnumero = totalnumero + (precio*numero);
+                lista.add(new ArticuloVenta(categorias, nombre, numero, precio, iva));
+
+                resg.crearnuevaorden(orden, categorias, nombre, numero, precio, iva);
+
+
+            }
+            cursor.close();
+            bd.close();
+            cursororden.close();
+
+
+
+
+
+            Intent i = new Intent(getContext(), VentaIntroduceImporteEfectivo.class);
+            i.putExtra("totalnumero", totalnumero);
+            startActivity(i);
+            dialog.dismiss();
         });
 
         ticketrestaurante.setOnClickListener(v -> {

@@ -77,7 +77,7 @@ public class PagoRealizadoTarjeta extends AppCompatActivity {
     int id = 0;
     Cursor cursorfechahoratotal;
     Cursor cursorcomercialfiscal;
-    ArrayList<Double> listanumero = new ArrayList<>();
+    ArrayList<Integer> listanumero = new ArrayList<>();
     ArrayList<Double> listaimporte = new ArrayList<>();
     ArrayList<Double> listaprecio = new ArrayList<>();
     ArrayList<ProductoTicket> listaproductos = new ArrayList<>();
@@ -175,7 +175,7 @@ if(idticket != 0){
             listanombres.add(Nombre);
             listaimporte.add(Precio*Numero);
             listaprecio.add(Precio);
-            listanumero.add((double) Numero);
+            listanumero.add(Numero);
 
         }
         cursorlista.close();
@@ -271,10 +271,16 @@ if(idticket != 0){
 
             crearPDF.generarQr();
 
-            if(crearPDF.createPdf(datos.getNombreComercio(),datos.getNombreFiscal(),datos.getNumero(),datos.getDireccionFiscal(),datos.getCif(),datos.getFactura(),datos.getEfectivo(),datos.getCambio(),datos.getTotal(),datos.getBase10(),datos.getCuota10(),datos.getBase21(),datos.getCuota21(),datos.getListArticulos(),datos.getListunidades(),listaprecio,listaimporte)){
+            if(crearPDF.createPdf(datos.getNombreComercio(),datos.getNombreFiscal(),datos.getNumero(),datos.getDireccionFiscal(),datos.getCif(),datos.getFactura(),datos.getEfectivo(),datos.getCambio(),datos.getTotal(),datos.getBase10(),datos.getCuota10(),datos.getBase21(),datos.getCuota21(),datos.getListArticulos(),listanumero,listaprecio,listaimporte)){
+                crearPDF.crearXml(datos.getNombreComercio(),datos.getFactura(),datos.getTotal(),datos.getListArticulos());
+
+
                 Toast.makeText(getApplicationContext(),"Factura creada con exito",Toast.LENGTH_LONG).show();
-                PagoRealizadoTarjeta.Mostrar enviarticket = new PagoRealizadoTarjeta.Mostrar();
+                Mostrar enviarticket = new Mostrar();
                 enviarticket.execute();
+
+                SubirCsv enviarcsv = new SubirCsv();
+                enviarcsv.execute();
             }else{
                 Toast.makeText(getApplicationContext(),"Factura no creada",Toast.LENGTH_LONG).show();
             }
@@ -291,6 +297,63 @@ if(idticket != 0){
         });
     }
 
+    public class SubirCsv extends AsyncTask<String, String, Boolean> {
+        private Date date = new Date();
+
+        public Boolean doInBackground(String... params) {
+            boolean resul = true;
+            HttpClient httpClient = new DefaultHttpClient();
+            File ruta_sd = Environment.getExternalStorageDirectory();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+            String fecha = dateFormat.format(this.date);
+            dateFormat = new SimpleDateFormat("HH:mm:ss");
+            String hora = dateFormat.format(this.date);
+            //File f = new File(ruta_sd.getAbsolutePath(), "/Factura_"+fecha+"&"+hora+".pdf");
+            File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/Factura_" + fecha + "&" + hora + ".csv");
+            HttpPost post = new HttpPost("https://cr289fri24.execute-api.eu-west-1.amazonaws.com/test/uploadToS3");
+            post.setHeader("content-type", "application/json");
+            try {
+                JSONObject dato = new JSONObject();
+                dato.put("username", "0320002");
+                dato.put("menu_desc", "/Factura_"+fecha+"&"+hora);
+                dato.put("xml", true); // false: pdf, true: xml
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int nRead;
+                FileInputStream fis = new FileInputStream(f);
+                byte[] data = new byte[1024];
+                while ((nRead = fis.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, nRead);
+                }
+                buffer.flush();
+                dato.put("menu_photo", Base64.encodeToString(buffer.toByteArray(), Base64.DEFAULT));
+                StringEntity entity = new StringEntity(dato.toString());
+                post.setEntity(entity);
+                HttpResponse resp = httpClient.execute(post);
+                respStr = EntityUtils.toString(resp.getEntity());
+                StatusLine statusLine = resp.getStatusLine();
+                if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+                    resul = true;
+                } else {
+                    resul = false;
+                }
+            } catch (Exception ex) {
+                Log.e("ServicioRest", "Error!", ex);
+                resul = false;
+            }
+            return resul;
+        }
+        public void onPostExecute(Boolean result) {
+            if (result == true) {
+                Toast.makeText(getApplicationContext(), "Subido CSV Correctamente", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(getApplicationContext(), "Error Servidor", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+
+}
     @SuppressLint("StaticFieldLeak")
     public class Mostrar extends AsyncTask<String, String, Boolean> {
         private Date date = new Date();
@@ -311,7 +374,7 @@ if(idticket != 0){
             try {
                 JSONObject dato = new JSONObject();
                 dato.put("username", "0320002");
-                dato.put("menu_desc", "/Factura_23245");
+                dato.put("menu_desc", "/Factura_"+fecha+"&"+hora);
                 dato.put("xml", false); // false: pdf, true: xml
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 int nRead;

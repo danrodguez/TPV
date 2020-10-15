@@ -5,10 +5,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.diusframi.tpv.R;
 
 import java.text.DecimalFormat;
@@ -69,7 +70,7 @@ public class ProductosTicketAdapter extends RecyclerView.Adapter<ProductosTicket
             DecimalFormat decim = new DecimalFormat("0.00");
 
             Unidades.setText(ProductoLista.getUnidad().toString());
-            Articulos.setText(ProductoLista.getArticulos().toString());
+            Articulos.setText(ProductoLista.getArticulos());
             Precio.setText(ProductoLista.getPreciou().toString());
             Importe.setText(decim.format(ProductoLista.getImporte()));
         }

@@ -8,18 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diusframi.tpv.BaseDatos;
-import com.diusframi.tpv.Fragments.MisVentas.Devolucion;
 import com.diusframi.tpv.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.MultiViewHolder> {
@@ -124,6 +120,13 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
                             if (cursorselect3.moveToFirst()) {
                                 iva = cursorselect3.getInt(0);
                             }
+
+                            if (iva == 0){
+                                Cursor cursorselect4 = bd2.rawQuery("SELECT Iva FROM Vendidos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '"+devolucionlista.getOrdenticket()+"'", null);
+                                if(cursorselect4.moveToNext()){
+                                    iva = cursorselect4.getInt(0);
+                                }
+                            }
                             cursorselect3.close();
                             if (cursor3.moveToFirst()) {
                                 numero = cursor3.getInt(0);
@@ -131,7 +134,7 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
                             }
                             cursor3.close();
 
-                            @SuppressLint("Recycle") Cursor cursor5 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id ASC", null);
+                           Cursor cursor5 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id ASC", null);
                             while (cursor5.moveToNext()) {
                                 iddevolucion = cursor5.getInt(0);
                             }
@@ -142,7 +145,7 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
                                 iddevolucion = iddevolucion + 1;
                             }
 
-                            @SuppressLint("Recycle") Cursor cursor6 = bd2.rawQuery("SELECT idorden FROM Devueltostemporal ORDER BY idorden DESC ", null);
+                    Cursor cursor6 = bd2.rawQuery("SELECT idorden FROM Devueltostemporal ORDER BY idorden DESC ", null);
                             while (cursor6.moveToNext()) {
                                 idorden = cursor6.getInt(0);
                                 idorden = idorden + 1;
@@ -173,33 +176,30 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
                         } else if (!check.isChecked()) {
                             BaseDatos resg2 = new BaseDatos(itemView.getContext(), null);
                             SQLiteDatabase bd2 = resg2.getReadableDatabase();
-                            @SuppressLint("Recycle") Cursor cursor2 = bd2.rawQuery("SELECT Nombre FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '" + devolucionlista.getOrden() + "'", null);
-                            @SuppressLint("Recycle") Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '" + devolucionlista.getOrden() + "' ", null);
-                            @SuppressLint("Recycle") Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
-                            @SuppressLint("Recycle") Cursor cursorselect3 = bd2.rawQuery("SELECT IVA FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
+                         Cursor cursor3 = bd2.rawQuery("SELECT Numero FROM Devueltostemporal WHERE idticket LIKE '" + devolucionlista.getOrdenticket() + "' AND  Nombre LIKE '" + devolucionlista.getArticulo() + "' AND idorden LIKE '" + devolucionlista.getOrden() + "' ", null);
+                           Cursor cursorselect = bd2.rawQuery("SELECT Categorias FROM Articulos WHERE Nombre LIKE '" + devolucionlista.getArticulo() + "'", null);
+
 
                             if (cursorselect.moveToFirst()) {
                                 categoria = cursorselect.getInt(0);
                             }
+cursorselect.close();
 
-
-                            @SuppressLint("Recycle") Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
+                         Cursor cursorselect2 = bd2.rawQuery("SELECT Categoria FROM Categoriastabla WHERE id LIKE '" + categoria + "'", null);
                             if (cursorselect2.moveToFirst()) {
                                 categoriareal = cursorselect2.getString(0);
                             }
+cursorselect2.close();
 
-                            int iva = 0;
                             int numero = 0;
 
-                            if (cursorselect3.moveToFirst()) {
-                                iva = cursorselect3.getInt(0);
-                            }
                             if (cursor3.moveToFirst()) {
                                 numero = cursor3.getInt(0);
 
                             }
+                            cursor3.close();
 
-                            @SuppressLint("Recycle") Cursor cursor5 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id ASC", null);
+                          Cursor cursor5 = bd2.rawQuery("SELECT id FROM Devoluciones ORDER BY id ASC", null);
                             while (cursor5.moveToNext()) {
                                 iddevolucion = cursor5.getInt(0);
                             }
@@ -209,7 +209,7 @@ public class DevolucionAdapter  extends RecyclerView.Adapter<DevolucionAdapter.M
                             } else {
                                 iddevolucion = iddevolucion + 1;
                             }
-
+cursor5.close();
 
                             resg2.actualizardevoluciontemporal(numero, devolucionlista.getArticulo(), devolucionlista.getOrden());
 

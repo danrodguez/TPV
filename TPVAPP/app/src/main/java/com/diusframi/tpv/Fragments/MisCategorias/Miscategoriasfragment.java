@@ -49,7 +49,6 @@ public class Miscategoriasfragment extends Fragment implements Editarcategoria {
         //Declaraciones
         DrawerLayout drawerLayout = view.findViewById(R.id.drawer_layout);
         linearLayout = view.findViewById(R.id.linearla);
-        RadioGroup Botoneslinear = view.findViewById(R.id.botoneslinear);
         Button salir = view.findViewById(R.id.salirboton);
         Button nuevacategoria = view.findViewById(R.id.nuevacategoriaboton);
         adapter = new Miscategoriasadapter(Miscategoriasfragment.this,Miscategoriasfragment.this,  view.getContext(), listacategorias);
@@ -71,9 +70,6 @@ public class Miscategoriasfragment extends Fragment implements Editarcategoria {
         drawerLayout.setDrawerElevation(0);
 
 
-        BaseDatos resg = new BaseDatos(view.getContext(), null);
-        SQLiteDatabase bd = resg.getReadableDatabase();
-        Cursor cursortipos = bd.rawQuery("SELECT DISTINCT Categoria FROM Categoriastabla", null);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -119,20 +115,17 @@ public class Miscategoriasfragment extends Fragment implements Editarcategoria {
         });
 
 
-        nuevacategoria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment = new CrearNuevaCategoria();
-                linearLayout.setVisibility(View.GONE);
+        nuevacategoria.setOnClickListener(v -> {
+            fragment = new CrearNuevaCategoria();
+            linearLayout.setVisibility(View.GONE);
 
-                if (fragment != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("nombrecategoria", "");
-                    fragment.setArguments(bundle);
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_fragment, fragment);
-                    ft.commit();
-                }
+            if (fragment != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("nombrecategoria", "");
+                fragment.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_fragment, fragment);
+                ft.commit();
             }
         });
 

@@ -11,24 +11,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.diusframi.tpv.BaseDatos;
 import com.diusframi.tpv.Fragments.Venta.Venta;
 import com.diusframi.tpv.InputDinero;
 import com.diusframi.tpv.R;
 
+import java.text.DecimalFormat;
 import java.util.StringTokenizer;
 
 public class ArticuloRapido extends AppCompatActivity {
     //Declaraciones
     EditText precioedit;
-    TextView pvpedit;
     EditText articuloedit;
     Button cancelar;
     Button guardar;
-    String categoria;
     Double preciotexto = 0.0;
     String precioedittexto = "";
     String ivatextoedit = "";
@@ -47,13 +47,7 @@ public class ArticuloRapido extends AppCompatActivity {
 
         guardar.setEnabled(false);
         guardar.setBackgroundResource(R.drawable.botongrisclaro);
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-          onBackPressed();
-            }
-        });
+        cancelar.setOnClickListener(v -> onBackPressed());
         precioedittexto = precioedit.getText().toString();
         ivatextoedit = BotonIVA.getText().toString();
 
@@ -201,33 +195,27 @@ public class ArticuloRapido extends AppCompatActivity {
 
 
 //sumar el articulo a ArticulosVendidos
-        guardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        guardar.setOnClickListener(v -> {
 
-                BaseDatos resg = new BaseDatos(getApplicationContext(), null);
-                double preciotexto = Double.parseDouble(precioedit.getText().toString());
-                StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
-                String ivacortado = tokens.nextToken();
-                    int iva = Integer.parseInt(ivacortado);
+            BaseDatos resg = new BaseDatos(getApplicationContext(), null);
+            double preciotexto = Double.parseDouble(precioedit.getText().toString());
+            String finalIvatexto = BotonIVA.getText().toString();;
+            StringTokenizer token = new StringTokenizer(finalIvatexto, "%");
+            String ivasinporcentaje = token.nextToken();
+          int ivadoble = Integer.parseInt(ivasinporcentaje);
 
-                resg.articulonuevolistacompra("", articuloedit.getText().toString(), 1, preciotexto, iva);
 
-                String ticket = "si";
-                Intent i = new Intent(getApplicationContext(), Venta.class);
-                i.putExtra("ticketventa", ticket);
-                i.putExtra("misventas","");
-                 startActivity(i);
-            }
+            resg.articulonuevolistacompra("", articuloedit.getText().toString(), 1, preciotexto, ivadoble);
+
+            String ticket = "si";
+            Intent i = new Intent(getApplicationContext(), Venta.class);
+            i.putExtra("ticketventa", ticket);
+            i.putExtra("misventas","");
+             startActivity(i);
         });
 
 
-        BotonIVA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialogarticuloiva();
-            }
-        });
+        BotonIVA.setOnClickListener(view -> openDialogarticuloiva());
 
     }
 
@@ -260,69 +248,57 @@ public class ArticuloRapido extends AppCompatActivity {
 
 
         // Set negative/no button click listener
-        iva21boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ivatexto = iva21boton.getText().toString();
+        iva21boton.setOnClickListener(v -> {
+            String ivatexto = iva21boton.getText().toString();
+            BotonIVA.setText(ivatexto);
+            if (!precioedit.getText().toString().equals("") && !BotonIVA.getText().toString().equals("")) {
+
+
                 BotonIVA.setText(ivatexto);
-                if (!precioedit.getText().toString().equals("") && !BotonIVA.getText().toString().equals("")) {
 
-                    preciotexto = Double.parseDouble(precioedit.getText().toString());
-                    StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
-                    String ivacortado = tokens.nextToken();
-                    int iva = Integer.parseInt(ivacortado);
+                guardar.setEnabled(true);
 
-                    guardar.setEnabled(true);
-
-                    guardar.setBackgroundResource(R.drawable.botonnaranja);
+                guardar.setBackgroundResource(R.drawable.botonnaranja);
 
 
 
 
-            }
-                dialog.dismiss();
-            }
+        }
+            dialog.dismiss();
         });
 
 
 
-        iva10boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ivatexto = iva10boton.getText().toString();
-                BotonIVA.setText(ivatexto);
-                if (!precioedit.getText().toString().equals("") && !BotonIVA.getText().toString().equals("")) {
+        iva10boton.setOnClickListener(v -> {
+            String ivatexto = iva10boton.getText().toString();
+            BotonIVA.setText(ivatexto);
+            if (!precioedit.getText().toString().equals("") && !BotonIVA.getText().toString().equals("")) {
 
-                    preciotexto = Double.parseDouble(precioedit.getText().toString());
-                    StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
-                    String ivacortado = tokens.nextToken();
-                    int iva = Integer.parseInt(ivacortado);
+                preciotexto = Double.parseDouble(precioedit.getText().toString());
+                StringTokenizer tokens = new StringTokenizer(BotonIVA.getText().toString(), "%");
+                String ivacortado = tokens.nextToken();
 
-                    guardar.setEnabled(true);
+                guardar.setEnabled(true);
 
-                    guardar.setBackgroundResource(R.drawable.botonnaranja);
-
-                }
-
-                dialog.dismiss();
+                guardar.setBackgroundResource(R.drawable.botonnaranja);
 
             }
+
+            dialog.dismiss();
+
         });
 
 
 
 
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ivatexto = "";
-                BotonIVA.setText(ivatexto);
-                dialog.dismiss();
-                guardar.setEnabled(false);
+        cancelar.setOnClickListener(v -> {
+            String ivatexto = "";
+            BotonIVA.setText(ivatexto);
+            dialog.dismiss();
+            guardar.setEnabled(false);
 
-                guardar.setBackgroundResource(R.drawable.botongrisclaro);
+            guardar.setBackgroundResource(R.drawable.botongrisclaro);
 
-            }
         });
 
         // Display the custom alert dialog on interface
