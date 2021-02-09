@@ -1,9 +1,0 @@
-<resources>
-    <string-array name="pizza_menu">
-        <item>Seleccionar</item>
-        <item>Margarita</item>
-        <item>Doble Queso</item>
-        <item>Mozzarella</item>
-        <item>Tocineta</item>
-    </string-array>
-</resources>
